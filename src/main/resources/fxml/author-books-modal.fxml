@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.AuthorBooksModalController" spacing="12.0" styleClass="table-management-container">
+   <padding>
+      <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+   </padding>
+   <children>
+
+      <!-- Search Section -->
+      <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="search-section">
+         <children>
+            <TextField fx:id="searchField" promptText="%authorBooks.search.prompt" styleClass="text-field" />
+            <Region HBox.hgrow="ALWAYS" />
+         </children>
+      </HBox>
+
+      <!-- Table Section -->
+      <VBox styleClass="table-container,table-card" VBox.vgrow="ALWAYS">
+         <children>
+            <TableView fx:id="booksTable" styleClass="table-view" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="titleColumn" prefWidth="240.0" text="%book.title" />
+                  <TableColumn fx:id="isbnColumn" prefWidth="140.0" text="%book.isbn" />
+                  <TableColumn fx:id="publisherColumn" prefWidth="180.0" text="%book.publisher" />
+                  <TableColumn fx:id="pagesColumn" prefWidth="80.0" text="%book.pages" />
+                  <TableColumn fx:id="yearColumn" prefWidth="120.0" text="%book.publicationYear" />
+               </columns>
+               <placeholder>
+                  <Label text="%common.loading" />
+               </placeholder>
+            </TableView>
+
+            <!-- Pagination Footer -->
+            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="table-footer">
+               <children>
+                  <Label fx:id="tableStatusLabel" styleClass="table-status" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER_RIGHT" spacing="4.0" styleClass="pagination-controls">
+                     <children>
+                        <Button fx:id="previousButton" disable="true" mnemonicParsing="false" onAction="#handlePrevious" styleClass="page-button" text="&#60;" />
+                        <HBox fx:id="pageButtonsContainer" alignment="CENTER" spacing="4.0" />
+                        <Button fx:id="nextButton" disable="true" mnemonicParsing="false" onAction="#handleNext" styleClass="page-button" text="&#62;" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+
+      <!-- Close Button -->
+      <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="card-actions">
+         <children>
+            <Button fx:id="closeButton" mnemonicParsing="false" onAction="#handleClose" styleClass="button-outlined-primary" text="%borrowHistory.close" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

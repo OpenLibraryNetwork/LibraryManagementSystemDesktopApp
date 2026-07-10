@@ -1,0 +1,1227 @@
+/* ============================================
+   MODERN THEME CSS - Complete UI Styling
+   ============================================ */
+
+/* ========== ROOT STYLING ========== */
+.root {
+    -fx-base: white;
+    -fx-background: white;
+    -fx-background-color: white;
+    -fx-font-family: "System";
+    -fx-font-size: 14px;
+}
+
+/* Force override defaults for all buttons */
+.button,
+Button {
+    -fx-background-color: #f6f8fa;
+    -fx-text-fill: #24292f;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-padding: 5px 16px;
+    -fx-border-color: #d0d7de;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.button:hover,
+Button:hover {
+    -fx-background-color: #f3f4f6;
+    -fx-border-color: #c0c7ce;
+}
+
+.button:pressed,
+Button:pressed {
+    -fx-background-color: #e9ecef;
+}
+
+.button:focused,
+Button:focused {
+    -fx-border-color: #0969da;
+    -fx-border-width: 2px;
+}
+
+/* ========== BUTTONS ========== */
+.button {
+    -fx-background-color: #f6f8fa;
+    -fx-text-fill: #24292f;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-padding: 5px 16px;
+    -fx-border-color: #d0d7de;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.button:hover {
+    -fx-background-color: #f3f4f6;
+    -fx-border-color: #c0c7ce;
+}
+
+.button:pressed {
+    -fx-background-color: #e9ecef;
+}
+
+.button:disabled {
+    -fx-opacity: 0.5;
+}
+
+/* Primary Button - Blue */
+.button.button-primary,
+.button-primary,
+.dialog-pane .button.button-primary,
+.dialog-pane .button-primary {
+    -fx-background-color: #0969da;
+    -fx-text-fill: white;
+    -fx-border-color: #0969da;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+}
+
+.button.button-primary:hover,
+.button-primary:hover,
+.dialog-pane .button.button-primary:hover,
+.dialog-pane .button-primary:hover {
+    -fx-background-color: #0860ca;
+    -fx-border-color: #0860ca;
+}
+
+.button.button-primary:pressed,
+.button-primary:pressed,
+.dialog-pane .button.button-primary:pressed,
+.dialog-pane .button-primary:pressed {
+    -fx-background-color: #0757ba;
+}
+
+/* Danger Button - Red */
+.button.button-danger,
+.button-danger,
+.dialog-pane .button.button-danger,
+.dialog-pane .button-danger {
+    -fx-background-color: #cf222e;
+    -fx-text-fill: white;
+    -fx-border-color: #cf222e;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+}
+
+.button.button-danger:hover,
+.button-danger:hover,
+.dialog-pane .button.button-danger:hover,
+.dialog-pane .button-danger:hover {
+    -fx-background-color: #a40e26;
+    -fx-border-color: #a40e26;
+}
+
+.button.button-danger:pressed,
+.button-danger:pressed,
+.dialog-pane .button.button-danger:pressed,
+.dialog-pane .button-danger:pressed {
+    -fx-background-color: #8c0a1f;
+}
+
+/* Success Button - Green */
+.button.button-success,
+.button-success,
+.dialog-pane .button.button-success,
+.dialog-pane .button-success {
+    -fx-background-color: #1a7f37;
+    -fx-text-fill: white;
+    -fx-border-color: #1a7f37;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+}
+
+.button.button-success:hover,
+.button-success:hover,
+.dialog-pane .button.button-success:hover,
+.dialog-pane .button-success:hover {
+    -fx-background-color: #116329;
+    -fx-border-color: #116329;
+}
+
+.button.button-success:pressed,
+.button-success:pressed,
+.dialog-pane .button.button-success:pressed,
+.dialog-pane .button-success:pressed {
+    -fx-background-color: #0d4e21;
+}
+
+/* ========== TOGGLE BUTTONS (Sidebar Navigation) ========== */
+.toggle-button {
+    -fx-background-color: transparent;
+    -fx-text-fill: #24292f;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 16px;
+    -fx-border-width: 0;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+}
+
+.toggle-button:hover {
+    -fx-background-color: #f6f8fa;
+}
+
+.toggle-button:selected {
+    -fx-background-color: #ddf4ff;
+    -fx-text-fill: #0969da;
+}
+
+.toggle-button:selected:hover {
+    -fx-background-color: #b6e3ff;
+}
+
+/* ========== SIDEBAR NAVIGATION CONTAINER ========== */
+.sidebar-navigation,
+.nav-sidebar {
+    -fx-background-color: #7C4DFF;
+    -fx-background-radius: 0 12 12 0;
+    -fx-pref-width: 250px;
+    -fx-min-width: 250px;
+    -fx-max-width: 250px;
+}
+
+/* ========== SIDEBAR BUTTONS ========== */
+.sidebar-button,
+.nav-item,
+VBox .sidebar-button,
+VBox .nav-item {
+    -fx-background-color: #f6f8fa;
+    -fx-text-fill: #24292f;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 16px;
+    -fx-border-color: #d0d7de;
+    -fx-border-width: 1px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.sidebar-button:hover,
+.nav-item:hover,
+VBox .sidebar-button:hover,
+VBox .nav-item:hover {
+    -fx-background-color: #0969da;
+    -fx-text-fill: white;
+    -fx-border-color: #0969da;
+}
+
+.sidebar-button-active,
+.nav-item-active,
+.sidebar-button.sidebar-button-active,
+.nav-item.nav-item-active,
+VBox .sidebar-button-active,
+VBox .nav-item-active {
+    -fx-background-color: #0969da;
+    -fx-text-fill: white;
+    -fx-border-color: #0969da;
+}
+
+/* Sidebar navigation specific button styling */
+.sidebar-navigation .sidebar-button {
+    -fx-background-color: #7C4DFF;
+    -fx-text-fill: white;
+    -fx-font-weight: 700;
+    -fx-font-size: 14px;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 16px;
+    -fx-border-color: transparent;
+    -fx-border-width: 1px;
+    -fx-cursor: hand;
+    -fx-alignment: CENTER_LEFT;
+}
+
+.sidebar-navigation .sidebar-button .glyph-icon {
+    -fx-fill: white;
+}
+
+.sidebar-navigation .sidebar-button:hover {
+    -fx-background-color: #9575FF;
+    -fx-border-color: rgba(255, 255, 255, 0.3);
+}
+
+.sidebar-navigation .sidebar-button:hover .glyph-icon {
+    -fx-fill: white;
+}
+
+.sidebar-navigation .sidebar-button-active {
+    -fx-background-color: #FFFFFF;
+    -fx-text-fill: #7C4DFF;
+    -fx-border-color: white;
+}
+
+.sidebar-navigation .sidebar-button-active .glyph-icon {
+    -fx-fill: #7C4DFF;
+}
+
+.sidebar-navigation .sidebar-button-active:hover {
+    -fx-background-color: #FFFFFF;
+    -fx-border-color: white;
+}
+
+.sidebar-navigation .sidebar-button-active:hover .glyph-icon {
+    -fx-fill: #7C4DFF;
+}
+
+/* ========== TEXT FIELDS ========== */
+.text-field {
+    -fx-background-color: white;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 5px 12px;
+    -fx-font-size: 14px;
+}
+
+/* Task 1.12 — Focus shadow in #7C4DFF (Req 7.1–7.4) */
+.text-field:focused {
+    -fx-border-color: #7C4DFF;
+    -fx-border-width: 2px;
+    -fx-background-color: white;
+    -fx-effect: dropshadow(gaussian, rgba(124,77,255,0.35), 6, 0, 0, 0);
+}
+
+.text-field:disabled {
+    -fx-background-color: #f6f8fa;
+    -fx-opacity: 0.6;
+}
+
+/* ========== TEXT AREA ========== */
+.text-area {
+    -fx-background-color: white;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 8px 12px;
+}
+
+.text-area:focused {
+    -fx-border-color: #0969da;
+    -fx-border-width: 2px;
+}
+
+.text-area .content {
+    -fx-background-color: white;
+}
+
+/* ========== COMBO BOX ========== */
+.combo-box {
+    -fx-background-color: white;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+}
+
+.combo-box:focused {
+    -fx-border-color: #7C4DFF;
+    -fx-border-width: 2px;
+    -fx-border-radius: 4px;
+    -fx-effect: dropshadow(gaussian, rgba(124,77,255,0.25), 4, 0, 0, 0);
+}
+
+.combo-box .list-cell {
+    -fx-background-color: white;
+    -fx-text-fill: #24292f;
+}
+
+.combo-box-popup .list-view {
+    -fx-background-color: white;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 6px;
+}
+
+.combo-box-popup .list-view .list-cell:hover {
+    -fx-background-color: #f6f8fa;
+}
+
+.combo-box-popup .list-view .list-cell:selected {
+    -fx-background-color: #ddf4ff;
+    -fx-text-fill: #24292f;
+}
+
+/* ========== LANGUAGE SELECTOR IN SIDEBAR ========== */
+.sidebar-navigation .language-selector {
+    -fx-background-color: transparent;
+}
+
+.sidebar-navigation .language-button-compact {
+    -fx-min-width: 44px;
+    -fx-min-height: 44px;
+    -fx-pref-width: 44px;
+    -fx-pref-height: 44px;
+    -fx-max-width: 44px;
+    -fx-max-height: 44px;
+    -fx-padding: 10px;
+    -fx-background-radius: 50%;
+    -fx-border-radius: 50%;
+}
+
+/* Language menu styling */
+.context-menu {
+    -fx-background-color: white;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 4px 0;
+}
+
+.context-menu .menu-item {
+    -fx-background-color: white;
+    -fx-text-fill: #24292f;
+    -fx-padding: 8px 16px;
+}
+
+.context-menu .menu-item:hover {
+    -fx-background-color: #f6f8fa;
+}
+
+.context-menu .menu-item:focused {
+    -fx-background-color: #ddf4ff;
+}
+
+/* ========== LOGO PLACEHOLDER ========== */
+.logo-placeholder {
+    -fx-background-color: transparent; /* Κάνει το background ίδιο με το sidebar */
+    -fx-border-color: transparent;      /* Αφαιρεί τη διακεκομμένη γραμμή */
+    -fx-border-style: none;            /* Διασφαλίζει ότι δεν υπάρχει border */
+    -fx-padding: 0;
+}
+
+/* ========== CONTENT AREA ========== */
+
+/* Ελαφρώς γκρι background ώστε η λευκή κάρτα να ξεχωρίζει */
+.content-area {
+    -fx-background-color: #f0f2f5;
+}
+
+/* Outer container για κάθε management screen */
+.table-management-container {
+    -fx-background-color: #f0f2f5;
+}
+
+/* ========== TABLES ========== */
+
+/* Task 1.1 — TableCard: drop shadow + rounded corners (Req 1.1, 1.2, 1.3, 1.4) */
+.table-card {
+    -fx-background-color: white;
+    -fx-background-radius: 8px;
+    -fx-border-radius: 8px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.15), 10, 0, 0, 3);
+    -fx-padding: 0;
+}
+
+/* Padding για τα sections μέσα στην κάρτα */
+.card-header {
+    -fx-padding: 16px 20px 12px 20px;
+}
+
+.search-section {
+    -fx-padding: 0px 20px 12px 20px;
+}
+
+.table-footer {
+    -fx-padding: 12px 20px 12px 20px;
+}
+
+.table-view {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+/* Αφαίρεση focused outline από το TableView (Req 1.2) */
+.table-view:focused {
+    -fx-border-color: transparent;
+    -fx-effect: none;
+    -fx-background-insets: 0;
+}
+
+/* Task 1.3 — Remove vertical column separators (Req 2.1, 2.2, 2.3) */
+.table-view .column-header-background {
+    -fx-border-width: 0;
+    -fx-background-color: #7C4DFF;
+}
+
+/* Task 1.5 — Column header style: #7C4DFF bg, white text, bold (Req 3.1–3.6) */
+.table-view .column-header {
+    -fx-background-color: #7C4DFF;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 8px;
+    -fx-font-weight: bold;
+    -fx-text-fill: white;
+}
+
+.table-view .column-header .label {
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+}
+
+.table-view .column-header:hover {
+    -fx-background-color: #6A3FE0;
+}
+
+.table-view .column-header:pressed {
+    -fx-background-color: #5C35C5;
+}
+
+.table-view .filler {
+    -fx-background-color: #7C4DFF;
+    -fx-border-width: 0;
+}
+
+/* Task 1.7 — Row styles: white default, hover #9575FF, selected #7C4DFF (Req 4.1–4.5) */
+.table-row-cell {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-text-fill: #000000;
+}
+
+/* No zebra striping — all rows white by default (Req 4.5) */
+.table-row-cell:filled {
+    -fx-background-color: white;
+}
+
+.table-row-cell:filled:hover {
+    -fx-background-color: #9575FF;
+    -fx-text-fill: white;
+}
+
+.table-row-cell:filled:selected {
+    -fx-background-color: #7C4DFF;
+    -fx-text-fill: white;
+}
+
+.table-row-cell:filled:selected:hover {
+    -fx-background-color: #7C4DFF;
+    -fx-text-fill: white;
+}
+
+.table-row-cell .table-cell {
+    -fx-text-fill: inherit;
+}
+
+/* ========== LABELS ========== */
+.label {
+    -fx-text-fill: #24292f;
+    -fx-font-size: 14px;
+}
+
+.label.title {
+    -fx-font-size: 18px;
+    -fx-font-weight: bold;
+}
+
+.label.subtitle {
+    -fx-font-size: 16px;
+    -fx-font-weight: bold;
+}
+
+/* ========== DIALOGS ========== */
+.dialog-pane {
+    -fx-background-color: white;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 8px;
+    -fx-background-radius: 8px;
+}
+
+.dialog-pane .header-panel {
+    -fx-background-color: #f6f8fa;
+    -fx-padding: 16px;
+}
+
+.dialog-pane .content {
+    -fx-background-color: white;
+    -fx-padding: 16px;
+}
+
+.dialog-pane .button-bar {
+    -fx-background-color: #f6f8fa;
+    -fx-padding: 12px 16px;
+}
+
+.dialog-pane .button-bar .button {
+    -fx-background-color: #f6f8fa;
+    -fx-text-fill: #24292f;
+}
+
+/* ========== SCROLLBAR ========== */
+.scroll-bar {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .thumb {
+    -fx-background-color: #d0d7de;
+    -fx-background-radius: 4px;
+}
+
+.scroll-bar .thumb:hover {
+    -fx-background-color: #afb8c1;
+}
+
+.scroll-bar .track {
+    -fx-background-color: transparent;
+}
+
+.scroll-bar .increment-button,
+.scroll-bar .decrement-button {
+    -fx-background-color: transparent;
+    -fx-padding: 0;
+}
+
+/* ========== TOOLTIP ========== */
+.tooltip {
+    -fx-background-color: #24292f;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-padding: 4px 8px;
+    -fx-font-size: 12px;
+}
+
+/* ========== MENU BAR ========== */
+.menu-bar {
+    -fx-background-color: #f6f8fa;
+    -fx-border-color: #d0d7de;
+    -fx-border-width: 0 0 1px 0;
+}
+
+.menu-bar .label {
+    -fx-text-fill: #24292f;
+}
+
+.menu-item {
+    -fx-background-color: white;
+}
+
+.menu-item:hover {
+    -fx-background-color: #f6f8fa;
+}
+
+.menu-item:focused {
+    -fx-background-color: #ddf4ff;
+}
+
+/* ========== PROGRESS BAR ========== */
+.progress-bar {
+    -fx-background-color: #f6f8fa;
+    -fx-background-radius: 4px;
+}
+
+.progress-bar .bar {
+    -fx-background-color: #0969da;
+    -fx-background-radius: 4px;
+}
+
+/* ========== CHECK BOX ========== */
+.check-box {
+    -fx-text-fill: #24292f;
+}
+
+.check-box .box {
+    -fx-background-color: white;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 3px;
+    -fx-background-radius: 3px;
+}
+
+.check-box:selected .box {
+    -fx-background-color: #0969da;
+    -fx-border-color: #0969da;
+}
+
+.check-box:hover .box {
+    -fx-border-color: #0969da;
+}
+
+/* ========== RADIO BUTTON ========== */
+.radio-button {
+    -fx-text-fill: #24292f;
+}
+
+.radio-button .radio {
+    -fx-background-color: white;
+    -fx-border-color: #d0d7de;
+    -fx-border-radius: 10px;
+    -fx-background-radius: 10px;
+}
+
+.radio-button:selected .radio {
+    -fx-background-color: #0969da;
+    -fx-border-color: #0969da;
+}
+
+.radio-button:hover .radio {
+    -fx-border-color: #0969da;
+}
+
+/* ========== SEPARATOR ========== */
+.separator .line {
+    -fx-border-color: #d0d7de;
+    -fx-border-width: 1px 0 0 0;
+}
+
+/* ========== TAB PANE ========== */
+.tab-pane {
+    -fx-background-color: white;
+}
+
+.tab-pane .tab {
+    -fx-background-color: #f6f8fa;
+    -fx-background-radius: 6px 6px 0 0;
+    -fx-padding: 8px 16px;
+}
+
+.tab-pane .tab:selected {
+    -fx-background-color: white;
+    -fx-border-color: #d0d7de;
+    -fx-border-width: 1px 1px 0 1px;
+}
+
+.tab-pane .tab:hover {
+    -fx-background-color: #eaeef2;
+}
+
+.tab-pane .tab-label {
+    -fx-text-fill: #24292f;
+}
+
+/* ========== STATUS BAR ========== */
+.status-bar {
+    -fx-background-color: #f6f8fa;
+    -fx-border-color: #d0d7de;
+    -fx-border-width: 1px 0 0 0;
+    -fx-padding: 8px 16px;
+}
+
+.status-label {
+    -fx-text-fill: #24292f;
+    -fx-font-size: 13px;
+}
+
+.connection-status {
+    -fx-text-fill: #24292f;
+    -fx-font-size: 13px;
+}
+
+.status-connected {
+    -fx-text-fill: #1a7f37;
+}
+
+.status-disconnected {
+    -fx-text-fill: #cf222e;
+}
+
+.status-online {
+    -fx-text-fill: #1a7f37;
+}
+
+.status-offline {
+    -fx-text-fill: #cf222e;
+}
+
+/* ========== ACTION BUTTONS (outlined primary) ========== */
+
+/* Task 1.9 — Outlined primary style for Add/Edit/Delete (Req 5.1–5.6) */
+.button-outlined-primary {
+    -fx-background-color: transparent;
+    -fx-text-fill: #7C4DFF;
+    -fx-border-color: #7C4DFF;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 5px 16px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.button-outlined-primary:hover {
+    -fx-background-color: #7C4DFF;
+    -fx-text-fill: white;
+    -fx-border-color: #7C4DFF;
+}
+
+.button-outlined-primary:pressed {
+    -fx-background-color: #7C4DFF;
+    -fx-text-fill: white;
+    -fx-border-color: #7C4DFF;
+}
+
+.button-outlined-primary:disabled {
+    -fx-opacity: 0.5;
+}
+
+/* ========== PAGINATION BUTTONS ========== */
+
+/* Task 1.11 — Round page buttons (Req 6.1–6.4) */
+.page-button {
+    -fx-min-width: 44px;
+    -fx-min-height: 44px;
+    -fx-pref-width: 44px;
+    -fx-pref-height: 44px;
+    -fx-max-width: 44px;
+    -fx-max-height: 44px;
+    -fx-background-color: transparent;
+    -fx-text-fill: #7C4DFF;
+    -fx-border-color: #7C4DFF;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-padding: 0;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.page-button:hover {
+    -fx-background-color: #7C4DFF;
+    -fx-text-fill: white;
+}
+
+.page-button:disabled {
+    -fx-opacity: 0.4;
+    -fx-cursor: default;
+}
+
+.page-button-active {
+    -fx-min-width: 44px;
+    -fx-min-height: 44px;
+    -fx-pref-width: 44px;
+    -fx-pref-height: 44px;
+    -fx-max-width: 44px;
+    -fx-max-height: 44px;
+    -fx-background-color: #7C4DFF;
+    -fx-text-fill: white;
+    -fx-border-color: #7C4DFF;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 50%;
+    -fx-background-radius: 50%;
+    -fx-padding: 0;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.page-button-active:hover {
+    -fx-background-color: #6A3FE0;
+    -fx-border-color: #6A3FE0;
+}
+
+/* ========== FORM DIALOG STYLES ========== */
+
+/* Filled primary button for Save actions in form dialogs */
+.button-filled-primary {
+    -fx-background-color: #7C4DFF;
+    -fx-text-fill: white;
+    -fx-background-radius: 4px;
+    -fx-border-radius: 4px;
+    -fx-border-color: #7C4DFF;
+    -fx-padding: 8px 20px;
+    -fx-font-size: 14px;
+    -fx-cursor: hand;
+    -fx-background-insets: 0;
+    -fx-border-insets: 0;
+}
+
+.button-filled-primary:hover {
+    -fx-background-color: #6A3FE0;
+    -fx-border-color: #6A3FE0;
+}
+
+.button-filled-primary:pressed {
+    -fx-background-color: #5C35C5;
+    -fx-border-color: #5C35C5;
+}
+
+.button-filled-primary:disabled {
+    -fx-opacity: 0.5;
+}
+
+/* Section divider for grouping fields in forms with many fields */
+.section-divider {
+    -fx-border-color: #E0E0E0;
+    -fx-border-width: 0 0 1 0;
+    -fx-padding: 0 0 8 0;
+    -fx-pref-height: 1px;
+}
+
+/* Form label and field font size */
+.form-label {
+    -fx-font-size: 14px;
+    -fx-text-fill: #24292f;
+}
+
+.form-field {
+    -fx-font-size: 14px;
+}
+
+/* ========== FORM DIALOG CONTAINER ========== */
+/* Replaces .card to avoid AtlantaFX border */
+.form-dialog-container {
+    -fx-background-color: white;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+/* Remove border from ScrollPane inside form dialogs */
+.form-dialog-container .scroll-pane {
+    -fx-background-color: transparent;
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+    -fx-padding: 0;
+}
+
+.form-dialog-container .scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* Also remove border from any ScrollPane in dialogs */
+.scroll-pane {
+    -fx-border-color: transparent;
+    -fx-border-width: 0;
+}
+
+.scroll-pane > .viewport {
+    -fx-background-color: transparent;
+}
+
+/* ========== ALERT / SUCCESS DIALOG BUTTONS ========== */
+/* Style the OK button in info/success alerts to match app primary button */
+.alert.information .button-bar .button:default,
+.dialog-pane.information-alert .button-bar .button,
+.dialog-pane .button-bar .button {
+    -fx-background-color: #7C4DFF;
+    -fx-text-fill: white;
+    -fx-font-weight: bold;
+    -fx-background-radius: 6px;
+    -fx-border-radius: 6px;
+    -fx-border-color: #7C4DFF;
+    -fx-padding: 6px 16px;
+    -fx-cursor: hand;
+}
+
+.alert.information .button-bar .button:hover,
+.dialog-pane.information-alert .button-bar .button:hover,
+.dialog-pane .button-bar .button:hover {
+    -fx-background-color: #6A3FE0;
+    -fx-border-color: #6A3FE0;
+}
+
+/* ========== WARNING BOX / VALIDATION SUMMARY ALERT ========== */
+.warning-box {
+    -fx-background-color: #FFF3CD;
+    -fx-border-color: #FFEBAA;
+    -fx-border-width: 1px;
+    -fx-border-radius: 6px;
+    -fx-background-radius: 6px;
+    -fx-padding: 10px 14px;
+}
+
+.warning-icon-container {
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+    -fx-alignment: center;
+}
+
+.warning-icon-shape {
+    -fx-shape: "M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-2h2v2zm0-4h-2V7h2v6z";
+    -fx-background-color: #856404;
+    -fx-min-width: 16px;
+    -fx-min-height: 16px;
+    -fx-max-width: 16px;
+    -fx-max-height: 16px;
+}
+
+.warning-message {
+    -fx-font-size: 13px;
+    -fx-text-fill: #856404;
+    -fx-font-weight: bold;
+}
+
+/* ========== DASHBOARD SECTION CARDS ========== */
+.dashboard-card {
+    -fx-background-color: white;
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.06), 10, 0, 0, 4);
+    -fx-padding: 24px;
+}
+
+/* ========== DASHBOARD KPI CARDS ========== */
+.kpi-card {
+    -fx-background-radius: 12px;
+    -fx-border-radius: 12px;
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.04), 8, 0, 0, 2);
+    -fx-padding: 20px 24px;
+}
+
+.kpi-card:hover {
+    -fx-effect: dropshadow(gaussian, rgba(0,0,0,0.08), 12, 0, 0, 4);
+    -fx-translate-y: -2px;
+}
+
+.kpi-icon-container {
+    -fx-min-width: 48px;
+    -fx-min-height: 48px;
+    -fx-max-width: 48px;
+    -fx-max-height: 48px;
+    -fx-background-color: transparent;
+    -fx-alignment: center;
+}
+
+/* Card 1: Books (Purple) */
+.kpi-card-books {
+    -fx-background-color: #F3E8FF; /* Light purple */
+}
+.kpi-card-books:hover {
+    -fx-background-color: #E9D5FF; /* Slightly darker hover purple */
+}
+.kpi-card-books .kpi-icon-container {
+    -fx-background-color: transparent;
+}
+.kpi-card-books .kpi-icon-shape {
+    -fx-shape: "M19 2H6c-1.2 0-2 .9-2 2v16c0 1.1.9 2 2 2h13c1.1 0 2-.9 2-2V4c0-1.1-.9-2-2-2zm-6 2h5v10l-2.5-1.5L13 14V4z";
+    -fx-background-color: #7C4DFF;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+/* Card 2: Active Loans (Green) */
+.kpi-card-loans {
+    -fx-background-color: #EAFBF1; /* Light green */
+}
+.kpi-card-loans:hover {
+    -fx-background-color: #D3F7E2;
+}
+.kpi-card-loans .kpi-icon-container {
+    -fx-background-color: transparent;
+}
+.kpi-card-loans .kpi-icon-shape {
+    -fx-shape: "M12 6v14l-2-1.9-2-.1c-1.24 0-2.43.43-3.37 1.21V6.21C5.57 5.43 6.76 5 8 5c1.78 0 3.5.76 4 1zm10-1c-1.24 0-2.43.43-3.37 1.21v13.58C17.69 19 16.5 18.5 15.24 18.5H13V5c.5-.24 2.22-1 4-1 1.24 0 2.43.43 3.37 1.21V5z";
+    -fx-background-color: #00e676;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+/* Card 3: Overdue (Red) */
+.kpi-card-overdue {
+    -fx-background-color: #FFF0F2; /* Light red */
+}
+.kpi-card-overdue:hover {
+    -fx-background-color: #FFDEE2;
+}
+.kpi-card-overdue .kpi-icon-container {
+    -fx-background-color: transparent;
+}
+.kpi-card-overdue .kpi-icon-shape {
+    -fx-shape: "M11 15h2v2h-2zm0-8h2v6h-2zm.99-5C6.47 2 2 6.48 2 12s4.47 10 9.99 10C17.52 22 22 17.52 22 12S17.52 2 11.99 2zM12 20c-4.42 0-8-3.58-8-8s3.58-8 8-8 8 3.58 8 8-3.58 8-8 8z";
+    -fx-background-color: #FF1744;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+/* Card 4: Registered Members (Blue) */
+.kpi-card-members {
+    -fx-background-color: #E6F5FF; /* Light blue */
+}
+.kpi-card-members:hover {
+    -fx-background-color: #CCE8FF;
+}
+.kpi-card-members .kpi-icon-container {
+    -fx-background-color: transparent;
+}
+.kpi-card-members .kpi-icon-shape {
+    -fx-shape: "M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z";
+    -fx-background-color: #00B0FF;
+    -fx-min-width: 20px;
+    -fx-min-height: 20px;
+    -fx-max-width: 20px;
+    -fx-max-height: 20px;
+}
+
+.kpi-value {
+    -fx-font-size: 24px;
+    -fx-font-weight: 800;
+    -fx-text-fill: #1e293b;
+}
+
+.kpi-title {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+    -fx-font-weight: 600;
+}
+
+/* ========== POPULAR BOOKS SECTION ========== */
+.dashboard-section-title {
+    -fx-font-size: 18px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1e293b;
+}
+
+.dashboard-section-subtitle {
+    -fx-font-size: 13px;
+    -fx-text-fill: #64748b;
+}
+
+.popular-badge {
+    -fx-background-color: rgba(124,77,255,0.1);
+    -fx-text-fill: #7C4DFF;
+    -fx-font-weight: bold;
+    -fx-font-size: 12px;
+    -fx-padding: 4px 10px;
+    -fx-background-radius: 12px;
+}
+
+.popular-book-row {
+    -fx-padding: 8px 12px;
+    -fx-background-color: transparent;
+    -fx-background-radius: 8px;
+}
+
+.popular-book-row:hover {
+    -fx-background-color: #f8fafc;
+}
+
+.popular-rank {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #94a3b8;
+    -fx-min-width: 24px;
+}
+
+.popular-cover {
+    -fx-min-width: 32px;
+    -fx-min-height: 42px;
+    -fx-max-width: 32px;
+    -fx-max-height: 42px;
+    -fx-background-radius: 4px;
+}
+
+/* Gradients for covers */
+.cover-gradient-1 { -fx-background-color: linear-gradient(to bottom right, #ff7b00, #ff0055); }
+.cover-gradient-2 { -fx-background-color: linear-gradient(to bottom right, #00dbde, #fc00ff); }
+.cover-gradient-3 { -fx-background-color: linear-gradient(to bottom right, #00e676, #00b0ff); }
+.cover-gradient-4 { -fx-background-color: linear-gradient(to bottom right, #f12711, #f5af19); }
+.cover-gradient-5 { -fx-background-color: linear-gradient(to bottom right, #7b4397, #dc2430); }
+.cover-gradient-6 { -fx-background-color: linear-gradient(to bottom right, #11998e, #38ef7d); }
+.cover-gradient-7 { -fx-background-color: linear-gradient(to bottom right, #ff007f, #7f00ff); }
+.cover-gradient-8 { -fx-background-color: linear-gradient(to bottom right, #3a7bd5, #3a6073); }
+.cover-gradient-9 { -fx-background-color: linear-gradient(to bottom right, #f857a6, #ff5858); }
+.cover-gradient-10 { -fx-background-color: linear-gradient(to bottom right, #eb3349, #f45c43); }
+
+.popular-title {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1e293b;
+}
+
+.popular-author {
+    -fx-font-size: 12px;
+    -fx-text-fill: #64748b;
+}
+
+.popular-category-tag {
+    -fx-background-color: #f1f5f9;
+    -fx-text-fill: #475569;
+    -fx-font-size: 11px;
+    -fx-padding: 2px 8px;
+    -fx-background-radius: 12px;
+    -fx-min-width: 90px;
+    -fx-alignment: center;
+}
+
+/* Custom progress bar styles */
+.popular-progress-bar {
+    -fx-pref-width: 150px;
+    -fx-min-width: 100px;
+}
+
+.popular-progress-bar .track {
+    -fx-background-color: #e2e8f0;
+    -fx-background-insets: 0;
+    -fx-background-radius: 4px;
+}
+
+.popular-progress-bar .bar {
+    -fx-background-color: #7C4DFF;
+    -fx-background-insets: 0;
+    -fx-background-radius: 4px;
+}
+
+.popular-progress-bar-orange .bar { -fx-background-color: #ff5722; }
+.popular-progress-bar-teal .bar { -fx-background-color: #00bcd4; }
+.popular-progress-bar-purple .bar { -fx-background-color: #7C4DFF; }
+
+.popular-count {
+    -fx-font-size: 14px;
+    -fx-font-weight: 700;
+    -fx-text-fill: #1e293b;
+    -fx-min-width: 40px;
+    -fx-alignment: center-right;
+}
+
+.popular-trend-container {
+    -fx-min-width: 24px;
+    -fx-alignment: center;
+}
+
+.popular-trend-up {
+    -fx-shape: "M5 4v2h8.59L4 15.59 5.41 17 15 7.41V16h2V4H5z";
+    -fx-background-color: #10b981;
+    -fx-min-width: 12px;
+    -fx-min-height: 12px;
+    -fx-max-width: 12px;
+    -fx-max-height: 12px;
+}
+
+.popular-trend-down {
+    -fx-shape: "M5 16v-2h8.59L4 4.41 5.41 3 15 12.59V4h2v12H5z";
+    -fx-background-color: #ef4444;
+    -fx-min-width: 12px;
+    -fx-min-height: 12px;
+    -fx-max-width: 12px;
+    -fx-max-height: 12px;
+}
+
+.popular-trend-flat {
+    -fx-shape: "M3 11h14v2H3z";
+    -fx-background-color: #94a3b8;
+    -fx-min-width: 12px;
+    -fx-min-height: 2px;
+    -fx-max-width: 12px;
+    -fx-max-height: 2px;
+}
+
+/* ========== BORROW STATUS STYLES ========== */
+.status-active {
+    -fx-text-fill: #2e7d32;
+    -fx-font-weight: bold;
+}
+
+.status-returned {
+    -fx-text-fill: #1565c0;
+}
+
+.status-overdue {
+    -fx-text-fill: #c62828;
+    -fx-font-weight: bold;
+}

@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.chart.BarChart?>
+<?import javafx.scene.chart.CategoryAxis?>
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.Region?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.DashboardViewController"
+            fitToWidth="true" style="-fx-background-color: transparent; -fx-border-color: transparent;">
+
+   <content>
+      <VBox styleClass="content-area" spacing="20">
+         <padding>
+            <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+         </padding>
+         <children>
+            <!-- KPI Section -->
+            <HBox spacing="20">
+               <children>
+                  <!-- Total Books Card -->
+                  <HBox styleClass="kpi-card,kpi-card-books" HBox.hgrow="ALWAYS" spacing="12.0" alignment="CENTER_LEFT">
+                     <children>
+                        <StackPane styleClass="kpi-icon-container">
+                           <children>
+                              <Region styleClass="kpi-icon-shape" />
+                           </children>
+                        </StackPane>
+                        <VBox spacing="4.0" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="totalBooksValue" styleClass="kpi-value" />
+                              <Label text="%dashboard.totalBooks" styleClass="kpi-title" wrapText="true" minWidth="0.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+
+                  <!-- Active Loans Card -->
+                  <HBox styleClass="kpi-card,kpi-card-loans" HBox.hgrow="ALWAYS" spacing="12.0" alignment="CENTER_LEFT">
+                     <children>
+                        <StackPane styleClass="kpi-icon-container">
+                           <children>
+                              <Region styleClass="kpi-icon-shape" />
+                           </children>
+                        </StackPane>
+                        <VBox spacing="4.0" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="activeLoansValue" styleClass="kpi-value" />
+                              <Label text="%dashboard.activeLoans" styleClass="kpi-title" wrapText="true" minWidth="0.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+
+                  <!-- Overdue Card -->
+                  <HBox styleClass="kpi-card,kpi-card-overdue" HBox.hgrow="ALWAYS" spacing="12.0" alignment="CENTER_LEFT">
+                     <children>
+                        <StackPane styleClass="kpi-icon-container">
+                           <children>
+                              <Region styleClass="kpi-icon-shape" />
+                           </children>
+                        </StackPane>
+                        <VBox spacing="4.0" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="overdueValue" styleClass="kpi-value" />
+                              <Label text="%dashboard.overdue" styleClass="kpi-title" wrapText="true" minWidth="0.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+
+                  <!-- Registered Members Card -->
+                  <HBox styleClass="kpi-card,kpi-card-members" HBox.hgrow="ALWAYS" spacing="12.0" alignment="CENTER_LEFT">
+                     <children>
+                        <StackPane styleClass="kpi-icon-container">
+                           <children>
+                              <Region styleClass="kpi-icon-shape" />
+                           </children>
+                        </StackPane>
+                        <VBox spacing="4.0" alignment="CENTER_LEFT" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label fx:id="registeredMembersValue" styleClass="kpi-value" />
+                              <Label text="%dashboard.registeredMembers" styleClass="kpi-title" wrapText="true" minWidth="0.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+
+            <!-- Popular Books Section -->
+            <VBox styleClass="dashboard-card" VBox.vgrow="ALWAYS">
+               <padding>
+                  <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+               </padding>
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="12.0">
+                     <padding>
+                        <Insets left="12.0" right="12.0" />
+                     </padding>
+                     <children>
+                        <VBox spacing="4.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <Label text="%dashboard.popularBooks.title" styleClass="dashboard-section-title" />
+                              <Label text="%dashboard.popularBooks.subtitle" styleClass="dashboard-section-subtitle" />
+                           </children>
+                        </VBox>
+                        <Label text="%dashboard.popularBooks.badge" styleClass="popular-badge" />
+                     </children>
+                     <VBox.margin>
+                        <Insets bottom="16.0" />
+                     </VBox.margin>
+                  </HBox>
+                  <VBox fx:id="popularBooksContainer" spacing="10.0" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+   </content>
+</ScrollPane>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.UserManagementController" styleClass="table-management-container">
+   <padding>
+      <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+   </padding>
+   <children>
+
+      <!-- Search and Action Section -->
+      <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="search-section">
+         <children>
+            <TextField fx:id="searchField" promptText="%common.search" styleClass="text-field" />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="action-buttons">
+               <children>
+                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddUser" styleClass="button,button-outlined-primary" text="%user.addUser" />
+                  <Button fx:id="editButton" disable="true" mnemonicParsing="false" onAction="#handleEditUser" styleClass="button,button-outlined-primary" text="%common.edit" />
+                  <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" onAction="#handleDeleteUser" styleClass="button,button-outlined-primary" text="%common.delete" />
+                  <Button fx:id="borrowHistoryButton" disable="true" mnemonicParsing="false" onAction="#handleBorrowHistory" styleClass="button,button-outlined-primary" text="%borrowHistory.button" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+
+      <!-- Table Section -->
+      <VBox styleClass="table-container,table-card" VBox.vgrow="ALWAYS">
+         <children>
+            <TableView fx:id="usersTable" styleClass="table-view" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="idColumn" prefWidth="80.0" styleClass="table-column-id" text="%table.column.id" />
+                  <TableColumn fx:id="firstNameColumn" prefWidth="150.0" styleClass="table-column-name" text="%user.firstName" />
+                  <TableColumn fx:id="lastNameColumn" prefWidth="150.0" styleClass="table-column-name" text="%user.lastName" />
+                  <TableColumn fx:id="emailColumn" prefWidth="200.0" styleClass="table-column-name" text="%user.email" />
+                  <TableColumn fx:id="phoneColumn" prefWidth="150.0" text="%user.phone" />
+                  <TableColumn fx:id="activeBorrowsColumn" prefWidth="120.0" styleClass="table-column-numeric" text="%user.activeBorrows" />
+               </columns>
+               <placeholder>
+                  <Label text="%table.placeholder.no.users" />
+               </placeholder>
+            </TableView>
+            
+            <!-- Table Footer -->
+            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="table-footer">
+               <children>
+                  <Label fx:id="tableStatusLabel" styleClass="table-status" text="%status.items.total" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER_RIGHT" spacing="4.0" styleClass="pagination-controls">
+                     <children>
+                        <Button fx:id="previousButton" disable="true" mnemonicParsing="false" onAction="#handlePrevious" styleClass="page-button" text="&#60;" />
+                        <HBox fx:id="pageButtonsContainer" alignment="CENTER" spacing="4.0" />
+                        <Button fx:id="nextButton" disable="true" mnemonicParsing="false" onAction="#handleNext" styleClass="page-button" text="&#62;" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</VBox>

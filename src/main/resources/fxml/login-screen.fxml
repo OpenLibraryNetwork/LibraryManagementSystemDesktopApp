@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.LoginController"
+      alignment="CENTER" spacing="20" styleClass="login-container">
+    <padding>
+        <Insets bottom="40" left="40" right="40" top="40"/>
+    </padding>
+    <children>
+        <Label text="Σύστημα Διαχείρισης Βιβλιοθήκης" styleClass="login-title"/>
+
+        <VBox spacing="10" maxWidth="400" alignment="CENTER_LEFT">
+            <Label text="Διεύθυνση Strapi (URL)"/>
+            <TextField fx:id="urlField" promptText="http://localhost:1337"/>
+
+            <Label text="Όνομα χρήστη"/>
+            <TextField fx:id="usernameField" promptText="librarian@example.com"/>
+
+            <Label text="Κωδικός"/>
+            <PasswordField fx:id="passwordField" promptText="••••••••"/>
+
+            <Label fx:id="errorLabel" styleClass="error-label" visible="false" textFill="RED"/>
+
+            <HBox alignment="CENTER" spacing="10">
+                <padding><Insets top="10"/></padding>
+                <Button fx:id="loginButton" text="Σύνδεση" styleClass="primary-button"/>
+                <ProgressIndicator fx:id="loginProgress" prefWidth="24" prefHeight="24"/>
+            </HBox>
+        </VBox>
+    </children>
+</VBox>

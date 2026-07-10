@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.BorrowManagementController" styleClass="table-management-container">
+   <padding>
+      <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+   </padding>
+   <children>
+
+      <!-- Search and Action Section -->
+      <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="search-section">
+         <children>
+            <TextField fx:id="searchField" promptText="%common.search" styleClass="text-field" />
+            <ComboBox fx:id="statusFilterComboBox" promptText="%prompt.filter.by.status" styleClass="combo-box" />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="action-buttons">
+               <children>
+                  <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAddBorrow" styleClass="button,button-outlined-primary" text="%borrow.addBorrow" />
+                  <Button fx:id="returnButton" disable="true" mnemonicParsing="false" onAction="#handleReturnBook" styleClass="button,button-outlined-primary" text="%borrow.returnBook" />
+                  <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" onAction="#handleDeleteBorrow" styleClass="button,button-outlined-primary" text="%common.delete" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+
+      <!-- Table Section -->
+      <VBox styleClass="table-container,table-card" VBox.vgrow="ALWAYS">
+         <children>
+            <TableView fx:id="borrowsTable" styleClass="table-view" VBox.vgrow="ALWAYS">
+               <columns>
+                   <TableColumn fx:id="userColumn" prefWidth="160.0" styleClass="table-column-name" text="%borrow.user" />
+                   <TableColumn fx:id="publicationTitleColumn" prefWidth="200.0" styleClass="table-column-name" text="%borrow.book" />
+                   <TableColumn fx:id="publicationTypeColumn" prefWidth="100.0" styleClass="table-column-name" text="Τύπος" />
+                   <TableColumn fx:id="authorColumn" prefWidth="150.0" styleClass="table-column-name" text="%book.author" />
+                   <TableColumn fx:id="copyNumberColumn" prefWidth="80.0" styleClass="table-column-numeric" text="%borrow.copyNumber" />
+                   <TableColumn fx:id="borrowDateColumn" prefWidth="110.0" styleClass="table-column-date" text="%borrow.borrowDate" />
+                   <TableColumn fx:id="dueDateColumn" prefWidth="110.0" styleClass="table-column-date" text="Προθεσμία" />
+                   <TableColumn fx:id="returnDateColumn" prefWidth="110.0" styleClass="table-column-date" text="%borrow.returnDate" />
+                   <TableColumn fx:id="statusColumn" prefWidth="100.0" styleClass="table-column-status" text="%borrow.status" />
+               </columns>
+               <placeholder>
+                  <Label text="%table.placeholder.no.borrows" />
+               </placeholder>
+            </TableView>
+            
+            <!-- Table Footer -->
+            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="table-footer">
+               <children>
+                  <Label fx:id="tableStatusLabel" styleClass="table-status" text="%status.items.total" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER_RIGHT" spacing="4.0" styleClass="pagination-controls">
+                     <children>
+                        <Button fx:id="previousButton" disable="true" mnemonicParsing="false" onAction="#handlePrevious" styleClass="page-button" text="&#60;" />
+                        <HBox fx:id="pageButtonsContainer" alignment="CENTER" spacing="4.0" />
+                        <Button fx:id="nextButton" disable="true" mnemonicParsing="false" onAction="#handleNext" styleClass="page-button" text="&#62;" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</VBox>

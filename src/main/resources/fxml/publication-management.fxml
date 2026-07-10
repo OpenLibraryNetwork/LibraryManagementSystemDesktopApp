@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.PublicationManagementController" styleClass="table-management-container">
+   <padding>
+      <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+   </padding>
+   <children>
+
+      <!-- Search and Action Section -->
+      <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="search-section">
+         <children>
+            <TextField fx:id="searchField" promptText="%common.search" styleClass="text-field" />
+            <Region HBox.hgrow="ALWAYS" />
+            <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="action-buttons">
+               <children>
+                  <Button fx:id="addButton" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%book.addBook" />
+                  <Button fx:id="editButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%common.edit" />
+                  <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%common.delete" />
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+
+      <!-- Table Section -->
+      <VBox styleClass="table-container,table-card" VBox.vgrow="ALWAYS">
+         <children>
+            <TableView fx:id="tableView" styleClass="table-view" VBox.vgrow="ALWAYS">
+               <columns>
+                  <TableColumn fx:id="titleColumn" prefWidth="220.0" styleClass="table-column-name" text="%book.title" />
+                  <TableColumn fx:id="typeColumn" prefWidth="100.0" styleClass="table-column-name" text="Τύπος" />
+                  <TableColumn fx:id="authorColumn" prefWidth="180.0" styleClass="table-column-name" text="%book.author" />
+                  <TableColumn fx:id="publisherColumn" prefWidth="160.0" styleClass="table-column-name" text="%book.publisher" />
+                  <TableColumn fx:id="isbnColumn" prefWidth="140.0" text="%book.isbn" />
+                  <TableColumn fx:id="yearColumn" prefWidth="100.0" styleClass="table-column-date" text="%book.publicationYear" />
+                  <TableColumn fx:id="copiesColumn" prefWidth="100.0" styleClass="table-column-numeric" text="Αντίτυπα" />
+               </columns>
+               <placeholder>
+                  <Label text="%table.placeholder.no.books" />
+               </placeholder>
+            </TableView>
+            
+            <!-- Table Footer -->
+            <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="table-footer">
+               <children>
+                  <Label fx:id="statusLabel" styleClass="table-status" text="%status.items.total" />
+                  <Region HBox.hgrow="ALWAYS" />
+                  <HBox alignment="CENTER_RIGHT" spacing="4.0" styleClass="pagination-controls">
+                     <children>
+                        <Button fx:id="previousButton" disable="true" mnemonicParsing="false" onAction="#handlePrevious" styleClass="page-button" text="&#60;" />
+                        <HBox fx:id="pageButtonsContainer" alignment="CENTER" spacing="4.0" />
+                        <Button fx:id="nextButton" disable="true" mnemonicParsing="false" onAction="#handleNext" styleClass="page-button" text="&#62;" />
+                     </children>
+                  </HBox>
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</VBox>

@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.BorrowFormControllerNew"
+      spacing="12.0" styleClass="form-dialog-container" prefWidth="550.0" prefHeight="600.0">
+   <padding>
+      <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+   </padding>
+   <children>
+      <VBox spacing="12.0" styleClass="form-content" VBox.vgrow="ALWAYS">
+         <children>
+            <!-- User Selection Section -->
+            <VBox spacing="6.0" styleClass="form-section">
+               <children>
+                  <Label styleClass="section-title" text="Επιλογή Χρήστη"/>
+                  <ComboBox fx:id="userComboBox" promptText="Επιλέξτε χρήστη..." styleClass="combo-box" maxWidth="Infinity"/>
+               </children>
+            </VBox>
+
+            <!-- Publication Search Section -->
+            <VBox spacing="6.0" styleClass="form-section" VBox.vgrow="ALWAYS">
+               <children>
+                  <Label styleClass="section-title" text="Αναζήτηση Εντύπου"/>
+                  <HBox alignment="CENTER_LEFT" spacing="8.0">
+                     <children>
+                        <TextField fx:id="publicationSearchField" promptText="Τίτλος εντύπου..." HBox.hgrow="ALWAYS"/>
+                        <Button fx:id="searchPublicationButton" text="Αναζήτηση" styleClass="button"/>
+                     </children>
+                  </HBox>
+                  <Label fx:id="selectedPublicationLabel" styleClass="details-label" text="" wrapText="true"/>
+                  <ListView fx:id="publicationListView" prefHeight="150" VBox.vgrow="ALWAYS"/>
+               </children>
+            </VBox>
+
+            <!-- Copy Selection Section -->
+            <VBox spacing="6.0" styleClass="form-section">
+               <children>
+                  <Label styleClass="section-title" text="Επιλογή Αντιτύπου"/>
+                  <ComboBox fx:id="copyComboBox" promptText="Επιλέξτε αντίτυπο..." styleClass="combo-box" maxWidth="Infinity"/>
+                  <Label fx:id="availableCopiesLabel" styleClass="details-label" text=""/>
+                  <Label fx:id="selectedCopyLabel" styleClass="details-label" text=""/>
+               </children>
+            </VBox>
+
+            <!-- Due Date Section -->
+            <VBox spacing="6.0" styleClass="form-section">
+               <children>
+                  <Label styleClass="section-title" text="Ημερομηνία Επιστροφής"/>
+                  <DatePicker fx:id="dueDatePicker" maxWidth="Infinity"/>
+               </children>
+            </VBox>
+         </children>
+      </VBox>
+
+      <!-- Button Bar -->
+      <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="dialog-button-bar">
+         <children>
+            <Button fx:id="cancelButton" mnemonicParsing="false" styleClass="button-outlined-primary" text="Ακύρωση"/>
+            <Button fx:id="saveButton" defaultButton="true" mnemonicParsing="false" styleClass="button-filled-primary" text="Αποθήκευση"/>
+         </children>
+         <padding>
+            <Insets top="12.0" />
+         </padding>
+      </HBox>
+   </children>
+</VBox>

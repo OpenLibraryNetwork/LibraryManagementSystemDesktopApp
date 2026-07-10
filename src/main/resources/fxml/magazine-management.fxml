@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/11.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.MagazineManagementController" styleClass="table-management-container">
+   <padding>
+      <Insets bottom="16.0" left="16.0" right="16.0" top="16.0" />
+   </padding>
+   <children>
+      <SplitPane dividerPositions="0.5" orientation="VERTICAL" VBox.vgrow="ALWAYS" style="-fx-background-color: transparent;">
+         <items>
+            <!-- Top pane: Magazines list -->
+            <VBox spacing="10.0">
+               <children>
+                  <!-- Search and Action Section -->
+                  <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="search-section">
+                     <children>
+                        <TextField fx:id="searchField" promptText="%common.search" styleClass="text-field" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="action-buttons">
+                           <children>
+                               <Button fx:id="addButton" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%magazine.addMagazine" />
+                               <Button fx:id="editButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%common.edit" />
+                               <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%common.delete" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+
+                  <!-- Magazines Table -->
+                  <VBox styleClass="table-container,table-card" VBox.vgrow="ALWAYS">
+                     <children>
+                        <TableView fx:id="tableView" styleClass="table-view" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="titleColumn" prefWidth="300.0" styleClass="table-column-name" text="%magazine.title" />
+                              <TableColumn fx:id="issnColumn" prefWidth="180.0" text="%magazine.issn" />
+                              <TableColumn fx:id="publisherColumn" prefWidth="250.0" styleClass="table-column-name" text="%magazine.publisher" />
+                              <TableColumn fx:id="issuesCountColumn" prefWidth="100.0" styleClass="table-column-numeric" text="Τεύχη" />
+                           </columns>
+                           <placeholder>
+                              <Label text="%table.placeholder.no.magazines" />
+                           </placeholder>
+                        </TableView>
+                        <!-- Table Footer -->
+                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="table-footer">
+                           <children>
+                              <Label fx:id="statusLabel" styleClass="table-status" text="" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <HBox alignment="CENTER_RIGHT" spacing="4.0" styleClass="pagination-controls">
+                                 <children>
+                                    <Button fx:id="previousButton" disable="true" mnemonicParsing="false" onAction="#handlePrevious" styleClass="page-button" text="&#60;" />
+                                    <HBox fx:id="pageButtonsContainer" alignment="CENTER" spacing="4.0" />
+                                    <Button fx:id="nextButton" disable="true" mnemonicParsing="false" onAction="#handleNext" styleClass="page-button" text="&#62;" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+
+            <!-- Bottom pane: Issues list for selected Magazine -->
+            <VBox spacing="10.0">
+               <children>
+                  <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="search-section">
+                     <children>
+                        <Label fx:id="issuesTitleLabel" style="-fx-font-size: 16px; -fx-font-weight: bold;" text="%magazine.issueList" />
+                        <Region HBox.hgrow="ALWAYS" />
+                        <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="action-buttons">
+                           <children>
+                              <Button fx:id="addIssueButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%magazine.addIssue" />
+                              <Button fx:id="editIssueButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%common.edit" />
+                              <Button fx:id="deleteIssueButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%common.delete" />
+                              <Button fx:id="borrowIssueButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%borrow.borrowIssue" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </HBox>
+
+                  <!-- Issues Table -->
+                  <VBox styleClass="table-container,table-card" VBox.vgrow="ALWAYS">
+                     <children>
+                        <TableView fx:id="issuesTable" styleClass="table-view" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="issueIdColumn" prefWidth="80.0" styleClass="table-column-id" text="%table.column.id" />
+                              <TableColumn fx:id="issueNumberColumn" prefWidth="150.0" styleClass="table-column-numeric" text="%magazine.issue" />
+                              <TableColumn fx:id="issueDateColumn" prefWidth="180.0" text="%magazine.publicationMonthYear" />
+                              <TableColumn fx:id="issueQtyColumn" prefWidth="120.0" styleClass="table-column-numeric" text="%magazine.quantity" />
+                              <TableColumn fx:id="issueAvailableQtyColumn" prefWidth="150.0" styleClass="table-column-numeric" text="%borrow.availableCopies" />
+                           </columns>
+                           <placeholder>
+                              <Label text="%table.placeholder.no.issues" />
+                           </placeholder>
+                        </TableView>
+                        <!-- Table Footer -->
+                        <HBox alignment="CENTER_LEFT" spacing="16.0" styleClass="table-footer">
+                           <children>
+                              <Label fx:id="issueStatusLabel" styleClass="table-status" text="" />
+                              <Region HBox.hgrow="ALWAYS" />
+                              <HBox alignment="CENTER_RIGHT" spacing="4.0" styleClass="pagination-controls">
+                                 <children>
+                                    <Button fx:id="issuePreviousButton" disable="true" mnemonicParsing="false" styleClass="page-button" text="&#60;" />
+                                    <HBox fx:id="issuePageButtonsContainer" alignment="CENTER" spacing="4.0" />
+                                    <Button fx:id="issueNextButton" disable="true" mnemonicParsing="false" styleClass="page-button" text="&#62;" />
+                                 </children>
+                              </HBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </VBox>
+         </items>
+      </SplitPane>
+   </children>
+</VBox>

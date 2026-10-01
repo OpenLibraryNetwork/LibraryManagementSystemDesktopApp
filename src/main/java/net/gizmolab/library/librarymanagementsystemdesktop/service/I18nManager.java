@@ -29,7 +29,7 @@ public class I18nManager {
         
         // Load saved language preference or use default
         String savedLanguage = preferences.get(LANGUAGE_PREFERENCE_KEY, DEFAULT_LOCALE.getLanguage());
-        Locale initialLocale = "el".equals(savedLanguage) ? new Locale("el", "GR") : DEFAULT_LOCALE;
+        Locale initialLocale = "el".equals(savedLanguage) ? Locale.of("el", "GR") : DEFAULT_LOCALE;
         
         // Eagerly load the resource bundle BEFORE setting the locale
         // This ensures currentBundle is immediately available for getMessage() calls
@@ -133,7 +133,7 @@ public class I18nManager {
     public Locale[] getAvailableLocales() {
         return new Locale[] {
             Locale.ENGLISH,
-            new Locale("el", "GR")
+            Locale.of("el", "GR")
         };
     }
     

@@ -26,7 +26,7 @@ class I18nDemoTest {
         assertFalse(i18nManager.isGreek());
         
         // Test Greek
-        i18nManager.setLocale(new Locale("el", "GR"));
+        i18nManager.setLocale(Locale.of("el", "GR"));
         assertEquals("Σύστημα Βιβλιοθήκης", i18nManager.getMessage("app.title"));
         assertEquals("Βιβλία", i18nManager.getMessage("navigation.books"));
         assertEquals("Αποθήκευση", i18nManager.getMessage("common.save"));
@@ -40,7 +40,7 @@ class I18nDemoTest {
         
         // Test display names
         assertEquals("English", i18nManager.getDisplayName(Locale.ENGLISH));
-        assertEquals("Ελληνικά", i18nManager.getDisplayName(new Locale("el", "GR")));
+        assertEquals("Ελληνικά", i18nManager.getDisplayName(Locale.of("el", "GR")));
         
         // Test missing key fallback
         assertEquals("nonexistent.key", i18nManager.getMessage("nonexistent.key"));

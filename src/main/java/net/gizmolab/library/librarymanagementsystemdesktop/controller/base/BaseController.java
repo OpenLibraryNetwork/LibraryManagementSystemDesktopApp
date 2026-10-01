@@ -73,9 +73,8 @@ public abstract class BaseController {
 
     /**
      * Shows an error dialog with the specified title and message.
-     * @deprecated Use alertManager.showError() instead for consistent styling and i18n
+     * Delegates to the AlertManager when it is set, otherwise falls back to a plain JavaFX dialog.
      */
-    @Deprecated
     protected void showError(String title, String message) {
         if (alertManager != null) {
             alertManager.showError(title, message);
@@ -95,9 +94,8 @@ public abstract class BaseController {
 
     /**
      * Shows a warning dialog with the specified title and message.
-     * @deprecated Use alertManager.showWarning() instead for consistent styling and i18n
+     * Delegates to the AlertManager when it is set, otherwise falls back to a plain JavaFX dialog.
      */
-    @Deprecated
     protected void showWarning(String title, String message) {
         if (alertManager != null) {
             alertManager.showWarning(title, message);
@@ -117,9 +115,8 @@ public abstract class BaseController {
 
     /**
      * Shows an information dialog with the specified title and message.
-     * @deprecated Use alertManager.showInfo() instead for consistent styling and i18n
+     * Delegates to the AlertManager when it is set, otherwise falls back to a plain JavaFX dialog.
      */
-    @Deprecated
     protected void showInfo(String title, String message) {
         if (alertManager != null) {
             alertManager.showInfo(title, message);
@@ -139,9 +136,8 @@ public abstract class BaseController {
 
     /**
      * Shows a confirmation dialog and returns true if the user confirms.
-     * @deprecated Use alertManager.showConfirmation() instead for consistent styling and i18n
+     * Delegates to the AlertManager when it is set, otherwise falls back to a plain JavaFX dialog.
      */
-    @Deprecated
     protected boolean showConfirmation(String title, String message) {
         if (alertManager != null) {
             return alertManager.showConfirmation(title, message);
@@ -161,9 +157,8 @@ public abstract class BaseController {
 
     /**
      * Shows a confirmation dialog with custom button text.
-     * @deprecated Use alertManager.showConfirmation() instead for consistent styling and i18n
+     * Delegates to the AlertManager when it is set, otherwise falls back to a plain JavaFX dialog.
      */
-    @Deprecated
     protected boolean showConfirmation(String title, String message, String confirmText, String cancelText) {
         Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
         alert.setTitle(title);

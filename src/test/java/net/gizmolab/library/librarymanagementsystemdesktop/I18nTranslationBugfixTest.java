@@ -92,7 +92,7 @@ class I18nTranslationBugfixTest {
     void greekLocaleDisplaysProperCharacters(@ForAll("greekTranslationKeys") String key) {
         // Create I18nManager and set Greek locale
         I18nManager i18nManager = new I18nManager();
-        i18nManager.setLocale(new Locale("el", "GR"));
+        i18nManager.setLocale(Locale.of("el", "GR"));
         
         // Small delay to ensure listener execution completes
         try {
@@ -268,7 +268,7 @@ class I18nTranslationBugfixTest {
         
         // Switch to opposite locale first (to ensure we're testing a real change)
         Locale oppositeLocale = "en".equals(targetLocale.getLanguage()) ? 
-            new Locale("el", "GR") : Locale.ENGLISH;
+            Locale.of("el", "GR") : Locale.ENGLISH;
         i18nManager.setLocale(oppositeLocale);
         
         // Wait for listener to execute
@@ -310,7 +310,7 @@ class I18nTranslationBugfixTest {
     Arbitrary<Locale> availableLocales() {
         return Arbitraries.of(
             Locale.ENGLISH,
-            new Locale("el", "GR")
+            Locale.of("el", "GR")
         );
     }
 
@@ -463,7 +463,7 @@ class I18nTranslationBugfixTest {
         I18nManager i18nManager = new I18nManager();
         
         // Switch to Greek first (to ensure we're testing a real change)
-        i18nManager.setLocale(new Locale("el", "GR"));
+        i18nManager.setLocale(Locale.of("el", "GR"));
         try {
             Thread.sleep(150);
         } catch (InterruptedException e) {
@@ -522,7 +522,7 @@ class I18nTranslationBugfixTest {
         assertFalse(i18nManager.isGreek(), "isGreek() should return false for English locale");
         
         // Test with Greek locale
-        i18nManager.setLocale(new Locale("el", "GR"));
+        i18nManager.setLocale(Locale.of("el", "GR"));
         try {
             Thread.sleep(100);
         } catch (InterruptedException e) {
@@ -540,7 +540,7 @@ class I18nTranslationBugfixTest {
         // Test getDisplayName
         assertEquals("English", i18nManager.getDisplayName(Locale.ENGLISH),
             "Display name for English should be 'English'");
-        assertEquals("Ελληνικά", i18nManager.getDisplayName(new Locale("el", "GR")),
+        assertEquals("Ελληνικά", i18nManager.getDisplayName(Locale.of("el", "GR")),
             "Display name for Greek should be 'Ελληνικά'");
     }
 
@@ -565,7 +565,7 @@ class I18nTranslationBugfixTest {
         });
         
         // Change locale
-        i18nManager.setLocale(new Locale("el", "GR"));
+        i18nManager.setLocale(Locale.of("el", "GR"));
         
         // Wait for listener
         try {

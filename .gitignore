@@ -46,3 +46,6 @@ logs/
 # ═══════════════════════════════════════════
 *.pem
 *.key
+
+# jqwik test cache
+.jqwik-database

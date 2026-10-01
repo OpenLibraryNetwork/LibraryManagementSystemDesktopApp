@@ -2,7 +2,7 @@
   "data": [
     {
       "id": 1,
-      "documentId": "doc-1",
+      "documentId": "magazine-1",
       "title": "Κοινωνικός Αναρχισμός",
       "qualifier": null,
       "issn": "2241-5580",
@@ -12,7 +12,7 @@
       "reviewed": true,
       "publisher": {
         "id": 1,
-        "documentId": "doc-1",
+        "documentId": "publisher-1",
         "name": "Ελευθεριακές Εκδόσεις Κουρσάλ",
         "biblionetCompanyId": null,
         "address": null,

@@ -2,7 +2,7 @@
   "source": "biblionet",
   "data": {
     "id": 2,
-    "documentId": "doc-2",
+    "documentId": "book-2",
     "title": "Θεραπείας συνέχεια",
     "type": "Βιβλίο",
     "isbn": "9789602116524",
@@ -29,7 +29,7 @@
     "reviewed": true,
     "publisher": {
       "id": 1,
-      "documentId": "doc-1",
+      "documentId": "publisher-1",
       "name": "Νεφέλη",
       "biblionetCompanyId": "212",
       "address": "Ασκληπιού 57\r\n106 80 Αθήνα",
@@ -43,7 +43,7 @@
     "subjects": [
       {
         "id": 1,
-        "documentId": "doc-1",
+        "documentId": "subject-1",
         "subjectTitle": "Νεοελληνική πεζογραφία - Προσωπικές αφηγήσεις",
         "subjectDDC": "889.3",
         "biblionetSubjectId": "20"
@@ -55,7 +55,7 @@
         "id": 2,
         "person": {
           "id": 2,
-          "documentId": "doc-2",
+          "documentId": "person-2",
           "name": "Pino Corrias",
           "qualifier": null,
           "firstname": null,
@@ -69,7 +69,7 @@
         },
         "role": {
           "id": 1,
-          "documentId": "doc-1",
+          "documentId": "role-1",
           "name": "Συγγραφέας",
           "biblionetTypeId": "1"
         }
@@ -78,7 +78,7 @@
         "id": 3,
         "person": {
           "id": 3,
-          "documentId": "doc-3",
+          "documentId": "person-3",
           "name": "Παναγιώτης Σκόνδρας",
           "qualifier": null,
           "firstname": "Παναγιώτης",
@@ -92,7 +92,7 @@
         },
         "role": {
           "id": 2,
-          "documentId": "doc-2",
+          "documentId": "role-2",
           "name": "Μεταφραστής",
           "biblionetTypeId": "2"
         }

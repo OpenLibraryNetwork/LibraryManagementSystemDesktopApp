@@ -2,7 +2,7 @@
   "data": [
     {
       "id": 1,
-      "documentId": "doc-1",
+      "documentId": "person-1",
       "name": "Νίκη Λοϊζίδη",
       "qualifier": null,
       "firstname": "Νίκη",
@@ -17,7 +17,7 @@
     },
     {
       "id": 3,
-      "documentId": "doc-3",
+      "documentId": "person-3",
       "name": "Ομάδα Γειτονιάς",
       "qualifier": null,
       "firstname": null,

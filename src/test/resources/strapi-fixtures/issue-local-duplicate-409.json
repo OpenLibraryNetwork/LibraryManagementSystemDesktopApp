@@ -8,7 +8,7 @@
   "candidates": [
     {
       "id": 1,
-      "documentId": "doc-1",
+      "documentId": "book-1",
       "title": "Κοινωνικός Αναρχισμός",
       "type": "Περιοδικό",
       "isbn": null,
@@ -35,7 +35,7 @@
       "reviewed": false,
       "publisher": {
         "id": 1,
-        "documentId": "doc-1",
+        "documentId": "publisher-1",
         "name": "Ελευθεριακές Εκδόσεις Κουρσάλ",
         "biblionetCompanyId": null,
         "address": null,
@@ -51,13 +51,13 @@
       "copies": [
         {
           "id": 1,
-          "documentId": "doc-1",
+          "documentId": "copy-1",
           "copyNumber": 1,
           "isAvailable": true,
           "condition": "NEW",
           "library": {
             "id": 1,
-            "documentId": "doc-1",
+            "documentId": "library-1",
             "name": "Βιβλιοθήκη Fixtures 2γ 1",
             "description": null
           }

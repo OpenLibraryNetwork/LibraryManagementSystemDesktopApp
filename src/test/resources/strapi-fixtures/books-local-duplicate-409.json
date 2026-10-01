@@ -8,7 +8,7 @@
   "candidates": [
     {
       "id": 1,
-      "documentId": "doc-1",
+      "documentId": "book-1",
       "title": "Μανιφέστο",
       "type": "Μπροσούρα",
       "isbn": null,
@@ -40,7 +40,7 @@
           "id": 1,
           "person": {
             "id": 1,
-            "documentId": "doc-1",
+            "documentId": "person-1",
             "name": "Ομάδα Γειτονιάς",
             "qualifier": null,
             "firstname": null,
@@ -54,7 +54,7 @@
           },
           "role": {
             "id": 1,
-            "documentId": "doc-1",
+            "documentId": "role-1",
             "name": "Συγγραφέας",
             "biblionetTypeId": "1"
           }
@@ -63,13 +63,13 @@
       "copies": [
         {
           "id": 1,
-          "documentId": "doc-1",
+          "documentId": "copy-1",
           "copyNumber": 1,
           "isAvailable": true,
           "condition": "NEW",
           "library": {
             "id": 1,
-            "documentId": "doc-1",
+            "documentId": "library-1",
             "name": "Βιβλιοθήκη Fixtures 2β 1",
             "description": null
           }

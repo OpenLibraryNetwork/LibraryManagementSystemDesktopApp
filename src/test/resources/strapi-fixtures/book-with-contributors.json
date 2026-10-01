@@ -1,7 +1,7 @@
 {
   "data": {
     "id": 1,
-    "documentId": "doc-1",
+    "documentId": "book-1",
     "title": "Θεραπείας συνέχεια",
     "type": "Βιβλίο",
     "isbn": "9789602116524",
@@ -28,7 +28,7 @@
     "reviewed": true,
     "publisher": {
       "id": 1,
-      "documentId": "doc-1",
+      "documentId": "publisher-1",
       "name": "Νεφέλη",
       "biblionetCompanyId": "212",
       "address": "Ασκληπιού 57, Αθήνα",
@@ -42,7 +42,7 @@
     "subjects": [
       {
         "id": 1,
-        "documentId": "doc-1",
+        "documentId": "subject-1",
         "subjectTitle": "Νεοελληνική πεζογραφία",
         "subjectDDC": "889.3",
         "biblionetSubjectId": "20"
@@ -53,7 +53,7 @@
         "id": 1,
         "person": {
           "id": 1,
-          "documentId": "doc-1",
+          "documentId": "person-1",
           "name": "Νίκη Λοϊζίδη",
           "qualifier": null,
           "firstname": "Νίκη",
@@ -67,7 +67,7 @@
         },
         "role": {
           "id": 1,
-          "documentId": "doc-1",
+          "documentId": "role-1",
           "name": "Συγγραφέας",
           "biblionetTypeId": "1"
         }
@@ -76,7 +76,7 @@
         "id": 2,
         "person": {
           "id": 2,
-          "documentId": "doc-2",
+          "documentId": "person-2",
           "name": "Παναγιώτης Σκόνδρας",
           "qualifier": "1960-",
           "firstname": null,
@@ -90,7 +90,7 @@
         },
         "role": {
           "id": 2,
-          "documentId": "doc-2",
+          "documentId": "role-2",
           "name": "Μεταφραστής",
           "biblionetTypeId": "2"
         }
@@ -99,26 +99,26 @@
     "copies": [
       {
         "id": 1,
-        "documentId": "doc-1",
+        "documentId": "copy-1",
         "copyNumber": 1,
         "isAvailable": true,
         "condition": "NEW",
         "library": {
           "id": 1,
-          "documentId": "doc-1",
+          "documentId": "library-1",
           "name": "Βιβλιοθήκη Fixtures 1",
           "description": null
         }
       },
       {
         "id": 2,
-        "documentId": "doc-2",
+        "documentId": "copy-2",
         "copyNumber": 2,
         "isAvailable": false,
         "condition": "NEW",
         "library": {
           "id": 1,
-          "documentId": "doc-1",
+          "documentId": "library-1",
           "name": "Βιβλιοθήκη Fixtures 1",
           "description": null
         }

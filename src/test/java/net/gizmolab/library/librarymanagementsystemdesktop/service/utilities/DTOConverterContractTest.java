@@ -94,4 +94,14 @@ class DTOConverterContractTest {
         assertEquals(1, pub.getContributors().size());
         assertEquals("Νίκη Λοϊζίδη", pub.getAuthorNames());
     }
+
+    @Test
+    void fixtureDocumentIdsCarryTheirType() throws IOException {
+        JsonNode book = fixture("book-with-contributors.json").path("data");
+        assertTrue(book.path("documentId").asString().startsWith("book-"), book.path("documentId").asString());
+        String library = book.path("copies").get(0).path("library").path("documentId").asString();
+        assertTrue(library.startsWith("library-"), library);
+        assertEquals(2, DTOConverter.publicationFromJson(fixture("book-with-contributors.json"), library).getTotalCopies());
+        assertEquals(0, DTOConverter.publicationFromJson(fixture("book-with-contributors.json"), "library-999").getTotalCopies());
+    }
 }

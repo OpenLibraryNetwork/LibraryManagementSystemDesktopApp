@@ -40,6 +40,7 @@ public class MainNavigationController extends BaseController implements Initiali
     @FXML private Button authorsButton;
     @FXML private Button publishersButton;
     @FXML private Button magazinesButton;
+    @FXML private Button logoutButton;
     @FXML private StackPane contentArea;
     @FXML private Label welcomeLabel;
     @FXML private Label welcomeMessageLabel;
@@ -471,6 +472,9 @@ public class MainNavigationController extends BaseController implements Initiali
                 }
                 if (magazinesButton != null) {
                     magazinesButton.setText(i18nManager.getMessage("navigation.magazines"));
+                }
+                if (logoutButton != null) {
+                    logoutButton.setText(i18nManager.getMessage("navigation.logout"));
                 }
 
                 updateStatus("status.ready");

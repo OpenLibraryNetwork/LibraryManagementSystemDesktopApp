@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.CopyManagementModalController" spacing="12.0" styleClass="form-dialog-container">
+   <padding>
+      <Insets bottom="24.0" left="24.0" right="24.0" top="24.0" />
+   </padding>
+   <children>
+      <Label fx:id="titleLabel" styleClass="form-label" text="Αντίτυπα:" />
+      
+      <!-- Action Section -->
+      <HBox alignment="CENTER_LEFT" spacing="8.0">
+         <children>
+            <Button fx:id="addButton" mnemonicParsing="false" onAction="#handleAdd" styleClass="button-outlined-primary" text="Προσθήκη" />
+            <Button fx:id="editButton" disable="true" mnemonicParsing="false" onAction="#handleEdit" styleClass="button-outlined-primary" text="Αλλαγή Κατάστασης" />
+            <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" onAction="#handleDelete" styleClass="button-outlined-primary" text="Διαγραφή" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="refreshButton" mnemonicParsing="false" onAction="#handleRefresh" styleClass="button-outlined-primary" text="Ανανέωση" />
+         </children>
+      </HBox>
+
+      <!-- Table Section -->
+      <TableView fx:id="copiesTable" styleClass="table-view" VBox.vgrow="ALWAYS" prefHeight="300.0">
+         <columns>
+            <TableColumn fx:id="copyNumberColumn" prefWidth="100.0" text="Copy #" />
+            <TableColumn fx:id="conditionColumn" prefWidth="150.0" text="Κατάσταση" />
+            <TableColumn fx:id="availableColumn" prefWidth="100.0" text="Διαθέσιμο" />
+         </columns>
+         <placeholder>
+            <Label text="Δεν υπάρχουν αντίτυπα" />
+         </placeholder>
+      </TableView>
+
+      <!-- Status -->
+      <HBox alignment="CENTER_LEFT" spacing="16.0">
+         <children>
+            <Label fx:id="statusLabel" text="0 αντίτυπα (0 διαθέσιμα)" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

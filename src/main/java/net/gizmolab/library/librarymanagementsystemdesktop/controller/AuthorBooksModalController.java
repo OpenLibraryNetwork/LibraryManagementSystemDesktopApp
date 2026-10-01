@@ -1,12 +1,15 @@
 package net.gizmolab.library.librarymanagementsystemdesktop.controller;
 
-import net.gizmolab.library.librarymanagementsystemdesktop.dto.AuthorDTO;
+import net.gizmolab.library.librarymanagementsystemdesktop.dto.PersonDTO;
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.PublicationDTO;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.I18nManager;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.StrapiApiClient;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.utilities.DTOConverter;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.PaginationHelper;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.TableCellFactory;
+import net.gizmolab.library.librarymanagementsystemdesktop.config.FXMLLoaderFactory;
+import net.gizmolab.library.librarymanagementsystemdesktop.util.UserMessages;
+import net.gizmolab.library.librarymanagementsystemdesktop.util.AuthorWorksFilter;
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -39,6 +42,7 @@ public class AuthorBooksModalController {
 
     @Autowired private StrapiApiClient strapiApiClient;
     @Autowired private I18nManager i18nManager;
+    @Autowired private FXMLLoaderFactory fxmlLoaderFactory;
 
     // FXML components
     @FXML private TableView<PublicationDTO> booksTable;
@@ -73,7 +77,7 @@ public class AuthorBooksModalController {
         loadData();
     }
 
-    public void setAuthor(AuthorDTO author) {
+    public void setAuthor(PersonDTO author) {
         if (author != null) {
             this.authorId = author.getId();
             loadData();
@@ -94,6 +98,16 @@ public class AuthorBooksModalController {
         setupTableColumns();
         setupSearchFunctionality();
         setupPagination();
+
+        booksTable.setRowFactory(tv -> {
+            TableRow<PublicationDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    openPublication(row.getItem());
+                }
+            });
+            return row;
+        });
     }
 
     private void setupTableColumns() {
@@ -165,10 +179,9 @@ public class AuthorBooksModalController {
         Task<List<PublicationDTO>> loadTask = new Task<>() {
             @Override
             protected List<PublicationDTO> call() throws Exception {
-                JsonNode response = strapiApiClient.get(
-                    "/api/books?filters[authors][id][$eq]=" + authorId +
-                    "&populate=authors,publisher,copies&pagination[pageSize]=100");
-                return DTOConverter.publicationsFromJson(response);
+                Long libId = net.gizmolab.library.librarymanagementsystemdesktop.service.AuthService.getCurrentLibraryId();
+                JsonNode response = strapiApiClient.getAuthorBooksInLibrary(authorId, libId);
+                return AuthorWorksFilter.authoredBy(DTOConverter.publicationsFromJson(response), authorId);
             }
         };
 
@@ -272,6 +285,16 @@ public class AuthorBooksModalController {
     }
 
     // FXML event handlers
+
+    private void openPublication(PublicationDTO publication) {
+        try {
+            PublicationDetailWindow.open(fxmlLoaderFactory, booksTable.getScene().getWindow(), publication);
+            loadData(); // copies may have changed
+        } catch (Exception e) {
+            logger.error("Failed to open publication {}", publication.getId(), e);
+            new Alert(Alert.AlertType.ERROR, UserMessages.describe(e)).showAndWait();
+        }
+    }
 
     @FXML
     private void handleClose() {

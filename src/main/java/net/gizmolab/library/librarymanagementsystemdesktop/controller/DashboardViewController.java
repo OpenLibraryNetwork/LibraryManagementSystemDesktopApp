@@ -2,6 +2,10 @@ package net.gizmolab.library.librarymanagementsystemdesktop.controller;
 
 import net.gizmolab.library.librarymanagementsystemdesktop.controller.base.BaseController;
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.BorrowDTO;
+import net.gizmolab.library.librarymanagementsystemdesktop.dto.PublicationDTO;
+import net.gizmolab.library.librarymanagementsystemdesktop.service.utilities.DTOConverter;
+import net.gizmolab.library.librarymanagementsystemdesktop.util.PopularPublications;
+import net.gizmolab.library.librarymanagementsystemdesktop.util.PublicationDetailFormatter;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.*;
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.concurrent.Task;
@@ -13,6 +17,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.Priority;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.shape.Rectangle;
 import javafx.application.Platform;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.AuthService;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.IBorrowService;
@@ -24,6 +31,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -58,8 +66,12 @@ public class DashboardViewController extends BaseController implements Initializ
                 // Strapi: total publications
                 long totalPubs = 0;
                 try {
-                    JsonNode response = strapiApiClient.get(
-                        "/api/books?pagination[pageSize]=1&pagination[withCount]=true");
+                    Long libId = AuthService.getCurrentLibraryId();
+                    String queryUrl = "/api/books?pagination[pageSize]=1&pagination[withCount]=true";
+                    if (libId != null) {
+                        queryUrl += "&filters[copies][library][id][$eq]=" + libId;
+                    }
+                    JsonNode response = strapiApiClient.get(queryUrl);
                     if (response != null && response.has("meta")) {
                         totalPubs = response.path("meta").path("pagination").path("total").asLong(0);
                     }
@@ -118,25 +130,17 @@ public class DashboardViewController extends BaseController implements Initializ
             protected Void call() {
                 List<BorrowDTO> allBorrows = borrowService.getAllBorrowsAsDTO();
 
-                // Count borrows per publication title
-                Map<String, Long> counts = allBorrows.stream()
-                    .filter(b -> b.getPublicationTitle() != null)
-                    .collect(Collectors.groupingBy(
-                        BorrowDTO::getPublicationTitle,
-                        Collectors.counting()));
-
-                var topBooks = counts.entrySet().stream()
-                    .sorted(Map.Entry.<String, Long>comparingByValue().reversed())
-                    .limit(10)
-                    .toList();
+                // Count borrows per publication (two books may share a title)
+                List<PopularPublications.Entry> topBooks = PopularPublications.top(allBorrows, 10);
+                Map<String, String> covers = coversOf(topBooks);
 
                 Platform.runLater(() -> {
                     popularBooksContainer.getChildren().clear();
                     int rank = 1;
-                    long maxCount = topBooks.isEmpty() ? 1 : topBooks.get(0).getValue();
+                    long maxCount = topBooks.isEmpty() ? 1 : topBooks.get(0).count();
 
                     for (var entry : topBooks) {
-                        HBox row = createBookRow(entry.getKey(), entry.getValue(), rank, maxCount);
+                        HBox row = createBookRow(entry.title(), entry.count(), rank, maxCount, covers.get(coverKey(entry)));
                         popularBooksContainer.getChildren().add(row);
                         rank++;
                     }
@@ -152,7 +156,28 @@ public class DashboardViewController extends BaseController implements Initializ
         t.start();
     }
 
-    private HBox createBookRow(String title, long borrowCount, int rank, long maxCount) {
+    /** Cover URL per publication, for those that have one in our catalog (Biblionet imports). */
+    private Map<String, String> coversOf(List<PopularPublications.Entry> entries) {
+        Map<String, String> covers = new HashMap<>();
+        for (PopularPublications.Entry entry : entries) {
+            if (entry.publicationId() == null) continue;
+            try {
+                PublicationDTO pub = DTOConverter.publicationFromJson(strapiApiClient.getPublicationById(entry.publicationId()));
+                if (pub == null || !PopularPublications.coverBelongsTo(entry.title(), pub.getTitle())) continue;
+                String url = PublicationDetailFormatter.resolveCoverUrl(pub.getCoverImageUrl(), authService.getStrapiBaseUrl());
+                if (url != null) covers.put(coverKey(entry), url);
+            } catch (Exception e) {
+                logger.debug("No cover for publication {}: {}", entry.publicationId(), e.getMessage());
+            }
+        }
+        return covers;
+    }
+
+    private static String coverKey(PopularPublications.Entry entry) {
+        return entry.publicationId() + "|" + entry.title();
+    }
+
+    private HBox createBookRow(String title, long borrowCount, int rank, long maxCount, String coverUrl) {
         HBox row = new HBox();
         row.getStyleClass().add("popular-book-row");
         row.setAlignment(javafx.geometry.Pos.CENTER_LEFT);
@@ -165,6 +190,21 @@ public class DashboardViewController extends BaseController implements Initializ
         // 2. Cover StackPane
         StackPane coverPane = new StackPane();
         coverPane.getStyleClass().addAll("popular-cover", "cover-gradient-" + (((rank - 1) % 10) + 1));
+        if (coverUrl != null) {
+            // Thumbnail over the gradient; if the image fails to load the gradient simply stays
+            ImageView cover = new ImageView();
+            cover.setFitWidth(32);
+            cover.setFitHeight(42);
+            Rectangle clip = new Rectangle(32, 42);
+            clip.setArcWidth(8);
+            clip.setArcHeight(8);
+            cover.setClip(clip);
+            Image image = new Image(coverUrl, 64, 84, false, true, true);
+            image.progressProperty().addListener((obs, old, progress) -> {
+                if (progress.doubleValue() >= 1.0 && !image.isError()) cover.setImage(image);
+            });
+            coverPane.getChildren().add(cover);
+        }
 
         // 3. Book Details VBox
         VBox detailsVBox = new VBox();

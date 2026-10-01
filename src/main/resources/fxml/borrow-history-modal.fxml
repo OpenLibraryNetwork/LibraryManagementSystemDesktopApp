@@ -29,7 +29,7 @@
          <children>
             <TableView fx:id="historyTable" styleClass="table-view" VBox.vgrow="ALWAYS">
                <columns>
-                  <TableColumn fx:id="bookTitleColumn" prefWidth="200.0" text="%borrowHistory.column.bookTitle" />
+                  <TableColumn fx:id="publicationTitleColumn" prefWidth="200.0" text="%borrowHistory.column.bookTitle" />
                   <TableColumn fx:id="authorColumn" prefWidth="160.0" text="%borrowHistory.column.author" />
                   <TableColumn fx:id="copyNumberColumn" prefWidth="90.0" text="%borrowHistory.column.copyNumber" />
                   <TableColumn fx:id="borrowDateColumn" prefWidth="110.0" text="%borrowHistory.column.borrowDate" />

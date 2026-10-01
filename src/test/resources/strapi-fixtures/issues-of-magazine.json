@@ -1,0 +1,186 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "attributes": {
+        "title": "Κοινωνικός Αναρχισμός",
+        "type": "Περιοδικό",
+        "isbn": null,
+        "subtitle": "Αφιέρωμα",
+        "yearPublished": null,
+        "description": null,
+        "summary": null,
+        "pages": null,
+        "language": null,
+        "originalLanguage": null,
+        "coverImageUrl": null,
+        "binding": null,
+        "edition": null,
+        "dimensions": null,
+        "place": null,
+        "category": null,
+        "series": null,
+        "price": null,
+        "weight": null,
+        "biblionetId": null,
+        "biblionetCategoryId": null,
+        "issueNumber": "5",
+        "publicationMonthYear": "Δεκέμβριος 2016",
+        "reviewed": false,
+        "contributors": [],
+        "publisher": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "name": "Ελευθεριακές Εκδόσεις Κουρσάλ",
+              "biblionetCompanyId": null,
+              "address": null,
+              "phone": null,
+              "email": null,
+              "website": null,
+              "alternativeName": null,
+              "qualifier": null,
+              "reviewed": false
+            }
+          }
+        },
+        "subjects": {
+          "data": []
+        },
+        "copies": {
+          "data": [
+            {
+              "id": 1,
+              "attributes": {
+                "copyNumber": 1,
+                "isAvailable": true,
+                "condition": "NEW",
+                "library": {
+                  "data": {
+                    "id": 1,
+                    "attributes": {
+                      "name": "Βιβλιοθήκη Fixtures 2γ 1",
+                      "description": null
+                    }
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": 2,
+      "attributes": {
+        "title": "Κοινωνικός Αναρχισμός",
+        "type": "Περιοδικό",
+        "isbn": null,
+        "subtitle": null,
+        "yearPublished": null,
+        "description": null,
+        "summary": null,
+        "pages": null,
+        "language": null,
+        "originalLanguage": null,
+        "coverImageUrl": null,
+        "binding": null,
+        "edition": null,
+        "dimensions": null,
+        "place": null,
+        "category": null,
+        "series": null,
+        "price": null,
+        "weight": null,
+        "biblionetId": null,
+        "biblionetCategoryId": null,
+        "issueNumber": "10",
+        "publicationMonthYear": null,
+        "reviewed": false,
+        "contributors": [],
+        "publisher": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "name": "Ελευθεριακές Εκδόσεις Κουρσάλ",
+              "biblionetCompanyId": null,
+              "address": null,
+              "phone": null,
+              "email": null,
+              "website": null,
+              "alternativeName": null,
+              "qualifier": null,
+              "reviewed": false
+            }
+          }
+        },
+        "subjects": {
+          "data": []
+        },
+        "copies": {
+          "data": []
+        }
+      }
+    },
+    {
+      "id": 3,
+      "attributes": {
+        "title": "Κοινωνικός Αναρχισμός",
+        "type": "Περιοδικό",
+        "isbn": null,
+        "subtitle": null,
+        "yearPublished": null,
+        "description": null,
+        "summary": null,
+        "pages": null,
+        "language": null,
+        "originalLanguage": null,
+        "coverImageUrl": null,
+        "binding": null,
+        "edition": null,
+        "dimensions": null,
+        "place": null,
+        "category": null,
+        "series": null,
+        "price": null,
+        "weight": null,
+        "biblionetId": null,
+        "biblionetCategoryId": null,
+        "issueNumber": null,
+        "publicationMonthYear": "Άνοιξη 2020",
+        "reviewed": false,
+        "contributors": [],
+        "publisher": {
+          "data": {
+            "id": 1,
+            "attributes": {
+              "name": "Ελευθεριακές Εκδόσεις Κουρσάλ",
+              "biblionetCompanyId": null,
+              "address": null,
+              "phone": null,
+              "email": null,
+              "website": null,
+              "alternativeName": null,
+              "qualifier": null,
+              "reviewed": false
+            }
+          }
+        },
+        "subjects": {
+          "data": []
+        },
+        "copies": {
+          "data": []
+        }
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pageSize": 100,
+      "pageCount": 1,
+      "total": 3
+    }
+  }
+}

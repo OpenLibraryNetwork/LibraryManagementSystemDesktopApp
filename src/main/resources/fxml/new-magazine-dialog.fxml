@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.NewMagazineDialogController"
+      spacing="12.0" styleClass="form-dialog-container" prefWidth="560.0">
+   <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+   <children>
+      <Label fx:id="messageLabel" wrapText="true" styleClass="text-muted" visible="false" managed="false" />
+      <GridPane hgap="10.0" vgap="8.0">
+         <columnConstraints>
+            <ColumnConstraints minWidth="170.0" />
+            <ColumnConstraints hgrow="ALWAYS" />
+         </columnConstraints>
+         <children>
+            <Label text="%magazine.title" GridPane.rowIndex="0" />
+            <TextField fx:id="titleField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label text="%catalog.qualifier" GridPane.rowIndex="1" />
+            <TextField fx:id="qualifierField" promptText="%catalog.qualifier.prompt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="%magazine.issn" GridPane.rowIndex="2" />
+            <TextField fx:id="issnField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="%magazine.place" GridPane.rowIndex="3" />
+            <TextField fx:id="placeField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="%magazine.periodicity" GridPane.rowIndex="4" />
+            <TextField fx:id="periodicityField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+         </children>
+      </GridPane>
+      <Label text="%form.publisher" styleClass="form-label" />
+      <fx:include fx:id="publisher" source="publisher-picker.fxml" />
+      <Label fx:id="errorLabel" styleClass="label-error" wrapText="true" visible="false" managed="false" />
+      <VBox fx:id="duplicatesBox" spacing="6.0" visible="false" managed="false">
+         <children>
+            <Label text="%dialog.duplicate.magazine" styleClass="form-label" wrapText="true" />
+            <ListView fx:id="duplicatesList" prefHeight="100.0" />
+            <Label text="%dialog.duplicate.magazineHint" wrapText="true" />
+            <Button fx:id="useExistingButton" text="%dialog.useExisting" onAction="#handleUseExisting" disable="true" />
+         </children>
+      </VBox>
+      <HBox alignment="CENTER_RIGHT" spacing="8.0">
+         <children>
+            <Button text="%common.cancel" onAction="#handleCancel" styleClass="button-outlined-primary" />
+            <Button fx:id="createButton" text="%dialog.create" onAction="#handleCreate" styleClass="button-filled-primary" defaultButton="true" />
+         </children>
+      </HBox>
+   </children>
+</VBox>

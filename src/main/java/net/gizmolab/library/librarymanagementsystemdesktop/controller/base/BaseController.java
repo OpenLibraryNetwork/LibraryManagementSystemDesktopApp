@@ -5,6 +5,7 @@ import net.gizmolab.library.librarymanagementsystemdesktop.service.GlobalExcepti
 import net.gizmolab.library.librarymanagementsystemdesktop.service.I18nManager;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.ValidationManager;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.StylesheetHelper;
+import net.gizmolab.library.librarymanagementsystemdesktop.util.UserMessages;
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
@@ -208,27 +209,28 @@ public abstract class BaseController {
     protected String getLocalizedMessage(String key, Object... args) {
         String message = getLocalizedMessage(key);
         if (args.length > 0) {
-            return String.format(message, args);
+            // The bundles use MessageFormat placeholders ("Σύνολο: {0} στοιχεία"), not String.format ones
+            return java.text.MessageFormat.format(message, args);
         }
         return message;
     }
 
     /**
-     * Handles exceptions in a consistent way across all controllers.
-     * @deprecated Use exceptionHandler.handleException() instead for comprehensive error handling
+     * Logs the error and shows a short Greek message to the user.
+     * The GlobalExceptionHandler only logs, so without this the user would see nothing.
      */
-    @Deprecated
     protected void handleException(String operation, Exception e) {
         if (exceptionHandler != null) {
             exceptionHandler.handleException(operation, e);
         } else {
-            // Fallback
             logger.error("Error during {}: {}", operation, e.getMessage(), e);
-            
-            String title = getLocalizedMessage("error.title");
-            String message = getLocalizedMessage("error.operation.failed", operation, e.getMessage());
-            
+        }
+        String title = getLocalizedMessage("error.title");
+        String message = UserMessages.describe(e);
+        if (Platform.isFxApplicationThread()) {
             showError(title, message);
+        } else {
+            Platform.runLater(() -> showError(title, message));
         }
     }
 

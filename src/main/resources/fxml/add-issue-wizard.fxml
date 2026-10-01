@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.AddIssueWizardController"
+            styleClass="form-dialog-container">
+   <center>
+      <StackPane>
+         <children>
+            <StackPane fx:id="startPage">
+               <children>
+                  <VBox fx:id="magazinePane" spacing="12.0">
+                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                     <children>
+                        <Label text="%wizard.issue.codePrompt" styleClass="form-label" />
+                        <HBox spacing="8.0">
+                           <children>
+                              <TextField fx:id="codeField" HBox.hgrow="ALWAYS" />
+                              <Button fx:id="searchButton" text="%wizard.search" onAction="#handleSearch" defaultButton="true" />
+                           </children>
+                        </HBox>
+                        <Label fx:id="codeMessage" styleClass="label-error" wrapText="true" />
+                        <TableView fx:id="magazinesTable" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="magTitleColumn" prefWidth="280.0" text="%magazine.title" />
+                              <TableColumn fx:id="magIssnColumn" prefWidth="110.0" text="%magazine.issn" />
+                              <TableColumn fx:id="magPublisherColumn" prefWidth="220.0" text="%magazine.publisher" />
+                              <TableColumn fx:id="magInLibraryColumn" prefWidth="140.0" text="%wizard.issue.inLibrary" />
+                           </columns>
+                           <placeholder>
+                              <Label fx:id="magazinesPlaceholder" wrapText="true" />
+                           </placeholder>
+                        </TableView>
+                        <HBox spacing="8.0">
+                           <children>
+                              <Button fx:id="selectMagazineButton" text="%wizard.issue.select" onAction="#handleSelectMagazine" disable="true" />
+                              <Button fx:id="newMagazineButton" text="%wizard.issue.newMagazine" onAction="#handleNewMagazine" disable="true" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+                  <VBox fx:id="issuesPane" spacing="12.0" visible="false" managed="false">
+                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                     <children>
+                        <Label fx:id="magazineHeader" styleClass="title-3" wrapText="true" />
+                        <Label fx:id="magazineDetails" wrapText="true" />
+                        <Label fx:id="magazineSource" styleClass="text-muted" wrapText="true" />
+                        <TableView fx:id="issuesTable" VBox.vgrow="ALWAYS">
+                           <columns>
+                              <TableColumn fx:id="issueNumberColumn" prefWidth="110.0" text="%magazine.issueNumber" />
+                              <TableColumn fx:id="issuePeriodColumn" prefWidth="180.0" text="%magazine.period" />
+                              <TableColumn fx:id="issueThemeColumn" prefWidth="280.0" text="%magazine.theme" />
+                              <TableColumn fx:id="issueInLibraryColumn" prefWidth="140.0" text="%wizard.issue.inLibrary" />
+                           </columns>
+                           <placeholder>
+                              <Label fx:id="issuesPlaceholder" wrapText="true" />
+                           </placeholder>
+                        </TableView>
+                        <HBox spacing="8.0">
+                           <children>
+                              <Button fx:id="selectIssueButton" text="%wizard.issue.select" onAction="#handleSelectIssue" disable="true" />
+                              <Button text="%wizard.issue.newIssue" onAction="#handleNewIssue" />
+                           </children>
+                        </HBox>
+                     </children>
+                  </VBox>
+               </children>
+            </StackPane>
+
+            <ScrollPane fx:id="previewPage" fitToWidth="true">
+               <content>
+                  <VBox spacing="12.0">
+                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                     <children>
+                        <Label fx:id="previewNote" styleClass="form-label" wrapText="true" />
+                        <fx:include fx:id="summary" source="publication-summary.fxml" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+
+            <ScrollPane fx:id="formPage" fitToWidth="true">
+               <content>
+                  <VBox spacing="12.0">
+                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                     <children>
+                        <VBox fx:id="duplicatesBox" spacing="6.0">
+                           <children>
+                              <Label fx:id="duplicatesLabel" styleClass="form-label" wrapText="true" />
+                              <ListView fx:id="duplicatesList" prefHeight="90.0" />
+                              <Button fx:id="useExistingButton" text="%wizard.useExisting" onAction="#handleUseExisting" disable="true" />
+                           </children>
+                        </VBox>
+                        <fx:include fx:id="form" source="local-publication-form.fxml" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+
+            <VBox fx:id="copiesPage" spacing="12.0">
+               <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+               <children>
+                  <Label fx:id="copiesTitle" styleClass="form-label" wrapText="true" />
+                  <fx:include fx:id="copies" source="copies-input.fxml" />
+                  <Label fx:id="copiesMessage" wrapText="true" />
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" spacing="8.0">
+         <padding><Insets bottom="12.0" left="20.0" right="20.0" top="12.0" /></padding>
+         <children>
+            <ProgressIndicator fx:id="busyIndicator" prefHeight="24.0" prefWidth="24.0" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="backButton" text="%wizard.back" onAction="#handleBack" />
+            <Button fx:id="nextButton" text="%common.next" onAction="#handleNext" styleClass="button-filled-primary" />
+            <Button fx:id="finishButton" text="%wizard.finish" onAction="#handleFinish" styleClass="button-filled-primary" />
+            <Button fx:id="cancelButton" text="%common.cancel" onAction="#handleCancel" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

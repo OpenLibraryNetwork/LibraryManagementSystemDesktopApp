@@ -1,0 +1,26 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "attributes": {
+        "name": "Συγγραφέας",
+        "biblionetTypeId": "1"
+      }
+    },
+    {
+      "id": 2,
+      "attributes": {
+        "name": "Μεταφραστής",
+        "biblionetTypeId": "2"
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pageSize": 25,
+      "pageCount": 1,
+      "total": 2
+    }
+  }
+}

@@ -34,6 +34,7 @@
          <Button fx:id="usersButton" styleClass="sidebar-button,nav-item" text="%navigation.users" onAction="#onUsersClicked" maxWidth="Infinity" graphicTextGap="10.0" />
          <Button fx:id="borrowsButton" styleClass="sidebar-button,nav-item" text="%navigation.borrows" onAction="#onBorrowsClicked" maxWidth="Infinity" graphicTextGap="10.0" />
          <Button fx:id="publicationsButton" styleClass="sidebar-button,nav-item" text="%navigation.books" onAction="#onPublicationsClicked" maxWidth="Infinity" graphicTextGap="10.0" />
+         <Button fx:id="brochuresButton" styleClass="sidebar-button,nav-item" text="%navigation.brochures" onAction="#onBrochuresClicked" maxWidth="Infinity" graphicTextGap="10.0" />
          <Button fx:id="magazinesButton" styleClass="sidebar-button,nav-item" text="%navigation.magazines" onAction="#onMagazinesClicked" maxWidth="Infinity" graphicTextGap="10.0" />
          <Button fx:id="authorsButton" styleClass="sidebar-button,nav-item" text="%navigation.authors" onAction="#onAuthorsClicked" maxWidth="Infinity" graphicTextGap="10.0" />
          <Button fx:id="publishersButton" styleClass="sidebar-button,nav-item" text="%navigation.publishers" onAction="#onPublishersClicked" maxWidth="Infinity" graphicTextGap="10.0" />
@@ -47,6 +48,7 @@
                <Insets top="10.0" bottom="10.0" left="10.0" right="10.0" />
             </VBox.margin>
             <Button fx:id="languageButton" styleClass="sidebar-button, language-button-compact" onAction="#onLanguageButtonClicked" />
+            <Button fx:id="logoutButton" styleClass="sidebar-button" text="%navigation.logout" onAction="#onLogoutClicked" />
          </HBox>
       </VBox>
    </left>

@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.AddBookWizardController"
+            styleClass="form-dialog-container">
+   <center>
+      <StackPane>
+         <children>
+            <VBox fx:id="startPage" spacing="12.0">
+               <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+               <children>
+                  <Label text="%wizard.isbn.prompt" styleClass="form-label" />
+                  <HBox spacing="8.0">
+                     <children>
+                        <TextField fx:id="isbnField" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="searchButton" text="%wizard.search" onAction="#handleSearch" defaultButton="true" />
+                     </children>
+                  </HBox>
+                  <Label fx:id="isbnMessage" styleClass="label-error" wrapText="true" />
+               </children>
+            </VBox>
+
+            <ScrollPane fx:id="previewPage" fitToWidth="true">
+               <content>
+                  <VBox spacing="12.0">
+                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                     <children>
+                        <Label fx:id="previewNote" styleClass="form-label" wrapText="true" />
+                        <fx:include fx:id="summary" source="publication-summary.fxml" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+
+            <ScrollPane fx:id="formPage" fitToWidth="true">
+               <content>
+                  <VBox spacing="12.0">
+                     <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+                     <children>
+                        <VBox fx:id="duplicatesBox" spacing="6.0">
+                           <children>
+                              <Label fx:id="duplicatesLabel" styleClass="form-label" wrapText="true" />
+                              <ListView fx:id="duplicatesList" prefHeight="90.0" />
+                              <Button fx:id="useExistingButton" text="%wizard.useExisting" onAction="#handleUseExisting" disable="true" />
+                           </children>
+                        </VBox>
+                        <fx:include fx:id="form" source="local-publication-form.fxml" />
+                     </children>
+                  </VBox>
+               </content>
+            </ScrollPane>
+
+            <VBox fx:id="copiesPage" spacing="12.0">
+               <padding><Insets bottom="20.0" left="20.0" right="20.0" top="20.0" /></padding>
+               <children>
+                  <Label fx:id="copiesTitle" styleClass="form-label" wrapText="true" />
+                  <fx:include fx:id="copies" source="copies-input.fxml" />
+                  <Label fx:id="copiesMessage" wrapText="true" />
+               </children>
+            </VBox>
+         </children>
+      </StackPane>
+   </center>
+   <bottom>
+      <HBox alignment="CENTER_RIGHT" spacing="8.0">
+         <padding><Insets bottom="12.0" left="20.0" right="20.0" top="12.0" /></padding>
+         <children>
+            <ProgressIndicator fx:id="busyIndicator" prefHeight="24.0" prefWidth="24.0" />
+            <Region HBox.hgrow="ALWAYS" />
+            <Button fx:id="backButton" text="%wizard.back" onAction="#handleBack" />
+            <Button fx:id="nextButton" text="%common.next" onAction="#handleNext" styleClass="button-filled-primary" />
+            <Button fx:id="finishButton" text="%wizard.finish" onAction="#handleFinish" styleClass="button-filled-primary" />
+            <Button fx:id="cancelButton" text="%common.cancel" onAction="#handleCancel" />
+         </children>
+      </HBox>
+   </bottom>
+</BorderPane>

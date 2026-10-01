@@ -34,6 +34,7 @@ import java.time.Duration;
 public class AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
+    private static AuthService instance;
 
     @Autowired
     private KeyStoreService keyStoreService;
@@ -48,6 +49,21 @@ public class AuthService {
     private Long userId;
     private boolean online = false;
 
+    /** Outcome of a login attempt, with the Greek message the login screen shows. */
+    public enum LoginResult {
+        SUCCESS(null),
+        BAD_CREDENTIALS("Λάθος όνομα χρήστη ή κωδικός."),
+        NO_LIBRARY("Ο λογαριασμός δεν έχει βιβλιοθήκη. Ζητήστε από τον διαχειριστή να σας αντιστοιχίσει σε βιβλιοθήκη."),
+        UNREACHABLE("Δεν υπάρχει σύνδεση με τον server."),
+        FAILED("Η σύνδεση απέτυχε.");
+
+        private final String message;
+
+        LoginResult(String message) { this.message = message; }
+
+        public String getMessage() { return message; }
+    }
+
     public AuthService() {
         this.httpClient = HttpClient.newBuilder()
                 .connectTimeout(Duration.ofSeconds(10))
@@ -60,6 +76,7 @@ public class AuthService {
      */
     @PostConstruct
     public void init() {
+        instance = this;
         try {
             String storedJwt = keyStoreService.getSecret(KeyStoreService.KEY_JWT);
             String storedLibraryId = keyStoreService.getSecret(KeyStoreService.KEY_LIBRARY_ID);
@@ -69,7 +86,14 @@ public class AuthService {
                 this.jwt = storedJwt;
                 this.libraryId = Long.parseLong(storedLibraryId);
                 this.strapiBaseUrl = storedUrl;
-                this.online = testConnection();
+                int status = sessionCheckStatus();
+                if (status == 401) {
+                    // Token rejected (expired, or the Strapi database was recreated): force a new login
+                    log.info("Stored session rejected by the server — login required");
+                    logout();
+                    return;
+                }
+                this.online = status == 200;
                 log.info("Restored session from keystore — library={}, online={}", libraryId, online);
             } else {
                 log.info("No stored session found — login required");
@@ -91,7 +115,7 @@ public class AuthService {
      * @param password Strapi password
      * @return true if login successful
      */
-    public boolean login(String url, String username, String password) {
+    public LoginResult login(String url, String username, String password) {
         try {
             // Normalize URL
             String baseUrl = url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
@@ -110,9 +134,13 @@ public class AuthService {
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
 
+            if (response.statusCode() == 400 || response.statusCode() == 401) {
+                log.warn("Login rejected — status {}: {}", response.statusCode(), response.body());
+                return LoginResult.BAD_CREDENTIALS;
+            }
             if (response.statusCode() != 200) {
                 log.warn("Login failed — status {}: {}", response.statusCode(), response.body());
-                return false;
+                return LoginResult.FAILED;
             }
 
             // Parse response
@@ -122,7 +150,7 @@ public class AuthService {
             String newJwt = json.path("jwt").asText(null);
             if (newJwt == null || newJwt.isEmpty()) {
                 log.error("Login response missing JWT");
-                return false;
+                return LoginResult.FAILED;
             }
 
             // Extract user info
@@ -140,7 +168,7 @@ public class AuthService {
 
             if (newLibraryId == null || newLibraryId == 0) {
                 log.error("User has no assigned library — cannot proceed");
-                return false;
+                return LoginResult.NO_LIBRARY;
             }
 
             // Store in memory
@@ -156,14 +184,14 @@ public class AuthService {
             keyStoreService.storeSecret(KeyStoreService.KEY_STRAPI_URL, baseUrl);
 
             log.info("Login successful — user={}, library={}", newUserId, newLibraryId);
-            return true;
+            return LoginResult.SUCCESS;
 
-        } catch (java.net.ConnectException e) {
+        } catch (java.net.ConnectException | java.net.http.HttpConnectTimeoutException e) {
             log.error("Cannot connect to Strapi at {}: {}", url, e.getMessage());
-            return false;
+            return LoginResult.UNREACHABLE;
         } catch (Exception e) {
             log.error("Login failed: {}", e.getMessage(), e);
-            return false;
+            return LoginResult.FAILED;
         }
     }
 
@@ -180,7 +208,14 @@ public class AuthService {
      * Test connection to Strapi with the current JWT.
      */
     private boolean testConnection() {
-        if (jwt == null || strapiBaseUrl == null) return false;
+        return sessionCheckStatus() == 200;
+    }
+
+    /**
+     * HTTP status of GET /api/users/me with the current JWT, or -1 when the server cannot be reached.
+     */
+    private int sessionCheckStatus() {
+        if (jwt == null || strapiBaseUrl == null) return -1;
         try {
             HttpRequest request = HttpRequest.newBuilder()
                     .uri(URI.create(strapiBaseUrl + "/api/users/me"))
@@ -189,10 +224,10 @@ public class AuthService {
                     .timeout(Duration.ofSeconds(5))
                     .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            return response.statusCode() == 200;
+            return response.statusCode();
         } catch (Exception e) {
             log.debug("Connection test failed: {}", e.getMessage());
-            return false;
+            return -1;
         }
     }
 
@@ -222,6 +257,13 @@ public class AuthService {
      */
     public Long getLibraryId() {
         return libraryId;
+    }
+
+    public static Long getCurrentLibraryId() {
+        if (instance != null) {
+            return instance.libraryId;
+        }
+        return null;
     }
 
     /**

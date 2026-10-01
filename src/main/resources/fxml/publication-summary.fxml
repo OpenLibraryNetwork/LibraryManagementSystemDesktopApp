@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.PublicationSummaryController"
+      spacing="12.0">
+   <children>
+      <HBox spacing="20.0">
+         <children>
+            <ImageView fx:id="coverImage" fitWidth="140.0" fitHeight="200.0" preserveRatio="true" />
+            <VBox spacing="6.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <Label fx:id="titleLabel" styleClass="title-3" wrapText="true" />
+                  <Label fx:id="subtitleLabel" wrapText="true" />
+                  <Label fx:id="originLabel" styleClass="text-muted" />
+                  <GridPane fx:id="detailsGrid" hgap="12.0" vgap="4.0" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+
+      <Label text="%publication.detail.contributors" styleClass="form-label" />
+      <VBox fx:id="contributorsBox" spacing="2.0" />
+
+      <Label text="%publication.detail.subjects" styleClass="form-label" />
+      <VBox fx:id="subjectsBox" spacing="2.0" />
+
+      <VBox fx:id="summarySection" spacing="4.0">
+         <children>
+            <Label text="%publication.detail.summary" styleClass="form-label" />
+            <TextArea fx:id="summaryArea" editable="false" wrapText="true" prefRowCount="4" />
+         </children>
+      </VBox>
+   </children>
+</VBox>

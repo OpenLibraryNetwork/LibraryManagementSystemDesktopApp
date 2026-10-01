@@ -17,9 +17,7 @@
             <Region HBox.hgrow="ALWAYS" />
             <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="action-buttons">
                <children>
-                  <Button fx:id="addButton" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%publisher.addPublisher" />
-                  <Button fx:id="editButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%common.edit" />
-                  <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%common.delete" />
+                  <Button fx:id="editButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%publisher.publications" />
                </children>
             </HBox>
          </children>
@@ -30,8 +28,12 @@
          <children>
             <TableView fx:id="tableView" styleClass="table-view" VBox.vgrow="ALWAYS">
                <columns>
-                  <TableColumn fx:id="bookCountColumn" prefWidth="80.0" styleClass="table-column-id" text="%table.column.id" />
-                  <TableColumn fx:id="nameColumn" prefWidth="400.0" styleClass="table-column-name" text="%publisher.name" />
+                  <TableColumn fx:id="nameColumn" prefWidth="240.0" styleClass="table-column-name" text="%publisher.name" />
+                  <TableColumn fx:id="addressColumn" prefWidth="200.0" text="%publisher.address" />
+                  <TableColumn fx:id="phoneColumn" prefWidth="110.0" text="%publisher.phone" />
+                  <TableColumn fx:id="emailColumn" prefWidth="170.0" text="%publisher.email" />
+                  <TableColumn fx:id="websiteColumn" prefWidth="170.0" text="%publisher.website" />
+                  <TableColumn fx:id="bookCountColumn" prefWidth="120.0" text="%publisher.booksInLibrary" />
                </columns>
                <placeholder>
                   <Label text="%table.placeholder.no.publishers" />

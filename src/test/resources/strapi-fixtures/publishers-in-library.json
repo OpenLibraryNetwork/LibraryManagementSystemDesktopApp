@@ -1,0 +1,27 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "attributes": {
+        "name": "Νεφέλη",
+        "biblionetCompanyId": "212",
+        "address": "Ασκληπιού 57, Αθήνα",
+        "phone": null,
+        "email": null,
+        "website": null,
+        "alternativeName": null,
+        "qualifier": null,
+        "reviewed": true,
+        "bookCount": 1
+      }
+    }
+  ],
+  "meta": {
+    "pagination": {
+      "page": 1,
+      "pageSize": 25,
+      "pageCount": 1,
+      "total": 1
+    }
+  }
+}

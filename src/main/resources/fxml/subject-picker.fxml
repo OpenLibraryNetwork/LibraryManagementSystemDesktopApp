@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.picker.SubjectPickerController"
+      spacing="6.0">
+   <children>
+      <TextField fx:id="filterField" promptText="%picker.subject.filter" />
+      <ListView fx:id="subjectsList" prefHeight="120.0" />
+      <Label fx:id="countLabel" styleClass="text-muted" />
+   </children>
+</VBox>

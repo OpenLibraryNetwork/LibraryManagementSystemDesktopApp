@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<ScrollPane xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+            fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.PublicationDetailModalController"
+            fitToWidth="true">
+   <content>
+      <VBox spacing="16.0" styleClass="form-dialog-container">
+         <padding><Insets bottom="24.0" left="24.0" right="24.0" top="24.0" /></padding>
+         <children>
+            <fx:include fx:id="summary" source="publication-summary.fxml" />
+            <Separator />
+            <Label text="%publication.detail.copies" styleClass="form-label" />
+            <fx:include fx:id="copies" source="copy-management-modal.fxml" />
+         </children>
+      </VBox>
+   </content>
+</ScrollPane>

@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<HBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.CopiesInputController"
+      spacing="12.0" alignment="CENTER_LEFT">
+   <children>
+      <Label text="%copies.count" />
+      <Spinner fx:id="countSpinner" prefWidth="90.0" editable="true" />
+      <Label text="%copies.condition" />
+      <ComboBox fx:id="conditionCombo" prefWidth="120.0" />
+   </children>
+</HBox>

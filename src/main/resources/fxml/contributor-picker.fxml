@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.picker.ContributorPickerController"
+      spacing="6.0">
+   <children>
+      <HBox spacing="8.0">
+         <children>
+            <TextField fx:id="searchField" promptText="%picker.person.search" HBox.hgrow="ALWAYS" />
+            <ComboBox fx:id="roleCombo" prefWidth="170.0" />
+            <Button text="%picker.person.new" onAction="#handleNewPerson" />
+         </children>
+      </HBox>
+      <ListView fx:id="suggestionsList" prefHeight="110.0" />
+      <Label fx:id="statusLabel" styleClass="text-muted" wrapText="true" />
+      <HBox spacing="8.0">
+         <children>
+            <ListView fx:id="selectedList" prefHeight="110.0" HBox.hgrow="ALWAYS" />
+            <VBox spacing="4.0">
+               <children>
+                  <Button text="▲" onAction="#handleUp" />
+                  <Button text="▼" onAction="#handleDown" />
+                  <Button text="✕" onAction="#handleRemove" />
+               </children>
+            </VBox>
+         </children>
+      </HBox>
+   </children>
+</VBox>

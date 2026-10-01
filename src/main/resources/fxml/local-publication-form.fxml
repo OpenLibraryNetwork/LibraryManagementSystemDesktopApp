@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<VBox xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1"
+      fx:controller="net.gizmolab.library.librarymanagementsystemdesktop.controller.LocalPublicationFormController"
+      spacing="10.0">
+   <children>
+      <Label fx:id="messageLabel" wrapText="true" styleClass="text-muted" />
+      <Label fx:id="errorLabel" styleClass="label-error" wrapText="true" visible="false" managed="false" />
+
+      <GridPane fx:id="issueGrid" hgap="10.0" vgap="8.0" visible="false" managed="false">
+         <columnConstraints>
+            <ColumnConstraints minWidth="150.0" />
+            <ColumnConstraints hgrow="ALWAYS" />
+         </columnConstraints>
+         <children>
+            <Label text="%form.magazine" GridPane.rowIndex="0" />
+            <Label fx:id="magazineValue" styleClass="form-label" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label text="%form.issueNumber" GridPane.rowIndex="1" />
+            <TextField fx:id="issueNumberField" promptText="%form.issueNumber.prompt" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label text="%form.period" GridPane.rowIndex="2" />
+            <TextField fx:id="periodField" promptText="%form.period.prompt" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+         </children>
+      </GridPane>
+
+      <GridPane hgap="10.0" vgap="8.0">
+         <columnConstraints>
+            <ColumnConstraints minWidth="150.0" />
+            <ColumnConstraints hgrow="ALWAYS" />
+         </columnConstraints>
+         <children>
+            <Label fx:id="isbnCaption" text="ISBN" GridPane.rowIndex="0" />
+            <Label fx:id="isbnValue" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+            <Label fx:id="titleCaption" text="%book.title" GridPane.rowIndex="1" />
+            <TextField fx:id="titleField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+            <Label fx:id="subtitleCaption" text="%form.subtitle" GridPane.rowIndex="2" />
+            <TextField fx:id="subtitleField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+            <Label text="%form.year" GridPane.rowIndex="3" />
+            <TextField fx:id="yearField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+            <Label text="%form.pages" GridPane.rowIndex="4" />
+            <TextField fx:id="pagesField" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+            <Label text="%form.language" GridPane.rowIndex="5" />
+            <TextField fx:id="languageField" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+         </children>
+      </GridPane>
+
+      <Label text="%form.contributors" styleClass="form-label" />
+      <fx:include fx:id="contributors" source="contributor-picker.fxml" />
+
+      <VBox fx:id="publisherBox" spacing="10.0">
+         <children>
+            <Label text="%form.publisher" styleClass="form-label" />
+            <fx:include fx:id="publisher" source="publisher-picker.fxml" />
+         </children>
+      </VBox>
+
+      <Label text="%form.subjects" styleClass="form-label" />
+      <fx:include fx:id="subjects" source="subject-picker.fxml" />
+
+      <Label text="%form.summary" styleClass="form-label" />
+      <TextArea fx:id="summaryArea" wrapText="true" prefRowCount="3" />
+
+      <TitledPane fx:id="morePane" text="%form.more" expanded="false">
+         <content>
+            <GridPane hgap="10.0" vgap="8.0">
+               <columnConstraints>
+                  <ColumnConstraints minWidth="150.0" />
+                  <ColumnConstraints hgrow="ALWAYS" />
+               </columnConstraints>
+               <children>
+                  <Label text="%form.originalLanguage" GridPane.rowIndex="0" />
+                  <TextField fx:id="originalLanguageField" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                  <Label text="%form.edition" GridPane.rowIndex="1" />
+                  <TextField fx:id="editionField" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                  <Label text="%form.series" GridPane.rowIndex="2" />
+                  <TextField fx:id="seriesField" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                  <Label text="%form.place" GridPane.rowIndex="3" />
+                  <TextField fx:id="placeField" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+               </children>
+            </GridPane>
+         </content>
+      </TitledPane>
+   </children>
+</VBox>

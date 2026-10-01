@@ -27,6 +27,14 @@ import java.util.Map;
 @Service
 public class StrapiApiClient {
 
+    /**
+     * Populate for every publication request: contributors (person + role), publisher, subjects, copies with library.
+     * Must stay equal to JAVAFX_BOOK_POPULATE in library-strapi/tests/integration/contract-fixtures.test.js.
+     */
+    public static final String BOOK_POPULATE =
+            "populate[contributors][populate][0]=person&populate[contributors][populate][1]=role"
+            + "&populate[publisher]=true&populate[subjects]=true&populate[copies][populate][0]=library";
+
     private final AuthService authService;
     private final HttpClient httpClient;
     private final ObjectMapper objectMapper;
@@ -111,17 +119,22 @@ public class StrapiApiClient {
 
     private JsonNode executeRequest(HttpRequest request) throws IOException, InterruptedException {
         HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+        int status = response.statusCode();
 
-        if (response.statusCode() == 401) {
+        if (status == 401) {
             throw new AuthenticationExpiredException("Session expired. Please login again.");
         }
 
-        if (response.statusCode() == 409) {
-            throw new ConflictException("Resource conflict (e.g., already borrowed or already returned).");
+        if (status == 409) {
+            throw new ConflictException(response.body(), serverMessageOf(response.body()));
         }
 
-        if (response.statusCode() >= 400) {
-            throw new StrapiApiException("Strapi API error " + response.statusCode() + ": " + response.body());
+        if (status == 403) {
+            throw new ForbiddenException(response.body(), serverMessageOf(response.body()));
+        }
+
+        if (status >= 400) {
+            throw new StrapiApiException(status, response.body(), serverMessageOf(response.body()));
         }
 
         if (response.body() == null || response.body().isEmpty()) {
@@ -129,6 +142,20 @@ public class StrapiApiClient {
         }
 
         return objectMapper.readTree(response.body());
+    }
+
+    /**
+     * Strapi errors look like { "error": { "status": 400, "message": "..." } }.
+     * Returns that message, or null when the body is not such JSON.
+     */
+    private String serverMessageOf(String body) {
+        if (body == null || body.isBlank()) return null;
+        try {
+            JsonNode message = objectMapper.readTree(body).path("error").path("message");
+            return message.isTextual() ? message.asText() : null;
+        } catch (IOException e) {
+            return null;
+        }
     }
 
     // ═══════════════════════════════════════════════════════
@@ -158,40 +185,67 @@ public class StrapiApiClient {
     // ═══════════════════════════════════════════════════════
 
     /**
-     * Search Biblionet by ISBN. Returns { source, data } or null.
-     */
-    public JsonNode searchBiblionetByIsbn(String isbn) throws IOException, InterruptedException {
-        return get("/api/books/search-biblionet?isbn=" + isbn);
-    }
-
-    /**
      * Get a publication by Strapi ID.
      */
     public JsonNode getPublicationById(Long id) throws IOException, InterruptedException {
-        return get("/api/books/" + id + "?populate=authors,publisher,copies");
+        return get("/api/books/" + id + "?" + BOOK_POPULATE);
     }
 
     /**
      * Search publications by title (case-insensitive contains).
      */
     public JsonNode searchPublications(String query) throws IOException, InterruptedException {
-        return get("/api/books?filters[title][$containsi]=" + encode(query) + "&populate=authors,publisher,copies");
+        Long libId = AuthService.getCurrentLibraryId();
+        String url = "/api/books?filters[title][$containsi]=" + encode(query) + "&" + BOOK_POPULATE;
+        if (libId != null) {
+            url += "&filters[copies][library][id][$eq]=" + libId;
+        }
+        return get(url);
     }
 
     /**
      * Get all publications of a specific type.
      */
     public JsonNode searchByType(String type) throws IOException, InterruptedException {
-        return get("/api/books?filters[type][$eq]=" + encode(type) + "&populate=authors,publisher,copies&pagination[pageSize]=100");
+        Long libId = AuthService.getCurrentLibraryId();
+        String url = "/api/books?filters[type][$eq]=" + encode(type) + "&" + BOOK_POPULATE + "&pagination[pageSize]=100";
+        if (libId != null) {
+            url += "&filters[copies][library][id][$eq]=" + libId;
+        }
+        return get(url);
     }
 
+
     /**
-     * Create a new publication (Brochure or Periodical — Books come from Biblionet).
+     * Get publications with server-side pagination, optional type filter and search.
+     *
+     * @param page        1-based page number
+     * @param pageSize    items per page
+     * @param typeFilter  null = all types, or "Βιβλίο", "Μπροσούρα", "Περιοδικό"
+     * @param searchQuery null = no search, or text to search in title/isbn
+     * @return Strapi v4 response with data array and meta.pagination
      */
-    public JsonNode createPublication(Map<String, Object> data) throws IOException, InterruptedException {
-        Map<String, Object> body = new HashMap<>();
-        body.put("data", data);
-        return post("/api/books", body);
+    public JsonNode getPublicationsPaginated(int page, int pageSize, String typeFilter, String searchQuery)
+            throws IOException, InterruptedException {
+        Long libId = AuthService.getCurrentLibraryId();
+
+        StringBuilder url = new StringBuilder("/api/books?" + BOOK_POPULATE);
+        url.append("&pagination[page]=").append(page);
+        url.append("&pagination[pageSize]=").append(pageSize);
+
+        if (typeFilter != null && !typeFilter.isEmpty()) {
+            url.append("&filters[type][$eq]=").append(encode(typeFilter));
+        }
+        if (searchQuery != null && !searchQuery.trim().isEmpty()) {
+            String q = encode(searchQuery.trim());
+            url.append("&filters[$or][0][title][$containsi]=").append(q);
+            url.append("&filters[$or][1][isbn][$containsi]=").append(q);
+        }
+        if (libId != null) {
+            url.append("&filters[copies][library][id][$eq]=").append(libId);
+        }
+
+        return get(url.toString());
     }
 
     // ═══════════════════════════════════════════════════════
@@ -269,68 +323,134 @@ public class StrapiApiClient {
     }
 
     // ═══════════════════════════════════════════════════════
-    // Magazines (Περιοδικά)
+    // Library catalog views (read-only): authors, publishers, their books
     // ═══════════════════════════════════════════════════════
 
-    /**
-     * Get all magazines.
-     */
-    public JsonNode getAllMagazines() throws IOException, InterruptedException {
-        return get("/api/magazines?populate=publisher,issues&pagination[pageSize]=100");
+    /** Authors with at least one publication that has a copy in the user's library (server decides the library). */
+    public JsonNode getAuthorsInLibrary(int page, int pageSize, String query) throws IOException, InterruptedException {
+        return get("/api/persons/authors?page=" + page + "&pageSize=" + pageSize + queryParam(query));
+    }
+
+    /** Publishers of publications that have a copy in the user's library. */
+    public JsonNode getPublishersInLibrary(int page, int pageSize, String query) throws IOException, InterruptedException {
+        return get("/api/publishers/in-library?page=" + page + "&pageSize=" + pageSize + queryParam(query));
     }
 
     /**
-     * Create a new magazine.
+     * Publications of the library in which the person is a contributor (any role).
+     * The caller keeps only those where the person is an author (AuthorWorksFilter).
      */
-    public JsonNode createMagazine(String title, String issn, Long publisherId) throws IOException, InterruptedException {
-        Map<String, Object> data = new HashMap<>();
-        data.put("title", title);
-        data.put("issn", issn);
-        if (publisherId != null) {
-            data.put("publisher", publisherId);
-        }
-        Map<String, Object> body = new HashMap<>();
-        body.put("data", data);
-        return post("/api/magazines", body);
+    public JsonNode getAuthorBooksInLibrary(Long personId, Long libraryId) throws IOException, InterruptedException {
+        return get("/api/books?" + BOOK_POPULATE
+                + "&filters[contributors][person][id][$eq]=" + personId
+                + "&filters[copies][library][id][$eq]=" + libraryId
+                + "&pagination[pageSize]=100&sort=title");
+    }
+
+    /** Publications of the library by this publisher. */
+    public JsonNode getPublisherBooksInLibrary(Long publisherId, Long libraryId) throws IOException, InterruptedException {
+        return get("/api/books?" + BOOK_POPULATE
+                + "&filters[publisher][id][$eq]=" + publisherId
+                + "&filters[copies][library][id][$eq]=" + libraryId
+                + "&pagination[pageSize]=100&sort=title");
+    }
+
+    private String queryParam(String query) {
+        return (query == null || query.isBlank()) ? "" : "&q=" + encode(query.trim());
     }
 
     // ═══════════════════════════════════════════════════════
-    // Authors (Συγγραφείς)
+    // Subjects (Θέματα DDC) — Read only (Biblionet)
     // ═══════════════════════════════════════════════════════
 
-    public JsonNode getAllAuthors() throws IOException, InterruptedException {
-        return get("/api/authors?pagination[pageSize]=100&populate=books");
+    /** One page of subjects; Strapi caps pageSize at 100 (config/api.js maxLimit), so callers loop over pages. */
+    public JsonNode getSubjectsPage(int page) throws IOException, InterruptedException {
+        return get("/api/subjects?sort=subjectDDC&pagination[page]=" + page + "&pagination[pageSize]=100");
     }
 
-    public JsonNode createAuthor(String name, String firstname, String lastname) throws IOException, InterruptedException {
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", name);
-        data.put("firstname", firstname);
-        data.put("lastname", lastname);
-        Map<String, Object> body = new HashMap<>();
-        body.put("data", data);
-        return post("/api/authors", body);
-    }
 
     // ═══════════════════════════════════════════════════════
-    // Publishers (Εκδότες)
+    // Adding publications (sub-project 2β)
     // ═══════════════════════════════════════════════════════
 
-    public JsonNode getAllPublishers() throws IOException, InterruptedException {
-        return get("/api/publishers?pagination[pageSize]=100&populate=books");
+    /** Catalog first, then Biblionet import. Response: { source: catalog|biblionet|not-found, data }. */
+    public JsonNode isbnLookup(String isbn) throws IOException, InterruptedException {
+        return post("/api/books/isbn-lookup", Map.of("isbn", isbn));
     }
 
-    public JsonNode createPublisher(String name) throws IOException, InterruptedException {
-        Map<String, Object> data = new HashMap<>();
-        data.put("name", name);
-        Map<String, Object> body = new HashMap<>();
-        body.put("data", data);
-        return post("/api/publishers", body);
+    /** { data: {...} } — see PublicationDraft.toPayload(). 201 local, 200 biblionet/catalog, 409 with candidates. */
+    public JsonNode createLocalPublication(Map<String, Object> payload) throws IOException, InterruptedException {
+        return post("/api/books/local", payload);
+    }
+
+    public JsonNode createLocalPerson(Map<String, Object> payload) throws IOException, InterruptedException {
+        return post("/api/persons/local", payload);
+    }
+
+    public JsonNode createLocalPublisher(Map<String, Object> payload) throws IOException, InterruptedException {
+        return post("/api/publishers/local", payload);
+    }
+
+    /** Brochures of the whole network (not only this library). */
+    public JsonNode searchBrochures(String query) throws IOException, InterruptedException {
+        return get("/api/books/search?type=" + encode("Μπροσούρα") + "&q=" + encode(query.trim()));
+    }
+
+    public JsonNode searchPersons(String query) throws IOException, InterruptedException {
+        return get("/api/persons/search?q=" + encode(query.trim()));
+    }
+
+    public JsonNode searchPublishers(String query) throws IOException, InterruptedException {
+        return get("/api/publishers/search?q=" + encode(query.trim()));
+    }
+
+    public JsonNode getContributorRoles() throws IOException, InterruptedException {
+        return get("/api/contributor-roles?sort=biblionetTypeId&pagination[pageSize]=100");
+    }
+
+    /** The highest-numbered copy of a publication in a library (for the next free copy number). */
+    public JsonNode getCopiesInLibrary(Long publicationId, Long libraryId) throws IOException, InterruptedException {
+        return get("/api/copies?filters[publication][id][$eq]=" + publicationId
+                + "&filters[library][id][$eq]=" + libraryId
+                + "&sort=copyNumber:desc&pagination[pageSize]=1");
     }
 
     // ═══════════════════════════════════════════════════════
     // Utilities
     // ═══════════════════════════════════════════════════════
+
+    // ═══════════════════════════════════════════════════════
+    // Magazines (sub-project 2γ): shared catalog, issues are books of type "Περιοδικό"
+    // ═══════════════════════════════════════════════════════
+
+    /** ISSN or serial barcode → { source: catalog|nlg|not-found|unavailable, issn, data }. */
+    public JsonNode magazineIssnLookup(String code) throws IOException, InterruptedException {
+        return post("/api/magazines/issn-lookup", Map.of("code", code));
+    }
+
+    /** { data: {...} } — see MagazineDraft.toPayload(). 201, or 409 with candidates. */
+    public JsonNode createLocalMagazine(Map<String, Object> payload) throws IOException, InterruptedException {
+        return post("/api/magazines/local", payload);
+    }
+
+    /** Whole network, with attributes.issuesInLibrary for the user's library. */
+    public JsonNode searchMagazines(String query) throws IOException, InterruptedException {
+        return get("/api/magazines/search?q=" + encode(query.trim()));
+    }
+
+    /** Magazines with an issue that has a copy in the user's library (server decides the library). */
+    public JsonNode getMagazinesInLibrary(int page, int pageSize, String query) throws IOException, InterruptedException {
+        return get("/api/magazines/in-library?page=" + page + "&pageSize=" + pageSize + queryParam(query));
+    }
+
+    /** One page (of 100) of a magazine's issues; only those with a copy in the library when libraryId is given. */
+    public JsonNode getIssues(Long magazineId, Long libraryId, int page) throws IOException, InterruptedException {
+        return get("/api/books?" + BOOK_POPULATE
+                + "&filters[type][$eq]=" + encode("Περιοδικό")
+                + "&filters[magazine][id][$eq]=" + magazineId
+                + (libraryId != null ? "&filters[copies][library][id][$eq]=" + libraryId : "")
+                + "&pagination[page]=" + page + "&pagination[pageSize]=100");
+    }
 
     private String encode(String value) {
         return java.net.URLEncoder.encode(value, java.nio.charset.StandardCharsets.UTF_8);
@@ -348,11 +468,33 @@ public class StrapiApiClient {
         public AuthenticationExpiredException(String message) { super(message); }
     }
 
-    public static class ConflictException extends RuntimeException {
-        public ConflictException(String message) { super(message); }
+    /** 409; the body may carry "candidates" (local cataloguing) — see CatalogService. */
+    public static class ConflictException extends StrapiApiException {
+        public ConflictException(String body, String serverMessage) {
+            super(409, body, serverMessage);
+        }
     }
 
     public static class StrapiApiException extends RuntimeException {
-        public StrapiApiException(String message) { super(message); }
+        private final int status;
+        private final String body;
+        private final String serverMessage;
+
+        public StrapiApiException(int status, String body, String serverMessage) {
+            super("Strapi API error " + status + ": " + body);
+            this.status = status;
+            this.body = body;
+            this.serverMessage = serverMessage;
+        }
+
+        public int getStatus() { return status; }
+        public String getBody() { return body; }
+        public String getServerMessage() { return serverMessage; }
+    }
+
+    public static class ForbiddenException extends StrapiApiException {
+        public ForbiddenException(String body, String serverMessage) {
+            super(403, body, serverMessage);
+        }
     }
 }

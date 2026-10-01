@@ -47,9 +47,9 @@ public class LoginController extends BaseController {
         loginProgress.setVisible(true);
         errorLabel.setVisible(false);
 
-        Task<Boolean> task = new Task<>() {
+        Task<AuthService.LoginResult> task = new Task<>() {
             @Override
-            protected Boolean call() {
+            protected AuthService.LoginResult call() {
                 return authService.login(url, username, password);
             }
         };
@@ -57,10 +57,10 @@ public class LoginController extends BaseController {
         task.setOnSucceeded(e -> {
             loginButton.setDisable(false);
             loginProgress.setVisible(false);
-            if (task.getValue()) {
+            if (task.getValue() == AuthService.LoginResult.SUCCESS) {
                 if (onLoginSuccess != null) onLoginSuccess.run();
             } else {
-                errorLabel.setText("Λάθος στοιχεία σύνδεσης");
+                errorLabel.setText(task.getValue().getMessage());
                 errorLabel.setVisible(true);
             }
         });

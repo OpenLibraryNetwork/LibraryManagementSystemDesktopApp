@@ -17,9 +17,7 @@
             <Region HBox.hgrow="ALWAYS" />
             <HBox alignment="CENTER_RIGHT" spacing="8.0" styleClass="action-buttons">
                <children>
-                  <Button fx:id="addButton" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%author.addAuthor" />
-                  <Button fx:id="editButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%common.edit" />
-                  <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%common.delete" />
+                  <Button fx:id="editButton" disable="true" mnemonicParsing="false" styleClass="button,button-outlined-primary" text="%author.works" />
                </children>
             </HBox>
          </children>
@@ -30,10 +28,9 @@
          <children>
             <TableView fx:id="tableView" styleClass="table-view" VBox.vgrow="ALWAYS">
                <columns>
-                  <TableColumn fx:id="nameColumn" prefWidth="80.0" styleClass="table-column-id" text="%table.column.id" />
-                  <TableColumn fx:id="firstnameColumn" prefWidth="200.0" styleClass="table-column-name" text="%user.firstName" />
-                  <TableColumn fx:id="lastnameColumn" prefWidth="200.0" styleClass="table-column-name" text="%user.lastName" />
-                  <TableColumn fx:id="bookCountColumn" prefWidth="300.0" styleClass="table-column-name" text="%author.name" />
+                  <TableColumn fx:id="nameColumn" prefWidth="360.0" styleClass="table-column-name" text="%author.name" />
+                  <TableColumn fx:id="lifespanColumn" prefWidth="140.0" text="%author.lifespan" />
+                  <TableColumn fx:id="bookCountColumn" prefWidth="180.0" text="%author.booksInLibrary" />
                </columns>
                <placeholder>
                   <Label text="%table.placeholder.no.authors" />

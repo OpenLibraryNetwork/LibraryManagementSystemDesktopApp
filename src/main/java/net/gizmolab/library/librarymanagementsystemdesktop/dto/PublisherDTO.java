@@ -39,5 +39,24 @@ public class PublisherDTO {
     public void setBookCount(int bookCount) { this.bookCount = bookCount; }
 
     @Override
-    public String toString() { return name; }
+    public String toString() { return getDisplayName(); }
+
+    private String alternativeName;
+    private String qualifier;
+    private boolean reviewed;
+
+    public String getAlternativeName() { return alternativeName; }
+    public void setAlternativeName(String alternativeName) { this.alternativeName = alternativeName; }
+    public String getQualifier() { return qualifier; }
+    public void setQualifier(String qualifier) { this.qualifier = qualifier; }
+    public boolean isReviewed() { return reviewed; }
+    public void setReviewed(boolean reviewed) { this.reviewed = reviewed; }
+
+    /** "Name (qualifier)" when a qualifier exists. */
+    public String getDisplayName() {
+        String base = name != null ? name : "";
+        return (qualifier == null || qualifier.trim().isEmpty()) ? base : base + " (" + qualifier.trim() + ")";
+    }
+
+    public boolean isFromBiblionet() { return biblionetCompanyId != null; }
 }

@@ -1,5 +1,6 @@
 package net.gizmolab.library.librarymanagementsystemdesktop.dto;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -22,16 +23,27 @@ public class PublicationDTO {
     private String edition;
     private String category;
 
+    // Biblionet fields
+    private String biblionetId;
+    private String biblionetCategoryId;
+    private String originalLanguage;
+    private String dimensions;
+    private String place;
+    private String series;
+    private Double price;
+    private Integer weight;
+
+
     // Periodical-specific
-    private Integer issueNumber;
+    private String issueNumber;
     private String publicationMonthYear;
     private Long magazineId;
     private String magazineTitle;
 
     // Relations (flattened for display)
-    private String authorNames;       // Comma-separated
-    private List<AuthorDTO> authors;
     private PublisherDTO publisher;
+    private List<SubjectDTO> subjects;
+
 
     // Copy stats (aggregated from Strapi)
     private int totalCopies;
@@ -68,22 +80,59 @@ public class PublicationDTO {
     public void setEdition(String edition) { this.edition = edition; }
     public String getCategory() { return category; }
     public void setCategory(String category) { this.category = category; }
-    public Integer getIssueNumber() { return issueNumber; }
-    public void setIssueNumber(Integer issueNumber) { this.issueNumber = issueNumber; }
+    public String getIssueNumber() { return issueNumber; }
+    public void setIssueNumber(String issueNumber) { this.issueNumber = issueNumber; }
     public String getPublicationMonthYear() { return publicationMonthYear; }
     public void setPublicationMonthYear(String publicationMonthYear) { this.publicationMonthYear = publicationMonthYear; }
     public Long getMagazineId() { return magazineId; }
     public void setMagazineId(Long magazineId) { this.magazineId = magazineId; }
     public String getMagazineTitle() { return magazineTitle; }
     public void setMagazineTitle(String magazineTitle) { this.magazineTitle = magazineTitle; }
-    public String getAuthorNames() { return authorNames; }
-    public void setAuthorNames(String authorNames) { this.authorNames = authorNames; }
-    public List<AuthorDTO> getAuthors() { return authors; }
-    public void setAuthors(List<AuthorDTO> authors) { this.authors = authors; }
     public PublisherDTO getPublisher() { return publisher; }
     public void setPublisher(PublisherDTO publisher) { this.publisher = publisher; }
     public int getTotalCopies() { return totalCopies; }
     public void setTotalCopies(int totalCopies) { this.totalCopies = totalCopies; }
     public int getAvailableCopies() { return availableCopies; }
     public void setAvailableCopies(int availableCopies) { this.availableCopies = availableCopies; }
+
+    public String getBiblionetId() { return biblionetId; }
+    public void setBiblionetId(String biblionetId) { this.biblionetId = biblionetId; }
+    public String getBiblionetCategoryId() { return biblionetCategoryId; }
+    public void setBiblionetCategoryId(String biblionetCategoryId) { this.biblionetCategoryId = biblionetCategoryId; }
+    public String getOriginalLanguage() { return originalLanguage; }
+    public void setOriginalLanguage(String originalLanguage) { this.originalLanguage = originalLanguage; }
+    public String getDimensions() { return dimensions; }
+    public void setDimensions(String dimensions) { this.dimensions = dimensions; }
+    public String getPlace() { return place; }
+    public void setPlace(String place) { this.place = place; }
+    public String getSeries() { return series; }
+    public void setSeries(String series) { this.series = series; }
+    public Double getPrice() { return price; }
+    public void setPrice(Double price) { this.price = price; }
+    public Integer getWeight() { return weight; }
+    public void setWeight(Integer weight) { this.weight = weight; }
+    public List<SubjectDTO> getSubjects() { return subjects; }
+    public void setSubjects(List<SubjectDTO> subjects) { this.subjects = subjects; }
+
+    private List<ContributorDTO> contributors = new ArrayList<>();
+    private boolean reviewed;
+
+    /** Contributors in presentation order; never null. */
+    public List<ContributorDTO> getContributors() { return contributors; }
+    public void setContributors(List<ContributorDTO> contributors) {
+        this.contributors = contributors != null ? contributors : new ArrayList<>();
+    }
+
+    /** Display names of contributors with the author role, comma-separated ("" if none). */
+    public String getAuthorNames() {
+        return contributors.stream()
+                .filter(c -> c.getRole().isAuthor())
+                .map(c -> c.getPerson().getDisplayName())
+                .collect(java.util.stream.Collectors.joining(", "));
+    }
+
+    public boolean isReviewed() { return reviewed; }
+    public void setReviewed(boolean reviewed) { this.reviewed = reviewed; }
+
+    public boolean isFromBiblionet() { return biblionetId != null; }
 }

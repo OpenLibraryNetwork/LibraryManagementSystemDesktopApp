@@ -34,6 +34,7 @@ public class MainNavigationController extends BaseController implements Initiali
     @FXML private Button languageButton;
     @FXML private Button dashboardButton;
     @FXML private Button publicationsButton;
+    @FXML private Button brochuresButton;
     @FXML private Button usersButton;
     @FXML private Button borrowsButton;
     @FXML private Button authorsButton;
@@ -71,7 +72,17 @@ public class MainNavigationController extends BaseController implements Initiali
         logger.info("MainNavigationController initialized successfully");
     }
 
+    /** True once the sidebar, shortcuts and bindings are set up; a later login only refreshes state. */
+    private boolean mainUiInitialized = false;
+
     private void initializeMainUI() {
+        if (mainUiInitialized) {
+            // Login after a logout: shortcuts and handlers already exist, do not register them twice
+            updateConnectionStatus();
+            Platform.runLater(this::onDashboardClicked);
+            return;
+        }
+        mainUiInitialized = true;
         setupLanguageSelector();
         setupNavigationButtons();
         updateConnectionStatus();
@@ -83,6 +94,19 @@ public class MainNavigationController extends BaseController implements Initiali
 
         // Load the dashboard as the initial view
         Platform.runLater(this::onDashboardClicked);
+    }
+
+    /**
+     * Sidebar "Αποσύνδεση": clears the session (memory + OS keystore) and shows the login screen.
+     */
+    @FXML
+    private void onLogoutClicked() {
+        if (!showConfirmation(getLocalizedMessage("navigation.logout"), getLocalizedMessage("logout.confirm"))) {
+            return;
+        }
+        authService.logout();
+        updateConnectionStatus();
+        showLoginScreen();
     }
 
     private void showLoginScreen() {
@@ -156,13 +180,14 @@ public class MainNavigationController extends BaseController implements Initiali
         IconProvider icons = IconProvider.getInstance();
         if (dashboardButton != null) dashboardButton.setGraphic(icons.getIcon("icon-dashboard", 16));
         if (publicationsButton != null) publicationsButton.setGraphic(icons.getIcon("icon-book", 16));
+        if (brochuresButton != null) brochuresButton.setGraphic(icons.getIcon("icon-brochure", 16));
         if (usersButton != null) usersButton.setGraphic(icons.getIcon("icon-user", 16));
         if (borrowsButton != null) borrowsButton.setGraphic(icons.getIcon("icon-borrow", 16));
         if (authorsButton != null) authorsButton.setGraphic(icons.getIcon("icon-author", 16));
         if (publishersButton != null) publishersButton.setGraphic(icons.getIcon("icon-publisher", 16));
         if (magazinesButton != null) magazinesButton.setGraphic(icons.getIcon("icon-magazine", 16));
 
-        Button[] navButtons = {dashboardButton, publicationsButton, usersButton, borrowsButton, authorsButton, publishersButton, magazinesButton};
+        Button[] navButtons = {dashboardButton, publicationsButton, brochuresButton, usersButton, borrowsButton, authorsButton, publishersButton, magazinesButton};
 
         for (Button button : navButtons) {
             if (button == null) continue;
@@ -214,6 +239,13 @@ public class MainNavigationController extends BaseController implements Initiali
         logger.info("Publications navigation clicked");
         setActiveButton(publicationsButton);
         loadModule("publications", "Publications Management");
+    }
+
+    @FXML
+    private void onBrochuresClicked() {
+        logger.info("Brochures navigation clicked");
+        setActiveButton(brochuresButton);
+        loadModule("brochures", "Brochures");
     }
 
     @FXML
@@ -281,7 +313,13 @@ public class MainNavigationController extends BaseController implements Initiali
                     break;
                 }
                 case "publications": {
-                    var result = fxmlLoaderFactory.<Node, PublicationManagementController>loadWithController("/fxml/publication-management.fxml");
+                    var result = fxmlLoaderFactory.<Node, BookManagementController>loadWithController("/fxml/book-management.fxml");
+                    moduleView = result.getRoot();
+                    controller = result.getController();
+                    break;
+                }
+                case "brochures": {
+                    var result = fxmlLoaderFactory.<Node, BrochureManagementController>loadWithController("/fxml/brochure-management.fxml");
                     moduleView = result.getRoot();
                     controller = result.getController();
                     break;
@@ -415,6 +453,9 @@ public class MainNavigationController extends BaseController implements Initiali
                 }
                 if (publicationsButton != null) {
                     publicationsButton.setText(i18nManager.getMessage("navigation.books"));
+                }
+                if (brochuresButton != null) {
+                    brochuresButton.setText(i18nManager.getMessage("navigation.brochures"));
                 }
                 if (usersButton != null) {
                     usersButton.setText(i18nManager.getMessage("navigation.users"));

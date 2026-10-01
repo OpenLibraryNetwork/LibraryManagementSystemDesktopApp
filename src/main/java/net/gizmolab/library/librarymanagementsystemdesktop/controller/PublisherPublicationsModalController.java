@@ -7,6 +7,8 @@ import net.gizmolab.library.librarymanagementsystemdesktop.service.StrapiApiClie
 import net.gizmolab.library.librarymanagementsystemdesktop.service.utilities.DTOConverter;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.PaginationHelper;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.TableCellFactory;
+import net.gizmolab.library.librarymanagementsystemdesktop.config.FXMLLoaderFactory;
+import net.gizmolab.library.librarymanagementsystemdesktop.util.UserMessages;
 import com.fasterxml.jackson.databind.JsonNode;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -39,6 +41,7 @@ public class PublisherPublicationsModalController {
 
     @Autowired private StrapiApiClient strapiApiClient;
     @Autowired private I18nManager i18nManager;
+    @Autowired private FXMLLoaderFactory fxmlLoaderFactory;
 
     // FXML components
     @FXML private TableView<PublicationDTO> publicationsTable;
@@ -94,6 +97,16 @@ public class PublisherPublicationsModalController {
         setupTableColumns();
         setupSearchFunctionality();
         setupPagination();
+
+        publicationsTable.setRowFactory(tv -> {
+            TableRow<PublicationDTO> row = new TableRow<>();
+            row.setOnMouseClicked(event -> {
+                if (event.getClickCount() == 2 && !row.isEmpty()) {
+                    openPublication(row.getItem());
+                }
+            });
+            return row;
+        });
     }
 
     private void setupTableColumns() {
@@ -167,9 +180,8 @@ public class PublisherPublicationsModalController {
         Task<List<PublicationDTO>> loadTask = new Task<>() {
             @Override
             protected List<PublicationDTO> call() throws Exception {
-                JsonNode response = strapiApiClient.get(
-                    "/api/books?filters[publisher][id][$eq]=" + publisherId +
-                    "&populate=authors,publisher,copies&pagination[pageSize]=100");
+                Long libId = net.gizmolab.library.librarymanagementsystemdesktop.service.AuthService.getCurrentLibraryId();
+                JsonNode response = strapiApiClient.getPublisherBooksInLibrary(publisherId, libId);
                 return DTOConverter.publicationsFromJson(response);
             }
         };
@@ -274,6 +286,16 @@ public class PublisherPublicationsModalController {
     }
 
     // FXML event handlers
+
+    private void openPublication(PublicationDTO publication) {
+        try {
+            PublicationDetailWindow.open(fxmlLoaderFactory, publicationsTable.getScene().getWindow(), publication);
+            loadData(); // copies may have changed
+        } catch (Exception e) {
+            logger.error("Failed to open publication {}", publication.getId(), e);
+            new Alert(Alert.AlertType.ERROR, UserMessages.describe(e)).showAndWait();
+        }
+    }
 
     @FXML
     private void handleClose() {

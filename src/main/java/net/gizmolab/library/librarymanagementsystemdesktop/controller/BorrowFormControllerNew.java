@@ -11,6 +11,7 @@ import net.gizmolab.library.librarymanagementsystemdesktop.service.IUserService;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.StrapiApiClient;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.utilities.DTOConverter;
 import com.fasterxml.jackson.databind.JsonNode;
+import net.gizmolab.library.librarymanagementsystemdesktop.util.PublicationDetailFormatter;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -85,8 +86,8 @@ public class BorrowFormControllerNew extends BaseController {
             (obs, oldVal, newVal) -> {
                 if (newVal != null) {
                     selectedPublication = newVal;
-                    selectedPublicationLabel.setText(newVal.getTitle() +
-                        (newVal.getAuthorNames() != null ? " — " + newVal.getAuthorNames() : ""));
+                    selectedPublicationLabel.setText(PublicationDetailFormatter.displayTitle(newVal) +
+                        PublicationDetailFormatter.authorSuffix(newVal));
                     loadAvailableCopies(newVal);
                 }
             });
@@ -122,9 +123,9 @@ public class BorrowFormControllerNew extends BaseController {
                 if (empty || item == null) {
                     setText("");
                 } else {
-                    setText(item.getTitle() +
+                    setText(PublicationDetailFormatter.displayTitle(item) +
                         " [" + item.getType() + "]" +
-                        (item.getAuthorNames() != null ? " — " + item.getAuthorNames() : "") +
+                        PublicationDetailFormatter.authorSuffix(item) +
                         " (Διαθ: " + item.getAvailableCopies() + "/" + item.getTotalCopies() + ")");
                 }
             }

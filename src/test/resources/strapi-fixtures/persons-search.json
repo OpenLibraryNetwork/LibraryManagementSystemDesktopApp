@@ -1,0 +1,20 @@
+{
+  "data": [
+    {
+      "id": 1,
+      "attributes": {
+        "name": "Ομάδα Γειτονιάς",
+        "qualifier": null,
+        "firstname": null,
+        "middlename": null,
+        "lastname": null,
+        "bornYear": null,
+        "deathYear": null,
+        "biography": null,
+        "biblionetPersonId": null,
+        "reviewed": false
+      }
+    }
+  ],
+  "meta": {}
+}

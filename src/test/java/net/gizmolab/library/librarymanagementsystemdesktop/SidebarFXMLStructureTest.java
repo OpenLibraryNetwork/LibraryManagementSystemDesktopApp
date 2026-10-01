@@ -88,32 +88,17 @@ class SidebarFXMLStructureTest {
         NodeList buttons = sidebarVBox.getElementsByTagName("Button");
         
         // Verify we have the expected navigation buttons
-        assertTrue(buttons.getLength() >= 5, 
-            "Sidebar should contain at least 5 navigation buttons (Books, Users, Borrows, Authors, Publishers)");
+        assertTrue(buttons.getLength() >= 8, "Sidebar should contain the 8 navigation buttons");
         
-        // Verify button IDs exist
-        boolean hasBooksButton = false;
-        boolean hasUsersButton = false;
-        boolean hasBorrowsButton = false;
-        boolean hasAuthorsButton = false;
-        boolean hasPublishersButton = false;
-        
+        // Verify the sidebar's navigation buttons (main-navigation.fxml)
+        java.util.Set<String> ids = new java.util.HashSet<>();
         for (int i = 0; i < buttons.getLength(); i++) {
-            Element button = (Element) buttons.item(i);
-            String fxId = button.getAttribute("fx:id");
-            
-            if ("booksButton".equals(fxId)) hasBooksButton = true;
-            if ("usersButton".equals(fxId)) hasUsersButton = true;
-            if ("borrowsButton".equals(fxId)) hasBorrowsButton = true;
-            if ("authorsButton".equals(fxId)) hasAuthorsButton = true;
-            if ("publishersButton".equals(fxId)) hasPublishersButton = true;
+            ids.add(((Element) buttons.item(i)).getAttribute("fx:id"));
         }
-        
-        assertTrue(hasBooksButton, "Should have booksButton");
-        assertTrue(hasUsersButton, "Should have usersButton");
-        assertTrue(hasBorrowsButton, "Should have borrowsButton");
-        assertTrue(hasAuthorsButton, "Should have authorsButton");
-        assertTrue(hasPublishersButton, "Should have publishersButton");
+        for (String expected : java.util.List.of("dashboardButton", "usersButton", "borrowsButton", "publicationsButton",
+                "brochuresButton", "magazinesButton", "authorsButton", "publishersButton")) {
+            assertTrue(ids.contains(expected), "Should have " + expected + " (found " + ids + ")");
+        }
     }
 
     @Test

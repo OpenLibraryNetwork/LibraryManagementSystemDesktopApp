@@ -2,6 +2,7 @@ package net.gizmolab.library.librarymanagementsystemdesktop;
 
 import net.gizmolab.library.librarymanagementsystemdesktop.config.FXMLLoaderFactory;
 import javafx.application.Platform;
+import net.gizmolab.library.librarymanagementsystemdesktop.testsupport.FxToolkit;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
@@ -54,17 +55,9 @@ class ApplicationStartupTest {
         app.setWebApplicationType(WebApplicationType.NONE);
         springContext = app.run();
         
-        // Initialize JavaFX Platform
-        if (!Platform.isFxApplicationThread()) {
-            CountDownLatch latch = new CountDownLatch(1);
-            Platform.startup(() -> {
-                javaFXInitialized = true;
-                latch.countDown();
-            });
-            latch.await(5, TimeUnit.SECONDS);
-        } else {
-            javaFXInitialized = true;
-        }
+        // Initialize JavaFX Platform (once per test JVM, never exited)
+        FxToolkit.start();
+        javaFXInitialized = true;
     }
 
     @AfterAll
@@ -72,13 +65,6 @@ class ApplicationStartupTest {
         // Clean up Spring context
         if (springContext != null) {
             springContext.close();
-        }
-        
-        // Clean up JavaFX
-        try {
-            Platform.exit();
-        } catch (Exception e) {
-            // Ignore cleanup errors in headless mode
         }
         
         // Clean up system properties

@@ -1,6 +1,7 @@
 package net.gizmolab.library.librarymanagementsystemdesktop;
 
 import javafx.application.Platform;
+import net.gizmolab.library.librarymanagementsystemdesktop.testsupport.FxToolkit;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.layout.VBox;
@@ -45,9 +46,7 @@ class SidebarNavigationButtonVisibilityTest {
         System.setProperty("prism.text", "t2k");
         System.setProperty("java.awt.headless", "true");
         
-        if (!Platform.isFxApplicationThread()) {
-            Platform.startup(() -> {});
-        }
+        FxToolkit.start();
     }
 
     @BeforeEach
@@ -231,7 +230,7 @@ class SidebarNavigationButtonVisibilityTest {
         );
         
         // Verify navigation buttons exist
-        assertTrue(fxmlContent.contains("booksButton"), "FXML should contain booksButton");
+        assertTrue(fxmlContent.contains("publicationsButton"), "FXML should contain publicationsButton");
         assertTrue(fxmlContent.contains("usersButton"), "FXML should contain usersButton");
         assertTrue(fxmlContent.contains("borrowsButton"), "FXML should contain borrowsButton");
         assertTrue(fxmlContent.contains("authorsButton"), "FXML should contain authorsButton");
@@ -308,13 +307,5 @@ class SidebarNavigationButtonVisibilityTest {
         );
     }
 
-    @AfterAll
-    static void tearDownClass() throws Exception {
-        // Clean up JavaFX toolkit
-        try {
-            Platform.exit();
-        } catch (Exception e) {
-            // Ignore cleanup errors in headless mode
-        }
-    }
+    // No Platform.exit(): JavaFX cannot restart in the same JVM, and later tests still need it (FxToolkit)
 }

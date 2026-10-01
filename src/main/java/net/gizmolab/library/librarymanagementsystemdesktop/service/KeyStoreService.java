@@ -32,7 +32,9 @@ public class KeyStoreService {
     // Key names
     public static final String KEY_DEK = "dek";
     public static final String KEY_JWT = "jwt";
+    /** Strapi 4 numeric library id; only read to recognise (and clear) an old session. */
     public static final String KEY_LIBRARY_ID = "libraryId";
+    public static final String KEY_LIBRARY_DOCUMENT_ID = "libraryDocumentId";
     public static final String KEY_STRAPI_URL = "strapiUrl";
 
     private Keyring keyring;
@@ -146,6 +148,7 @@ public class KeyStoreService {
     public void clearAll() {
         deleteSecret(KEY_JWT);
         deleteSecret(KEY_LIBRARY_ID);
+        deleteSecret(KEY_LIBRARY_DOCUMENT_ID);
         deleteSecret(KEY_STRAPI_URL);
         // NOTE: DEK is NOT cleared — it's needed to access existing H2 data
         log.info("Cleared auth secrets from keystore (DEK preserved)");

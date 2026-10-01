@@ -24,6 +24,7 @@ class AuthServiceSessionRestoreTest {
     @AfterEach
     void stopServer() {
         if (server != null) server.stop(0);
+        ReflectionTestUtils.setField(AuthService.class, "instance", null); // the static session must not leak into other tests
     }
 
     private String serverAnswering(int status) throws IOException {
@@ -46,7 +47,7 @@ class AuthServiceSessionRestoreTest {
 
     private static AuthService restoredFrom(String url, KeyStoreService keyStore) {
         when(keyStore.getSecret(KeyStoreService.KEY_JWT)).thenReturn("saved-jwt");
-        when(keyStore.getSecret(KeyStoreService.KEY_LIBRARY_ID)).thenReturn("1");
+        when(keyStore.getSecret(KeyStoreService.KEY_LIBRARY_DOCUMENT_ID)).thenReturn("libA");
         when(keyStore.getSecret(KeyStoreService.KEY_STRAPI_URL)).thenReturn(url);
         AuthService auth = new AuthService();
         ReflectionTestUtils.setField(auth, "keyStoreService", keyStore);
@@ -78,5 +79,26 @@ class AuthServiceSessionRestoreTest {
         assertTrue(auth.isAuthenticated());
         assertFalse(auth.isOnline());
         verify(keyStore, never()).clearAll();
+    }
+
+    @Test
+    void anOldStrapi4SessionAsksForANewLogin() throws IOException { // Review Focus 2
+        KeyStoreService keyStore = mock(KeyStoreService.class);
+        when(keyStore.getSecret(KeyStoreService.KEY_JWT)).thenReturn("saved-jwt");
+        when(keyStore.getSecret(KeyStoreService.KEY_LIBRARY_ID)).thenReturn("1");          // numeric id of Strapi 4
+        when(keyStore.getSecret(KeyStoreService.KEY_LIBRARY_DOCUMENT_ID)).thenReturn(null);
+        when(keyStore.getSecret(KeyStoreService.KEY_STRAPI_URL)).thenReturn(serverAnswering(200));
+        AuthService auth = new AuthService();
+        ReflectionTestUtils.setField(auth, "keyStoreService", keyStore);
+        auth.init();
+        assertFalse(auth.isAuthenticated());
+        verify(keyStore).clearAll();
+    }
+
+    @Test
+    void restoredSessionKnowsTheLibraryDocumentId() throws IOException {
+        KeyStoreService keyStore = mock(KeyStoreService.class);
+        restoredFrom(serverAnswering(200), keyStore);
+        assertEquals("libA", AuthService.getCurrentLibraryDocumentId());
     }
 }

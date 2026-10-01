@@ -13,9 +13,10 @@ import java.nio.charset.StandardCharsets;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
-/** The login screen must tell wrong credentials, a user without library and an unreachable server apart. */
+/** The login screen must tell wrong credentials, a non-librarian, a user without library and an unreachable server apart. */
 class AuthServiceLoginTest {
 
     private HttpServer server;
@@ -32,6 +33,7 @@ class AuthServiceLoginTest {
     @AfterEach
     void stopServer() {
         if (server != null) server.stop(0);
+        ReflectionTestUtils.setField(AuthService.class, "instance", null); // the static session must not leak into other tests
     }
 
     private String serverAnswering(int status, String body) throws IOException {
@@ -56,7 +58,7 @@ class AuthServiceLoginTest {
 
     @Test
     void userWithoutLibraryIsNotLoggedIn() throws IOException {
-        String url = serverAnswering(200, "{\"jwt\":\"t\",\"user\":{\"id\":1,\"username\":\"test\"}}");
+        String url = serverAnswering(200, "{\"jwt\":\"t\",\"user\":{\"id\":1,\"username\":\"test\",\"role\":{\"type\":\"librarian\"}}}");
         AuthService.LoginResult result = auth.login(url, "test", "right");
         assertEquals(AuthService.LoginResult.NO_LIBRARY, result);
         assertTrue(result.getMessage().contains("βιβλιοθήκη"));
@@ -66,11 +68,29 @@ class AuthServiceLoginTest {
 
     @Test
     void successStoresTheSession() throws IOException {
-        String url = serverAnswering(200, "{\"jwt\":\"t\",\"user\":{\"id\":1,\"library\":{\"id\":3}}}");
+        String url = serverAnswering(200, "{\"jwt\":\"t\",\"user\":{\"id\":1,\"role\":{\"type\":\"librarian\"},\"library\":{\"id\":3,\"documentId\":\"libA\"}}}");
         assertEquals(AuthService.LoginResult.SUCCESS, auth.login(url + "/", "test", "right"));
         assertTrue(auth.isAuthenticated());
-        assertEquals(3L, auth.getLibraryId());
+        assertEquals("libA", auth.getLibraryDocumentId());
         verify(keyStore).storeSecret(KeyStoreService.KEY_JWT, "t");
+    }
+
+    @Test
+    void aUserWithoutTheLibrarianRoleCannotLogIn() throws IOException { // Review Focus 3
+        String body = "{\"jwt\":\"j\",\"user\":{\"id\":5,\"role\":{\"type\":\"authenticated\"},\"library\":{\"documentId\":\"libA\"}}}";
+        AuthService.LoginResult result = auth.login(serverAnswering(200, body), "u", "p");
+        assertEquals(AuthService.LoginResult.NOT_LIBRARIAN, result);
+        assertTrue(result.getMessage().contains("βιβλιοθηκονόμου"));
+        assertFalse(auth.isAuthenticated());
+        verify(keyStore, never()).storeSecret(eq(KeyStoreService.KEY_JWT), anyString());
+    }
+
+    @Test
+    void aLibrarianLogsInAndTheLibraryDocumentIdIsKept() throws IOException {
+        String body = "{\"jwt\":\"j\",\"user\":{\"id\":5,\"role\":{\"type\":\"librarian\"},\"library\":{\"documentId\":\"libA\"}}}";
+        assertEquals(AuthService.LoginResult.SUCCESS, auth.login(serverAnswering(200, body), "u", "p"));
+        verify(keyStore).storeSecret(KeyStoreService.KEY_LIBRARY_DOCUMENT_ID, "libA");
+        assertEquals("libA", auth.getLibraryDocumentId());
     }
 
     @Test

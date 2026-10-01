@@ -19,11 +19,13 @@ import java.time.Duration;
  *
  * Login flow:
  * 1. POST /api/auth/local with {identifier, password}
- * 2. Strapi returns {jwt, user: {id, library: {id}}}
- * 3. Store JWT + libraryId + strapiUrl in OS Keystore
+ * 2. Strapi returns {jwt, user: {id, role: {type}, library: {documentId}}}
+ * 3. Only the Librarian role may log in
+ * 4. Store JWT + library documentId + strapiUrl in OS Keystore
  *
  * Startup flow:
- * 1. Try to restore JWT + libraryId + strapiUrl from keystore
+ * 1. Try to restore JWT + library documentId + strapiUrl from keystore
+ *    (a Strapi 4 session, which has only the numeric library id, is cleared)
  * 2. If found, set authenticated state (JWT validity checked on first API call)
  * 3. If not found, show login screen
  *
@@ -44,7 +46,6 @@ public class AuthService {
 
     // In-memory state (loaded from keystore on startup)
     private String jwt;
-    private Long libraryId;
     private String libraryDocumentId;
     private String strapiBaseUrl;
     private Long userId;
@@ -54,6 +55,7 @@ public class AuthService {
     public enum LoginResult {
         SUCCESS(null),
         BAD_CREDENTIALS("Λάθος όνομα χρήστη ή κωδικός."),
+        NOT_LIBRARIAN("Ο λογαριασμός δεν είναι βιβλιοθηκονόμου. Επικοινωνήστε με τον διαχειριστή."),
         NO_LIBRARY("Ο λογαριασμός δεν έχει βιβλιοθήκη. Ζητήστε από τον διαχειριστή να σας αντιστοιχίσει σε βιβλιοθήκη."),
         UNREACHABLE("Δεν υπάρχει σύνδεση με τον server."),
         FAILED("Η σύνδεση απέτυχε.");
@@ -80,12 +82,18 @@ public class AuthService {
         instance = this;
         try {
             String storedJwt = keyStoreService.getSecret(KeyStoreService.KEY_JWT);
-            String storedLibraryId = keyStoreService.getSecret(KeyStoreService.KEY_LIBRARY_ID);
+            String storedLibraryDocumentId = keyStoreService.getSecret(KeyStoreService.KEY_LIBRARY_DOCUMENT_ID);
             String storedUrl = keyStoreService.getSecret(KeyStoreService.KEY_STRAPI_URL);
 
-            if (storedJwt != null && storedLibraryId != null && storedUrl != null) {
+            if (storedJwt != null && storedLibraryDocumentId == null) {
+                // A Strapi 4 session (numeric library id only): its token and ids mean nothing to Strapi 5
+                log.info("Stored session is from Strapi 4 — login required");
+                logout();
+                return;
+            }
+            if (storedJwt != null && storedUrl != null) {
                 this.jwt = storedJwt;
-                this.libraryId = Long.parseLong(storedLibraryId);
+                this.libraryDocumentId = storedLibraryDocumentId;
                 this.strapiBaseUrl = storedUrl;
                 int status = sessionCheckStatus();
                 if (status == 401) {
@@ -95,7 +103,7 @@ public class AuthService {
                     return;
                 }
                 this.online = status == 200;
-                log.info("Restored session from keystore — library={}, online={}", libraryId, online);
+                log.info("Restored session from keystore — library={}, online={}", libraryDocumentId, online);
             } else {
                 log.info("No stored session found — login required");
             }
@@ -109,12 +117,12 @@ public class AuthService {
      *
      * POST /api/auth/local
      * Body: {"identifier": "user@example.com", "password": "pass"}
-     * Response: {"jwt": "...", "user": {"id": 1, "library": {"id": 3}}}
+     * Response: {"jwt": "...", "user": {"id": 1, "role": {"type": "librarian"}, "library": {"documentId": "..."}}}
      *
      * @param url Strapi base URL (e.g., "http://localhost:1337")
      * @param username Strapi username/email
      * @param password Strapi password
-     * @return true if login successful
+     * @return the outcome; only SUCCESS stores a session
      */
     public LoginResult login(String url, String username, String password) {
         try {
@@ -158,33 +166,31 @@ public class AuthService {
             JsonNode userNode = json.path("user");
             Long newUserId = userNode.path("id").asLong(0);
 
-            // Extract library ID (user.library.id or user.library — depends on populate)
-            Long newLibraryId = null;
-            JsonNode libraryNode = userNode.path("library");
-            if (libraryNode.isObject()) {
-                newLibraryId = libraryNode.path("id").asLong(0);
-            } else if (libraryNode.isNumber()) {
-                newLibraryId = libraryNode.asLong();
+            // Only librarians use the desktop app; checked before anything is stored
+            if (!"librarian".equals(userNode.path("role").path("type").asText())) {
+                log.warn("Login refused — user {} is not a librarian", newUserId);
+                return LoginResult.NOT_LIBRARIAN;
             }
 
-            if (newLibraryId == null || newLibraryId == 0) {
+            String newLibraryDocumentId = userNode.path("library").path("documentId").asText(null);
+            if (newLibraryDocumentId == null || newLibraryDocumentId.isEmpty()) {
                 log.error("User has no assigned library — cannot proceed");
                 return LoginResult.NO_LIBRARY;
             }
 
             // Store in memory
             this.jwt = newJwt;
-            this.libraryId = newLibraryId;
+            this.libraryDocumentId = newLibraryDocumentId;
             this.strapiBaseUrl = baseUrl;
             this.userId = newUserId;
             this.online = true;
 
             // Persist to OS Keystore
             keyStoreService.storeSecret(KeyStoreService.KEY_JWT, newJwt);
-            keyStoreService.storeSecret(KeyStoreService.KEY_LIBRARY_ID, String.valueOf(newLibraryId));
+            keyStoreService.storeSecret(KeyStoreService.KEY_LIBRARY_DOCUMENT_ID, newLibraryDocumentId);
             keyStoreService.storeSecret(KeyStoreService.KEY_STRAPI_URL, baseUrl);
 
-            log.info("Login successful — user={}, library={}", newUserId, newLibraryId);
+            log.info("Login successful — user={}, library={}", newUserId, newLibraryDocumentId);
             return LoginResult.SUCCESS;
 
         } catch (java.net.ConnectException | java.net.http.HttpConnectTimeoutException e) {
@@ -253,23 +259,9 @@ public class AuthService {
         return jwt;
     }
 
-    /**
-     * Get the authenticated user's library ID.
-     */
-    public Long getLibraryId() {
-        return libraryId;
-    }
-
     /** The authenticated user's library documentId (Strapi 5). */
     public String getLibraryDocumentId() {
         return libraryDocumentId;
-    }
-
-    public static Long getCurrentLibraryId() {
-        if (instance != null) {
-            return instance.libraryId;
-        }
-        return null;
     }
 
     /** The authenticated user's library documentId (Strapi 5), or null when there is no session. */
@@ -297,7 +289,7 @@ public class AuthService {
      */
     public void logout() {
         this.jwt = null;
-        this.libraryId = null;
+        this.libraryDocumentId = null;
         this.userId = null;
         this.online = false;
         // Don't clear strapiBaseUrl — keep as default for next login

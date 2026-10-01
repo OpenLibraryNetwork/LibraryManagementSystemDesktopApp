@@ -48,9 +48,12 @@ public class DataSourceConfig {
     public DataSource dataSource() {
         if (!encryptionEnabled) {
             log.warn("H2 encryption DISABLED (dev mode) — data stored in plaintext");
+            String url = h2Path.startsWith("mem:")
+                    ? "jdbc:h2:" + h2Path + ";DB_CLOSE_DELAY=-1"
+                    : "jdbc:h2:file:" + h2Path + ";DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;FILE_LOCK=NO";
             return DataSourceBuilder.create()
                     .driverClassName("org.h2.Driver")
-                    .url("jdbc:h2:file:" + h2Path + ";DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;FILE_LOCK=NO")
+                    .url(url)
                     .username("sa")
                     .password("")
                     .build();

@@ -4,6 +4,7 @@ import com.github.javakeyring.Keyring;
 import com.github.javakeyring.PasswordAccessException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import jakarta.annotation.PostConstruct;
@@ -40,11 +41,20 @@ public class KeyStoreService {
     private Keyring keyring;
     private boolean available = false;
 
+    /** Tests only (profile "test"): keep secrets in memory and never touch the OS keystore. */
+    @Value("${app.keystore.in-memory:false}")
+    private boolean inMemoryOnly;
+
     // In-memory fallback (development/testing only — NOT SECURE for production)
     private final java.util.Map<String, String> inMemoryStore = new java.util.concurrent.ConcurrentHashMap<>();
 
     @PostConstruct
     public void init() {
+        if (inMemoryOnly) {
+            available = false;
+            log.info("Keystore in memory (app.keystore.in-memory=true) — the OS keystore is not used");
+            return;
+        }
         try {
             keyring = Keyring.create();
             available = true;

@@ -45,7 +45,7 @@ All catalog data comes from the Strapi backend via REST API. Patron information 
 |                                                                    |
 |  +------------------+    +------------------+    +--------------+ |
 |  |  JavaFX UI       |    |  Controllers     |    | FXML Views   | |
-|  |  (17.0.2)        |<-->|  (17 screens)    |<-->| (17 files)   | |
+|  |  (25.0.4)        |<-->|  (17 screens)    |<-->| (17 files)   | |
 |  +------------------+    +------------------+    +--------------+ |
 |           |                       |                                |
 |           v                       v                                |
@@ -91,11 +91,11 @@ All catalog data comes from the Strapi backend via REST API. Patron information 
 
 | Component | Version | Purpose |
 |-----------|---------|---------|
-| Java | 17 (LTS) | Runtime |
-| Spring Boot | 3.1.0 | Dependency injection, JPA, configuration |
-| JavaFX | 17.0.2 | Desktop UI framework |
+| Java | 25 (LTS) | Runtime |
+| Spring Boot | 4.1.1 | Dependency injection, JPA, configuration |
+| JavaFX | 25.0.4 | Desktop UI framework |
 | H2 Database | 2.x | Local encrypted storage |
-| Jackson | 2.15.x | JSON parsing for Strapi responses |
+| Jackson | 3.x (`tools.jackson`) | JSON parsing for Strapi responses |
 | java-keyring | 1.0.4 | OS keystore access (DEK, JWT storage) |
 | FontAwesome (javafx) | 4.7.0-9.1.2 | Icon library |
 | Lombok | 1.18.x | Boilerplate reduction |
@@ -211,7 +211,8 @@ The client stores only patron and borrow data locally. All publication/catalog d
 
 ### Prerequisites
 
-- Java 17 JDK
+- Java 25 (JDK 25); the build stops with a clear message on an older Java
+- JavaFX 25 (via Maven, nothing to install)
 - Maven 3.9+ (or use included `mvnw` wrapper)
 - Running Strapi backend instance (see `library-strapi/` README)
 - A Strapi user account with Librarian role and assigned library

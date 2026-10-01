@@ -241,4 +241,16 @@ class CatalogServiceTest {
         assertTrue(result.isDuplicate());
         assertEquals("5", result.duplicates().get(0).getIssueNumber());
     }
+
+    @Test
+    void anEmptySuccessfulResponseGivesTheGenericErrorNotACrash() { // e.g. a proxy that answers 200 with no body
+        server.on("POST", "/api/books/isbn-lookup", 200, "");
+        server.on("POST", "/api/magazines/issn-lookup", 200, "");
+        Exception isbn = assertThrows(Exception.class, () -> catalog.lookupIsbn("9789602116524"));
+        Exception issn = assertThrows(Exception.class, () -> catalog.lookupIssn("2241-5580"));
+        assertFalse(isbn instanceof NullPointerException, isbn.toString());
+        assertFalse(issn instanceof NullPointerException, issn.toString());
+        assertEquals(UserMessages.GENERIC, UserMessages.describe(isbn));
+        assertEquals(UserMessages.GENERIC, UserMessages.describe(issn));
+    }
 }

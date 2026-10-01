@@ -139,7 +139,8 @@ public class StrapiApiClient {
         }
 
         if (response.body() == null || response.body().isEmpty()) {
-            return null;
+            // e.g. 204 on delete, or a proxy answering 200 with no body: callers read missing fields, never null
+            return objectMapper.createObjectNode();
         }
 
         return objectMapper.readTree(response.body());

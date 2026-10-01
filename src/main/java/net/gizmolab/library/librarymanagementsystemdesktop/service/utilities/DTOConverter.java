@@ -460,22 +460,27 @@ public class DTOConverter {
     // ═══════════════════════════════════════════════════════
 
 
+    // Jackson 3 throws when a value cannot be converted (an array in a text field, "abc" in a number field);
+    // one odd field must not fail a whole list, so these return null instead.
+
     private static String textOrNull(JsonNode node, String field) {
         JsonNode value = node.get(field);
         if (value == null || value.isNull()) return null;
-        return value.asString();
+        return value.asString(null);
     }
 
     private static Integer intOrNull(JsonNode node, String field) {
         JsonNode value = node.get(field);
         if (value == null || value.isNull()) return null;
-        return value.asInt();
+        java.util.OptionalInt number = value.asIntOpt();
+        return number.isPresent() ? number.getAsInt() : null;
     }
 
     private static Double doubleOrNull(JsonNode node, String field) {
         JsonNode value = node.get(field);
         if (value == null || value.isNull()) return null;
-        return value.asDouble();
+        java.util.OptionalDouble number = value.asDoubleOpt();
+        return number.isPresent() ? number.getAsDouble() : null;
     }
 
     // ═══════════════════════════════════════════════════════

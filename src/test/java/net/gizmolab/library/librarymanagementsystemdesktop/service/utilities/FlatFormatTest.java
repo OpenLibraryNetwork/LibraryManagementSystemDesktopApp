@@ -29,4 +29,15 @@ class FlatFormatTest {
         assertEquals(2, pub.getTotalCopies());
         assertEquals(1, pub.getAvailableCopies());
     }
+
+    @Test
+    void nonScalarOrMalformedFieldsDoNotBreakTheWholeList() throws Exception { // final review: Jackson 3 converts strictly
+        String json = "{\"data\":[{\"id\":1,\"documentId\":\"bk1\",\"title\":\"Α\",\"summary\":[{\"type\":\"paragraph\"}],"
+                + "\"pages\":\"abc\",\"price\":\"n/a\"},{\"id\":2,\"documentId\":\"bk2\",\"title\":\"Β\"}]}";
+        java.util.List<PublicationDTO> list = DTOConverter.publicationsFromJson(new ObjectMapper().readTree(json));
+        assertEquals(java.util.List.of("Α", "Β"), list.stream().map(PublicationDTO::getTitle).toList());
+        assertNull(list.get(0).getSummary());
+        assertNull(list.get(0).getPages());
+        assertNull(list.get(0).getPrice());
+    }
 }

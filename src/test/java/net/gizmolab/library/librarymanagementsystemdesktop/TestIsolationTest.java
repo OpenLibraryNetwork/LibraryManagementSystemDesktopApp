@@ -31,4 +31,11 @@ class TestIsolationTest {
         keyStoreService.storeSecret("probe", "v");
         assertEquals("v", keyStoreService.getSecret("probe"));
     }
+
+    @Test
+    void testsDoNotWriteTheApplicationsSavedPreferences() { // final review: the saved language lives in java.util.prefs
+        String root = System.getProperty("java.util.prefs.userRoot");
+        assertNotNull(root, "tests must use their own Preferences root, not the user's");
+        assertTrue(root.contains("target"), root);
+    }
 }

@@ -226,8 +226,12 @@ The client stores only patron and borrow data locally. All publication/catalog d
 ### Run
 
 ```bash
-./mvnw spring-boot:run
+./mvnw javafx:run
 ```
+
+`spring-boot:run` (or running `LibraryManagementFXApplication` directly with JavaFX on the classpath) does not work:
+the Java launcher refuses a JavaFX `Application` main class without the JavaFX modules. In IntelliJ, run the Maven goal
+`javafx:run`.
 
 Or after packaging:
 

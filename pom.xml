@@ -156,6 +156,8 @@
 				<configuration>
 					<systemPropertyVariables>
 						<spring.profiles.active>test</spring.profiles.active>
+						<!-- the saved language (java.util.prefs) of the running application stays untouched -->
+						<java.util.prefs.userRoot>${project.build.directory}/test-prefs</java.util.prefs.userRoot>
 					</systemPropertyVariables>
 					<!-- Java 24+: allow native calls (JavaFX, JNA) and Mockito's agent without warnings -->
 					<argLine>--enable-native-access=ALL-UNNAMED -XX:+EnableDynamicAgentLoading</argLine>

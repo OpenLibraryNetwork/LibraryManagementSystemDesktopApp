@@ -98,24 +98,24 @@ class StrapiApiClientTest {
 
     @Test
     void authorBooksInLibraryFiltersByPersonAndLibrary() throws Exception {
-        client.getAuthorBooksInLibrary(5L, 3L);
+        client.getAuthorBooksInLibrary("p5", "l3");
         assertEquals("/api/books?" + StrapiApiClient.BOOK_POPULATE
-                + "&filters[contributors][person][id][$eq]=5&filters[copies][library][id][$eq]=3"
+                + "&filters[contributors][person][documentId][$eq]=p5&filters[copies][library][documentId][$eq]=l3"
                 + "&pagination[pageSize]=100&sort=title", lastRequestDecoded());
     }
 
     @Test
     void publisherBooksInLibraryFiltersByPublisherAndLibrary() throws Exception {
-        client.getPublisherBooksInLibrary(7L, 3L);
+        client.getPublisherBooksInLibrary("pb7", "l3");
         assertEquals("/api/books?" + StrapiApiClient.BOOK_POPULATE
-                + "&filters[publisher][id][$eq]=7&filters[copies][library][id][$eq]=3"
+                + "&filters[publisher][documentId][$eq]=pb7&filters[copies][library][documentId][$eq]=l3"
                 + "&pagination[pageSize]=100&sort=title", lastRequestDecoded());
     }
 
     @Test
     void publicationQueriesPopulateContributors() throws Exception {
         client.getPublicationsPaginated(1, 15, null, null);
-        client.getPublicationById(9L);
+        client.getPublicationById("bk9");
         for (String uri : requestedUris) {
             String decoded = URLDecoder.decode(uri, StandardCharsets.UTF_8);
             assertTrue(decoded.contains(StrapiApiClient.BOOK_POPULATE), decoded);
@@ -156,13 +156,13 @@ class StrapiApiClientTest {
         client.searchPersons("λοϊζ");
         client.searchPublishers("νεφ");
         client.getContributorRoles();
-        client.getCopiesInLibrary(5L, 3L);
+        client.getCopiesInLibrary("p5", "l3");
         assertEquals(java.util.List.of(
                 "/api/books/search?type=Μπροσούρα&q=μανιφέστο",
                 "/api/persons/search?q=λοϊζ",
                 "/api/publishers/search?q=νεφ",
                 "/api/contributor-roles?sort=biblionetTypeId&pagination[pageSize]=100",
-                "/api/copies?filters[publication][id][$eq]=5&filters[library][id][$eq]=3&sort=copyNumber:desc&pagination[pageSize]=1"),
+                "/api/copies?filters[publication][documentId][$eq]=p5&filters[library][documentId][$eq]=l3&sort=copyNumber:desc&pagination[pageSize]=1"),
                 requestedUris.stream().map(u -> URLDecoder.decode(u, StandardCharsets.UTF_8)).toList());
     }
 
@@ -174,8 +174,8 @@ class StrapiApiClientTest {
         body = "{\"data\":[]}";
         client.searchMagazines(" αναρχ ");
         client.getMagazinesInLibrary(2, 15, "κοιν");
-        client.getIssues(7L, 3L, 1);
-        client.getIssues(7L, null, 2);
+        client.getIssues("m7", "l3", 1);
+        client.getIssues("m7", null, 2);
 
         List<String> uris = requestedUris.stream().map(u -> URLDecoder.decode(u, StandardCharsets.UTF_8)).toList();
         assertEquals("/api/magazines/issn-lookup", uris.get(0));
@@ -185,8 +185,31 @@ class StrapiApiClientTest {
         assertEquals("/api/magazines/search?q=αναρχ", uris.get(2));
         assertEquals("/api/magazines/in-library?page=2&pageSize=15&q=κοιν", uris.get(3));
         assertTrue(uris.get(4).startsWith("/api/books?" + StrapiApiClient.BOOK_POPULATE), uris.get(4));
-        assertTrue(uris.get(4).endsWith("&filters[type][$eq]=Περιοδικό&filters[magazine][id][$eq]=7"
-                + "&filters[copies][library][id][$eq]=3&pagination[page]=1&pagination[pageSize]=100"), uris.get(4));
-        assertTrue(uris.get(5).endsWith("&filters[type][$eq]=Περιοδικό&filters[magazine][id][$eq]=7&pagination[page]=2&pagination[pageSize]=100"), uris.get(5));
+        assertTrue(uris.get(4).endsWith("&filters[type][$eq]=Περιοδικό&filters[magazine][documentId][$eq]=m7"
+                + "&filters[copies][library][documentId][$eq]=l3&pagination[page]=1&pagination[pageSize]=100"), uris.get(4));
+        assertTrue(uris.get(5).endsWith("&filters[type][$eq]=Περιοδικό&filters[magazine][documentId][$eq]=m7&pagination[page]=2&pagination[pageSize]=100"), uris.get(5));
+    }
+
+    @Test
+    void copyEndpointsUseDocumentId() throws Exception {
+        client.getPublicationById("bk9");
+        client.createCopy("p5", 2, "NEW");
+        client.borrowCopy("c1");
+        client.returnCopy("c1");
+        client.updateCopyCondition("c1", "GOOD");
+        status = 204;
+        body = "";
+        client.deleteCopy("c1");
+
+        List<String> uris = requestedUris.stream().map(u -> URLDecoder.decode(u, StandardCharsets.UTF_8)).toList();
+        assertTrue(uris.get(0).startsWith("/api/books/bk9?"), uris.get(0));
+        assertEquals("/api/copies", uris.get(1));
+        assertTrue(requestBodies.get(1).contains("\"publication\":\"p5\""), requestBodies.get(1));
+        assertEquals("/api/copies/borrow", uris.get(2));
+        assertEquals("{\"documentId\":\"c1\"}", requestBodies.get(2));
+        assertEquals("/api/copies/return", uris.get(3));
+        assertEquals("{\"documentId\":\"c1\"}", requestBodies.get(3));
+        assertEquals("/api/copies/c1", uris.get(4));
+        assertEquals("/api/copies/c1", uris.get(5));
     }
 }

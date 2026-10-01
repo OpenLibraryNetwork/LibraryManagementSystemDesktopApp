@@ -2,8 +2,7 @@ package net.gizmolab.library.librarymanagementsystemdesktop.dto;
 
 /** A magazine title of the shared catalog (issues are publications of type "Περιοδικό"). */
 public class MagazineDTO {
-    private Long id;
-    private String title;
+    private String documentId;private String title;
     private String qualifier;
     private String issn;
     private String place;
@@ -12,8 +11,8 @@ public class MagazineDTO {
     private PublisherDTO publisher;
     private int issuesInLibrary;
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getDocumentId() { return documentId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
     public String getQualifier() { return qualifier; }

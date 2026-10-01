@@ -80,7 +80,7 @@ public class LocalPublicationFormController extends BaseController {
 
     /** A new issue of this magazine: its title is the magazine's, its publisher too (set by the server). */
     public void setIssue(MagazineDTO magazine) {
-        startFor("issue:" + magazine.getId(), magazine.getTitle());
+        startFor("issue:" + magazine.getDocumentId(), magazine.getTitle());
         this.type = PublicationDraft.PERIODICAL;
         this.isbn = null;
         this.magazine = magazine;
@@ -121,11 +121,11 @@ public class LocalPublicationFormController extends BaseController {
         draft.setSeries(seriesField.getText());
         draft.setPlace(placeField.getText());
         PublisherDTO publisher = publisherController.getPublisher();
-        draft.setPublisherId(publisher != null ? publisher.getId() : null);
+        draft.setPublisherId(publisher != null ? publisher.getDocumentId() : null);
         draft.setContributors(contributorsController.getContributors());
         draft.setSubjectIds(subjectsController.getSelectedSubjectIds());
         if (PublicationDraft.PERIODICAL.equals(type)) {
-            draft.setMagazineId(magazine.getId());
+            draft.setMagazineId(magazine.getDocumentId());
             draft.setIssueNumber(issueNumberField.getText());
             draft.setPeriod(periodField.getText());
             draft.setPublisherId(null); // the magazine's publisher (server side)

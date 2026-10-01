@@ -26,10 +26,10 @@ public class PublicationDraft {
     private String place;
     private String series;
     private String summary;
-    private Long publisherId;
+    private String publisherId; // documentId
     private List<ContributorDTO> contributors = new ArrayList<>();
-    private List<Long> subjectIds = new ArrayList<>();
-    private Long magazineId;
+    private List<String> subjectIds = new ArrayList<>(); // documentIds
+    private String magazineId; // documentId
     private String issueNumber;
     private String period;
 
@@ -74,7 +74,7 @@ public class PublicationDraft {
         if (!contributors.isEmpty()) {
             List<Map<String, Object>> rows = new ArrayList<>();
             for (ContributorDTO c : contributors) {
-                rows.add(Map.of("person", c.getPerson().getId(), "role", c.getRole().getId()));
+                rows.add(Map.of("person", c.getPerson().getDocumentId(), "role", c.getRole().getDocumentId()));
             }
             data.put("contributors", rows);
         }
@@ -120,18 +120,18 @@ public class PublicationDraft {
     public void setSeries(String series) { this.series = series; }
     public String getSummary() { return summary; }
     public void setSummary(String summary) { this.summary = summary; }
-    public Long getPublisherId() { return publisherId; }
-    public void setPublisherId(Long publisherId) { this.publisherId = publisherId; }
+    public String getPublisherId() { return publisherId; }
+    public void setPublisherId(String publisherId) { this.publisherId = publisherId; }
     public List<ContributorDTO> getContributors() { return contributors; }
     public void setContributors(List<ContributorDTO> contributors) {
         this.contributors = contributors != null ? new ArrayList<>(contributors) : new ArrayList<>();
     }
-    public List<Long> getSubjectIds() { return subjectIds; }
-    public void setSubjectIds(List<Long> subjectIds) {
+    public List<String> getSubjectIds() { return subjectIds; }
+    public void setSubjectIds(List<String> subjectIds) {
         this.subjectIds = subjectIds != null ? new ArrayList<>(subjectIds) : new ArrayList<>();
     }
-    public Long getMagazineId() { return magazineId; }
-    public void setMagazineId(Long magazineId) { this.magazineId = magazineId; }
+    public String getMagazineId() { return magazineId; }
+    public void setMagazineId(String magazineId) { this.magazineId = magazineId; }
     public String getIssueNumber() { return issueNumber; }
     public void setIssueNumber(String issueNumber) { this.issueNumber = issueNumber; }
     public String getPeriod() { return period; }

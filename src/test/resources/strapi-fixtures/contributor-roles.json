@@ -2,17 +2,15 @@
   "data": [
     {
       "id": 1,
-      "attributes": {
-        "name": "Συγγραφέας",
-        "biblionetTypeId": "1"
-      }
+      "documentId": "doc-1",
+      "name": "Συγγραφέας",
+      "biblionetTypeId": "1"
     },
     {
       "id": 2,
-      "attributes": {
-        "name": "Μεταφραστής",
-        "biblionetTypeId": "2"
-      }
+      "documentId": "doc-2",
+      "name": "Μεταφραστής",
+      "biblionetTypeId": "2"
     }
   ],
   "meta": {

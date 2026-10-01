@@ -21,11 +21,11 @@ public class AddPublicationFlow {
                           CatalogService.CopiesResult copies, boolean foundElsewhere) {}
 
     private final CatalogService catalog;
-    private final Long libraryId;
+    private final String libraryDocumentId;
 
-    public AddPublicationFlow(CatalogService catalog, Long libraryId) {
+    public AddPublicationFlow(CatalogService catalog, String libraryDocumentId) {
         this.catalog = catalog;
-        this.libraryId = libraryId;
+        this.libraryDocumentId = libraryDocumentId;
     }
 
     /** The publication already exists (catalog, Biblionet import or a chosen duplicate): copies only. */
@@ -57,7 +57,7 @@ public class AddPublicationFlow {
     }
 
     private Outcome withCopies(PublicationDTO publication, int count, String condition, boolean foundElsewhere) {
-        CatalogService.CopiesResult copies = catalog.addCopies(publication.getId(), libraryId, count, condition);
+        CatalogService.CopiesResult copies = catalog.addCopies(publication.getDocumentId(), libraryDocumentId, count, condition);
         return new Outcome(copies.isComplete() ? Kind.DONE : Kind.PARTIAL_COPIES,
                 publication, List.of(), copies, foundElsewhere);
     }

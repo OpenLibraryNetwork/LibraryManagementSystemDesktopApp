@@ -10,9 +10,9 @@ import java.time.LocalDate;
 /**
  * Τοπικό entity δανεισμού — αποθηκεύεται στην H2.
  *
- * Αναφέρεται σε Strapi resources μέσω IDs (όχι JPA relations):
- * - strapiCopyId    → Copy.id στο Strapi
- * - strapiPublicationId → Book(Έντυπα).id στο Strapi
+ * Αναφέρεται σε Strapi resources μέσω documentId (όχι JPA relations):
+ * - strapiCopyDocumentId        → Copy.documentId στη Strapi 5
+ * - strapiPublicationDocumentId → Book(Έντυπα).documentId στη Strapi 5
  *
  * Cached πεδία (publicationTitle, publicationType, isbn, authorName)
  * αποφεύγουν REST calls για εμφάνιση σε λίστες.
@@ -33,12 +33,12 @@ public class Borrow {
     @JoinColumn(name = "USER_ID", nullable = false)
     private User user;
 
-    // === Strapi αναφορές (IDs, not JPA) ===
-    @Column(name = "STRAPI_COPY_ID", nullable = false)
-    private Long strapiCopyId;
+    // === Strapi αναφορές (documentIds, not JPA) ===
+    @Column(name = "STRAPI_COPY_DOCUMENT_ID", nullable = false)
+    private String strapiCopyDocumentId;
 
-    @Column(name = "STRAPI_PUBLICATION_ID")
-    private Long strapiPublicationId;
+    @Column(name = "STRAPI_PUBLICATION_DOCUMENT_ID")
+    private String strapiPublicationDocumentId;
 
     @Column(name = "COPY_NUMBER")
     private Integer copyNumber;

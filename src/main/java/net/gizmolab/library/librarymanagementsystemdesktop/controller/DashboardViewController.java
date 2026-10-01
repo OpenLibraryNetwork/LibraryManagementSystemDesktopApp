@@ -66,10 +66,10 @@ public class DashboardViewController extends BaseController implements Initializ
                 // Strapi: total publications
                 long totalPubs = 0;
                 try {
-                    Long libId = AuthService.getCurrentLibraryId();
+                    String libId = AuthService.getCurrentLibraryDocumentId();
                     String queryUrl = "/api/books?pagination[pageSize]=1&pagination[withCount]=true";
                     if (libId != null) {
-                        queryUrl += "&filters[copies][library][id][$eq]=" + libId;
+                        queryUrl += "&filters[copies][library][documentId][$eq]=" + libId;
                     }
                     JsonNode response = strapiApiClient.get(queryUrl);
                     if (response != null && response.has("meta")) {
@@ -160,21 +160,21 @@ public class DashboardViewController extends BaseController implements Initializ
     private Map<String, String> coversOf(List<PopularPublications.Entry> entries) {
         Map<String, String> covers = new HashMap<>();
         for (PopularPublications.Entry entry : entries) {
-            if (entry.publicationId() == null) continue;
+            if (entry.publicationDocumentId() == null) continue;
             try {
-                PublicationDTO pub = DTOConverter.publicationFromJson(strapiApiClient.getPublicationById(entry.publicationId()));
+                PublicationDTO pub = DTOConverter.publicationFromJson(strapiApiClient.getPublicationById(entry.publicationDocumentId()));
                 if (pub == null || !PopularPublications.coverBelongsTo(entry.title(), pub.getTitle())) continue;
                 String url = PublicationDetailFormatter.resolveCoverUrl(pub.getCoverImageUrl(), authService.getStrapiBaseUrl());
                 if (url != null) covers.put(coverKey(entry), url);
             } catch (Exception e) {
-                logger.debug("No cover for publication {}: {}", entry.publicationId(), e.getMessage());
+                logger.debug("No cover for publication {}: {}", entry.publicationDocumentId(), e.getMessage());
             }
         }
         return covers;
     }
 
     private static String coverKey(PopularPublications.Entry entry) {
-        return entry.publicationId() + "|" + entry.title();
+        return entry.publicationDocumentId() + "|" + entry.title();
     }
 
     private HBox createBookRow(String title, long borrowCount, int rank, long maxCount, String coverUrl) {

@@ -88,8 +88,8 @@ class DTOConverterContractTest {
     @Test
     void contributorWithoutRoleIsIgnored() throws IOException {
         JsonNode book = fixture("book-with-contributors.json");
-        ArrayNode contributors = (ArrayNode) book.path("data").path("attributes").path("contributors");
-        ((ObjectNode) contributors.get(1)).putObject("role").putNull("data");
+        ArrayNode contributors = (ArrayNode) book.path("data").path("contributors");
+        ((ObjectNode) contributors.get(1)).putNull("role"); // Strapi 5: a deleted relation comes back as null
         PublicationDTO pub = DTOConverter.publicationFromJson(book);
         assertEquals(1, pub.getContributors().size());
         assertEquals("Νίκη Λοϊζίδη", pub.getAuthorNames());

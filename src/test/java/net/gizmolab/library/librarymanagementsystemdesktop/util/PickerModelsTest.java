@@ -11,12 +11,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PickerModelsTest {
 
-    private static final ContributorRoleDTO AUTHOR = new ContributorRoleDTO(1L, "Συγγραφέας", "1");
-    private static final ContributorRoleDTO TRANSLATOR = new ContributorRoleDTO(2L, "Μεταφραστής", "2");
+    private static final ContributorRoleDTO AUTHOR = new ContributorRoleDTO("r1", "Συγγραφέας", "1");
+    private static final ContributorRoleDTO TRANSLATOR = new ContributorRoleDTO("r2", "Μεταφραστής", "2");
 
     private static PersonDTO person(long id, String name) {
         PersonDTO p = new PersonDTO();
-        p.setId(id);
+        p.setDocumentId("p" + id);
         p.setName(name);
         return p;
     }
@@ -55,12 +55,12 @@ class PickerModelsTest {
     @Test
     void subjectFilterIgnoresAccentsAndMatchesCode() {
         List<SubjectDTO> all = List.of(
-                new SubjectDTO(1L, "Νεοελληνική πεζογραφία", "889.3", "20"),
-                new SubjectDTO(2L, "Ποίηση", null, "21"));
+                new SubjectDTO("s1", "Νεοελληνική πεζογραφία", "889.3", "20"),
+                new SubjectDTO("s2", "Ποίηση", null, "21"));
         assertEquals("889.3 Νεοελληνική πεζογραφία", SubjectFilter.label(all.get(0)));
         assertEquals("Ποίηση", SubjectFilter.label(all.get(1)));
-        assertEquals(List.of(1L), SubjectFilter.filter(all, "ΠΕΖΟΓΡΑΦΙΑ").stream().map(SubjectDTO::getId).toList());
-        assertEquals(List.of(1L), SubjectFilter.filter(all, "889").stream().map(SubjectDTO::getId).toList());
+        assertEquals(List.of("s1"), SubjectFilter.filter(all, "ΠΕΖΟΓΡΑΦΙΑ").stream().map(SubjectDTO::getDocumentId).toList());
+        assertEquals(List.of("s1"), SubjectFilter.filter(all, "889").stream().map(SubjectDTO::getDocumentId).toList());
         assertEquals(2, SubjectFilter.filter(all, "").size());
     }
 }

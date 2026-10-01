@@ -17,7 +17,7 @@ public class ContributorSelection {
     public boolean add(PersonDTO person, ContributorRoleDTO role) {
         if (person == null || role == null) return false;
         boolean exists = items.stream().anyMatch(c ->
-                Objects.equals(c.getPerson().getId(), person.getId()) && Objects.equals(c.getRole().getId(), role.getId()));
+                Objects.equals(c.getPerson().getDocumentId(), person.getDocumentId()) && Objects.equals(c.getRole().getDocumentId(), role.getDocumentId()));
         if (exists) return false;
         items.add(new ContributorDTO(person, role));
         return true;

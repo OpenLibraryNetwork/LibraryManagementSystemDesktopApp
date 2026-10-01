@@ -11,15 +11,15 @@ import java.util.Map;
 /** "Πιο δημοφιλή" on the dashboard: borrow counts per publication (two books may share a title). */
 public final class PopularPublications {
 
-    /** publicationId is null only for old borrows that know just the title. */
-    public record Entry(Long publicationId, String title, long count) {}
+    /** publicationDocumentId is null only for old borrows that know just the title. */
+    public record Entry(String publicationDocumentId, String title, long count) {}
 
     private PopularPublications() {}
 
     public static List<Entry> top(List<BorrowDTO> borrows, int limit) {
         Map<String, Entry> byPublication = new LinkedHashMap<>();
         for (BorrowDTO b : borrows) {
-            Long id = b.getStrapiPublicationId();
+            String id = b.getStrapiPublicationDocumentId();
             String title = b.getPublicationTitle();
             if (id == null && title == null) continue;
             // id and title together: an old borrow may carry an id that today belongs to another book
@@ -31,7 +31,7 @@ public final class PopularPublications {
         List<Entry> ranked = new ArrayList<>(byPublication.values());
         ranked.sort(Comparator.comparingLong(Entry::count).reversed()
                 .thenComparing(e -> SearchText.normalize(e.title() == null ? "" : e.title()))
-                .thenComparing(e -> e.publicationId() == null ? Long.MAX_VALUE : e.publicationId()));
+                .thenComparing(Entry::publicationDocumentId, Comparator.nullsLast(Comparator.naturalOrder())));
         return ranked.subList(0, Math.min(limit, ranked.size()));
     }
 

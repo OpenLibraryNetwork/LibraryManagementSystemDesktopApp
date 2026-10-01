@@ -105,7 +105,7 @@ public abstract class AddPublicationWizardController extends BaseController {
 
     @FXML
     protected void initialize() {
-        flow = new AddPublicationFlow(catalog, AuthService.getCurrentLibraryId());
+        flow = new AddPublicationFlow(catalog, AuthService.getCurrentLibraryDocumentId());
         duplicatesList.setCellFactory(Cells.text(AddPublicationWizardController::describe));
         duplicatesList.getSelectionModel().selectedItemProperty()
                 .addListener((obs, old, pub) -> useExistingButton.setDisable(pub == null));

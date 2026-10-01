@@ -22,7 +22,7 @@ import java.util.Map;
  * - Automatic JWT injection in every request
  * - 401 detection (throws AuthenticationExpiredException for UI to handle)
  * - JSON parsing via Jackson
- * - Strapi v4 response format: { "data": { "id": N, "attributes": {...} } }
+ * - Strapi 5 response format (flat): { "data": { "id": N, "documentId": "…", ... } }; records are addressed by documentId
  */
 @Service
 public class StrapiApiClient {
@@ -185,20 +185,20 @@ public class StrapiApiClient {
     // ═══════════════════════════════════════════════════════
 
     /**
-     * Get a publication by Strapi ID.
+     * Get a publication by its Strapi documentId.
      */
-    public JsonNode getPublicationById(Long id) throws IOException, InterruptedException {
-        return get("/api/books/" + id + "?" + BOOK_POPULATE);
+    public JsonNode getPublicationById(String documentId) throws IOException, InterruptedException {
+        return get("/api/books/" + documentId + "?" + BOOK_POPULATE);
     }
 
     /**
      * Search publications by title (case-insensitive contains).
      */
     public JsonNode searchPublications(String query) throws IOException, InterruptedException {
-        Long libId = AuthService.getCurrentLibraryId();
+        String libId = AuthService.getCurrentLibraryDocumentId();
         String url = "/api/books?filters[title][$containsi]=" + encode(query) + "&" + BOOK_POPULATE;
         if (libId != null) {
-            url += "&filters[copies][library][id][$eq]=" + libId;
+            url += "&filters[copies][library][documentId][$eq]=" + libId;
         }
         return get(url);
     }
@@ -207,10 +207,10 @@ public class StrapiApiClient {
      * Get all publications of a specific type.
      */
     public JsonNode searchByType(String type) throws IOException, InterruptedException {
-        Long libId = AuthService.getCurrentLibraryId();
+        String libId = AuthService.getCurrentLibraryDocumentId();
         String url = "/api/books?filters[type][$eq]=" + encode(type) + "&" + BOOK_POPULATE + "&pagination[pageSize]=100";
         if (libId != null) {
-            url += "&filters[copies][library][id][$eq]=" + libId;
+            url += "&filters[copies][library][documentId][$eq]=" + libId;
         }
         return get(url);
     }
@@ -223,11 +223,11 @@ public class StrapiApiClient {
      * @param pageSize    items per page
      * @param typeFilter  null = all types, or "Βιβλίο", "Μπροσούρα", "Περιοδικό"
      * @param searchQuery null = no search, or text to search in title/isbn
-     * @return Strapi v4 response with data array and meta.pagination
+     * @return Strapi response with data array and meta.pagination
      */
     public JsonNode getPublicationsPaginated(int page, int pageSize, String typeFilter, String searchQuery)
             throws IOException, InterruptedException {
-        Long libId = AuthService.getCurrentLibraryId();
+        String libId = AuthService.getCurrentLibraryDocumentId();
 
         StringBuilder url = new StringBuilder("/api/books?" + BOOK_POPULATE);
         url.append("&pagination[page]=").append(page);
@@ -242,7 +242,7 @@ public class StrapiApiClient {
             url.append("&filters[$or][1][isbn][$containsi]=").append(q);
         }
         if (libId != null) {
-            url.append("&filters[copies][library][id][$eq]=").append(libId);
+            url.append("&filters[copies][library][documentId][$eq]=").append(libId);
         }
 
         return get(url.toString());
@@ -255,18 +255,18 @@ public class StrapiApiClient {
     /**
      * Get copies for a publication in a specific library.
      */
-    public JsonNode getCopiesForPublication(Long publicationId, Long libraryId) throws IOException, InterruptedException {
-        return get("/api/copies?filters[publication]=" + publicationId +
-                "&filters[library]=" + libraryId +
+    public JsonNode getCopiesForPublication(String publicationDocumentId, String libraryDocumentId) throws IOException, InterruptedException {
+        return get("/api/copies?filters[publication][documentId][$eq]=" + publicationDocumentId +
+                "&filters[library][documentId][$eq]=" + libraryDocumentId +
                 "&populate=publication");
     }
 
     /**
      * Get available copies for a publication in a specific library.
      */
-    public JsonNode getAvailableCopies(Long publicationId, Long libraryId) throws IOException, InterruptedException {
-        return get("/api/copies?filters[publication]=" + publicationId +
-                "&filters[library]=" + libraryId +
+    public JsonNode getAvailableCopies(String publicationDocumentId, String libraryDocumentId) throws IOException, InterruptedException {
+        return get("/api/copies?filters[publication][documentId][$eq]=" + publicationDocumentId +
+                "&filters[library][documentId][$eq]=" + libraryDocumentId +
                 "&filters[isAvailable]=true" +
                 "&populate=publication");
     }
@@ -274,9 +274,9 @@ public class StrapiApiClient {
     /**
      * Create a new copy.
      */
-    public JsonNode createCopy(Long publicationId, int copyNumber, String condition) throws IOException, InterruptedException {
+    public JsonNode createCopy(String publicationDocumentId, int copyNumber, String condition) throws IOException, InterruptedException {
         Map<String, Object> data = new HashMap<>();
-        data.put("publication", publicationId);
+        data.put("publication", publicationDocumentId);
         data.put("copyNumber", copyNumber);
         data.put("condition", condition);
         // Note: library is forced by Strapi beforeCreate lifecycle hook
@@ -289,37 +289,37 @@ public class StrapiApiClient {
     /**
      * Borrow a copy (atomic — handled by Strapi).
      */
-    public JsonNode borrowCopy(Long copyId) throws IOException, InterruptedException {
+    public JsonNode borrowCopy(String copyDocumentId) throws IOException, InterruptedException {
         Map<String, Object> body = new HashMap<>();
-        body.put("copyId", copyId);
+        body.put("documentId", copyDocumentId);
         return post("/api/copies/borrow", body);
     }
 
     /**
      * Return a copy (atomic — handled by Strapi).
      */
-    public JsonNode returnCopy(Long copyId) throws IOException, InterruptedException {
+    public JsonNode returnCopy(String copyDocumentId) throws IOException, InterruptedException {
         Map<String, Object> body = new HashMap<>();
-        body.put("copyId", copyId);
+        body.put("documentId", copyDocumentId);
         return post("/api/copies/return", body);
     }
 
     /**
      * Update copy condition.
      */
-    public JsonNode updateCopyCondition(Long copyId, String condition) throws IOException, InterruptedException {
+    public JsonNode updateCopyCondition(String copyDocumentId, String condition) throws IOException, InterruptedException {
         Map<String, Object> data = new HashMap<>();
         data.put("condition", condition);
         Map<String, Object> body = new HashMap<>();
         body.put("data", data);
-        return put("/api/copies/" + copyId, body);
+        return put("/api/copies/" + copyDocumentId, body);
     }
 
     /**
-     * Delete a copy.
+     * Delete a copy. Strapi 5 answers 204 without a body.
      */
-    public JsonNode deleteCopy(Long copyId) throws IOException, InterruptedException {
-        return delete("/api/copies/" + copyId);
+    public JsonNode deleteCopy(String copyDocumentId) throws IOException, InterruptedException {
+        return delete("/api/copies/" + copyDocumentId);
     }
 
     // ═══════════════════════════════════════════════════════
@@ -340,18 +340,18 @@ public class StrapiApiClient {
      * Publications of the library in which the person is a contributor (any role).
      * The caller keeps only those where the person is an author (AuthorWorksFilter).
      */
-    public JsonNode getAuthorBooksInLibrary(Long personId, Long libraryId) throws IOException, InterruptedException {
+    public JsonNode getAuthorBooksInLibrary(String personDocumentId, String libraryDocumentId) throws IOException, InterruptedException {
         return get("/api/books?" + BOOK_POPULATE
-                + "&filters[contributors][person][id][$eq]=" + personId
-                + "&filters[copies][library][id][$eq]=" + libraryId
+                + "&filters[contributors][person][documentId][$eq]=" + personDocumentId
+                + "&filters[copies][library][documentId][$eq]=" + libraryDocumentId
                 + "&pagination[pageSize]=100&sort=title");
     }
 
     /** Publications of the library by this publisher. */
-    public JsonNode getPublisherBooksInLibrary(Long publisherId, Long libraryId) throws IOException, InterruptedException {
+    public JsonNode getPublisherBooksInLibrary(String publisherDocumentId, String libraryDocumentId) throws IOException, InterruptedException {
         return get("/api/books?" + BOOK_POPULATE
-                + "&filters[publisher][id][$eq]=" + publisherId
-                + "&filters[copies][library][id][$eq]=" + libraryId
+                + "&filters[publisher][documentId][$eq]=" + publisherDocumentId
+                + "&filters[copies][library][documentId][$eq]=" + libraryDocumentId
                 + "&pagination[pageSize]=100&sort=title");
     }
 
@@ -409,9 +409,9 @@ public class StrapiApiClient {
     }
 
     /** The highest-numbered copy of a publication in a library (for the next free copy number). */
-    public JsonNode getCopiesInLibrary(Long publicationId, Long libraryId) throws IOException, InterruptedException {
-        return get("/api/copies?filters[publication][id][$eq]=" + publicationId
-                + "&filters[library][id][$eq]=" + libraryId
+    public JsonNode getCopiesInLibrary(String publicationDocumentId, String libraryDocumentId) throws IOException, InterruptedException {
+        return get("/api/copies?filters[publication][documentId][$eq]=" + publicationDocumentId
+                + "&filters[library][documentId][$eq]=" + libraryDocumentId
                 + "&sort=copyNumber:desc&pagination[pageSize]=1");
     }
 
@@ -433,7 +433,7 @@ public class StrapiApiClient {
         return post("/api/magazines/local", payload);
     }
 
-    /** Whole network, with attributes.issuesInLibrary for the user's library. */
+    /** Whole network, with issuesInLibrary for the user's library. */
     public JsonNode searchMagazines(String query) throws IOException, InterruptedException {
         return get("/api/magazines/search?q=" + encode(query.trim()));
     }
@@ -443,12 +443,12 @@ public class StrapiApiClient {
         return get("/api/magazines/in-library?page=" + page + "&pageSize=" + pageSize + queryParam(query));
     }
 
-    /** One page (of 100) of a magazine's issues; only those with a copy in the library when libraryId is given. */
-    public JsonNode getIssues(Long magazineId, Long libraryId, int page) throws IOException, InterruptedException {
+    /** One page (of 100) of a magazine's issues; only those with a copy in the library when a library is given. */
+    public JsonNode getIssues(String magazineDocumentId, String libraryDocumentId, int page) throws IOException, InterruptedException {
         return get("/api/books?" + BOOK_POPULATE
                 + "&filters[type][$eq]=" + encode("Περιοδικό")
-                + "&filters[magazine][id][$eq]=" + magazineId
-                + (libraryId != null ? "&filters[copies][library][id][$eq]=" + libraryId : "")
+                + "&filters[magazine][documentId][$eq]=" + magazineDocumentId
+                + (libraryDocumentId != null ? "&filters[copies][library][documentId][$eq]=" + libraryDocumentId : "")
                 + "&pagination[page]=" + page + "&pagination[pageSize]=100");
     }
 

@@ -109,7 +109,7 @@ public class NewMagazineDialogController extends BaseController {
         draft.setPlace(placeField.getText());
         draft.setPeriodicity(periodicityField.getText());
         PublisherDTO publisher = publisherController.getPublisher();
-        draft.setPublisherId(publisher != null ? publisher.getId() : null);
+        draft.setPublisherId(publisher != null ? publisher.getDocumentId() : null);
         Map<String, String> errors = draft.validate();
         if (!errors.isEmpty()) {
             showError(String.join(" ", errors.values()));

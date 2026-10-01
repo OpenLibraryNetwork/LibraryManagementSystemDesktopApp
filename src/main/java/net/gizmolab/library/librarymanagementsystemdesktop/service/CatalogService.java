@@ -145,13 +145,13 @@ public class CatalogService {
 
     /**
      * Issues of the magazine in reading order, page by page (the server returns at most 100 per request);
-     * only those with a copy in the library when libraryId is given.
+     * only those with a copy in the library when a library is given.
      */
-    public List<PublicationDTO> getIssues(Long magazineId, Long libraryId) throws IOException, InterruptedException {
+    public List<PublicationDTO> getIssues(String magazineDocumentId, String libraryDocumentId) throws IOException, InterruptedException {
         List<PublicationDTO> issues = new ArrayList<>();
         int pageCount = 1;
         for (int page = 1; page <= pageCount; page++) {
-            JsonNode response = api.getIssues(magazineId, libraryId, page);
+            JsonNode response = api.getIssues(magazineDocumentId, libraryDocumentId, page);
             issues.addAll(DTOConverter.publicationsFromJson(response));
             pageCount = response.path("meta").path("pagination").path("pageCount").asInt(1);
         }
@@ -163,10 +163,10 @@ public class CatalogService {
      * Creates `count` copies numbered after the highest copy number this library already has.
      * Never throws: on failure it stops and reports how many were created.
      */
-    public CopiesResult addCopies(Long publicationId, Long libraryId, int count, String condition) {
+    public CopiesResult addCopies(String publicationDocumentId, String libraryDocumentId, int count, String condition) {
         int next;
         try {
-            next = DTOConverter.copiesFromJson(api.getCopiesInLibrary(publicationId, libraryId)).stream()
+            next = DTOConverter.copiesFromJson(api.getCopiesInLibrary(publicationDocumentId, libraryDocumentId)).stream()
                     .mapToInt(CopyDTO::getCopyNumber).max().orElse(0) + 1;
         } catch (Exception e) {
             return failed(0, count, e);
@@ -174,7 +174,7 @@ public class CatalogService {
         int created = 0;
         for (int i = 0; i < count; i++) {
             try {
-                api.createCopy(publicationId, next + i, condition);
+                api.createCopy(publicationDocumentId, next + i, condition);
                 created++;
             } catch (Exception e) {
                 return failed(created, count, e);

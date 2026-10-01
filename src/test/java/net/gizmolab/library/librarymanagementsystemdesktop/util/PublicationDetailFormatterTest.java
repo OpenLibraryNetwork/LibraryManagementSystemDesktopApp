@@ -29,10 +29,10 @@ class PublicationDetailFormatterTest {
         publisher.setName("Νεφέλη");
         pub.setPublisher(publisher);
         pub.setContributors(List.of(
-                new ContributorDTO(person("Νίκη Λοϊζίδη", null), new ContributorRoleDTO(1L, "Συγγραφέας", "1")),
-                new ContributorDTO(person("Παναγιώτης Σκόνδρας", "1960-"), new ContributorRoleDTO(2L, "Μεταφραστής", "2"))));
-        pub.setSubjects(List.of(new SubjectDTO(1L, "Νεοελληνική πεζογραφία", "889.3", "20"),
-                new SubjectDTO(2L, "Χωρίς κωδικό", null, null)));
+                new ContributorDTO(person("Νίκη Λοϊζίδη", null), new ContributorRoleDTO("r1", "Συγγραφέας", "1")),
+                new ContributorDTO(person("Παναγιώτης Σκόνδρας", "1960-"), new ContributorRoleDTO("r2", "Μεταφραστής", "2"))));
+        pub.setSubjects(List.of(new SubjectDTO("s1", "Νεοελληνική πεζογραφία", "889.3", "20"),
+                new SubjectDTO("s2", "Χωρίς κωδικό", null, null)));
         return pub;
     }
 

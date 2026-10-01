@@ -2,90 +2,73 @@
   "data": [
     {
       "id": 1,
-      "attributes": {
-        "title": "Μανιφέστο",
-        "type": "Μπροσούρα",
-        "isbn": null,
-        "subtitle": null,
-        "yearPublished": 2019,
-        "description": null,
-        "summary": null,
-        "pages": null,
-        "language": null,
-        "originalLanguage": null,
-        "coverImageUrl": null,
-        "binding": null,
-        "edition": null,
-        "dimensions": null,
-        "place": null,
-        "category": null,
-        "series": null,
-        "price": null,
-        "weight": null,
-        "biblionetId": null,
-        "biblionetCategoryId": null,
-        "issueNumber": null,
-        "publicationMonthYear": null,
-        "reviewed": false,
-        "contributors": [
-          {
+      "documentId": "doc-1",
+      "title": "Μανιφέστο",
+      "type": "Μπροσούρα",
+      "isbn": null,
+      "subtitle": null,
+      "yearPublished": 2019,
+      "description": null,
+      "summary": null,
+      "pages": null,
+      "language": null,
+      "originalLanguage": null,
+      "coverImageUrl": null,
+      "binding": null,
+      "edition": null,
+      "dimensions": null,
+      "place": null,
+      "category": null,
+      "series": null,
+      "price": null,
+      "weight": null,
+      "biblionetId": null,
+      "biblionetCategoryId": null,
+      "issueNumber": null,
+      "publicationMonthYear": null,
+      "reviewed": false,
+      "publisher": null,
+      "subjects": [],
+      "contributors": [
+        {
+          "id": 1,
+          "person": {
             "id": 1,
-            "person": {
-              "data": {
-                "id": 1,
-                "attributes": {
-                  "name": "Ομάδα Γειτονιάς",
-                  "qualifier": null,
-                  "firstname": null,
-                  "middlename": null,
-                  "lastname": null,
-                  "bornYear": null,
-                  "deathYear": null,
-                  "biography": null,
-                  "biblionetPersonId": null,
-                  "reviewed": false
-                }
-              }
-            },
-            "role": {
-              "data": {
-                "id": 1,
-                "attributes": {
-                  "name": "Συγγραφέας",
-                  "biblionetTypeId": "1"
-                }
-              }
-            }
+            "documentId": "doc-1",
+            "name": "Ομάδα Γειτονιάς",
+            "qualifier": null,
+            "firstname": null,
+            "middlename": null,
+            "lastname": null,
+            "bornYear": null,
+            "deathYear": null,
+            "biography": null,
+            "biblionetPersonId": null,
+            "reviewed": false
+          },
+          "role": {
+            "id": 1,
+            "documentId": "doc-1",
+            "name": "Συγγραφέας",
+            "biblionetTypeId": "1"
           }
-        ],
-        "publisher": {
-          "data": null
-        },
-        "subjects": {
-          "data": []
-        },
-        "copies": {
-          "data": [
-            {
-              "id": 1,
-              "attributes": {
-                "copyNumber": 1,
-                "isAvailable": true,
-                "condition": "NEW",
-                "library": {
-                  "data": {
-                    "id": 1,
-                    "attributes": {
-                      "name": "Βιβλιοθήκη Fixtures 2β 1",
-                      "description": null
-                    }
-                  }
-                }
-              }
-            }
-          ]
         }
-      }
+      ],
+      "copies": [
+        {
+          "id": 1,
+          "documentId": "doc-1",
+          "copyNumber": 1,
+          "isAvailable": true,
+          "condition": "NEW",
+          "library": {
+            "id": 1,
+            "documentId": "doc-1",
+            "name": "Βιβλιοθήκη Fixtures 2β 1",
+            "description": null
+          }
+        }
+      ]
     }
   ],
   "meta": {}

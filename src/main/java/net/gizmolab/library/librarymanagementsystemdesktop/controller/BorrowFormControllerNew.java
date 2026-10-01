@@ -191,7 +191,7 @@ public class BorrowFormControllerNew extends BaseController {
             @Override
             protected List<CopyDTO> call() throws Exception {
                 JsonNode response = strapiApiClient.getAvailableCopies(
-                    publication.getId(), authService.getLibraryId());
+                    publication.getDocumentId(), authService.getLibraryDocumentId());
                 return DTOConverter.copiesFromJson(response);
             }
         };

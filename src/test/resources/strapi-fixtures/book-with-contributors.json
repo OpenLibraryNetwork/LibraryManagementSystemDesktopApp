@@ -1,158 +1,129 @@
 {
   "data": {
     "id": 1,
-    "attributes": {
-      "title": "Θεραπείας συνέχεια",
-      "type": "Βιβλίο",
-      "isbn": "9789602116524",
-      "subtitle": null,
-      "yearPublished": 2002,
-      "description": null,
-      "summary": "Περίληψη.",
-      "pages": 119,
-      "language": "Ελληνικά",
-      "originalLanguage": null,
-      "coverImageUrl": null,
-      "binding": "Μαλακό εξώφυλλο",
-      "edition": null,
-      "dimensions": null,
-      "place": "Αθήνα",
-      "category": null,
-      "series": "Σύγχρονη Ελληνική Πεζογραφία",
-      "price": null,
-      "weight": null,
-      "biblionetId": "72584",
-      "biblionetCategoryId": null,
-      "issueNumber": null,
-      "publicationMonthYear": null,
-      "reviewed": true,
-      "contributors": [
-        {
-          "id": 1,
-          "person": {
-            "data": {
-              "id": 1,
-              "attributes": {
-                "name": "Νίκη Λοϊζίδη",
-                "qualifier": null,
-                "firstname": "Νίκη",
-                "middlename": null,
-                "lastname": "Λοϊζίδη",
-                "bornYear": "1950",
-                "deathYear": null,
-                "biography": null,
-                "biblionetPersonId": "15521",
-                "reviewed": true
-              }
-            }
-          },
-          "role": {
-            "data": {
-              "id": 1,
-              "attributes": {
-                "name": "Συγγραφέας",
-                "biblionetTypeId": "1"
-              }
-            }
-          }
-        },
-        {
-          "id": 2,
-          "person": {
-            "data": {
-              "id": 2,
-              "attributes": {
-                "name": "Παναγιώτης Σκόνδρας",
-                "qualifier": "1960-",
-                "firstname": null,
-                "middlename": null,
-                "lastname": null,
-                "bornYear": null,
-                "deathYear": null,
-                "biography": null,
-                "biblionetPersonId": "1232",
-                "reviewed": true
-              }
-            }
-          },
-          "role": {
-            "data": {
-              "id": 2,
-              "attributes": {
-                "name": "Μεταφραστής",
-                "biblionetTypeId": "2"
-              }
-            }
-          }
-        }
-      ],
-      "publisher": {
-        "data": {
-          "id": 1,
-          "attributes": {
-            "name": "Νεφέλη",
-            "biblionetCompanyId": "212",
-            "address": "Ασκληπιού 57, Αθήνα",
-            "phone": null,
-            "email": null,
-            "website": null,
-            "alternativeName": null,
-            "qualifier": null,
-            "reviewed": true
-          }
-        }
-      },
-      "subjects": {
-        "data": [
-          {
-            "id": 1,
-            "attributes": {
-              "subjectTitle": "Νεοελληνική πεζογραφία",
-              "subjectDDC": "889.3",
-              "biblionetSubjectId": "20"
-            }
-          }
-        ]
-      },
-      "copies": {
-        "data": [
-          {
-            "id": 1,
-            "attributes": {
-              "copyNumber": 1,
-              "isAvailable": true,
-              "condition": "NEW",
-              "library": {
-                "data": {
-                  "id": 1,
-                  "attributes": {
-                    "name": "Βιβλιοθήκη Fixtures 1",
-                    "description": null
-                  }
-                }
-              }
-            }
-          },
-          {
-            "id": 2,
-            "attributes": {
-              "copyNumber": 2,
-              "isAvailable": false,
-              "condition": "NEW",
-              "library": {
-                "data": {
-                  "id": 1,
-                  "attributes": {
-                    "name": "Βιβλιοθήκη Fixtures 1",
-                    "description": null
-                  }
-                }
-              }
-            }
-          }
-        ]
+    "documentId": "doc-1",
+    "title": "Θεραπείας συνέχεια",
+    "type": "Βιβλίο",
+    "isbn": "9789602116524",
+    "subtitle": null,
+    "yearPublished": 2002,
+    "description": null,
+    "summary": "Περίληψη.",
+    "pages": 119,
+    "language": "Ελληνικά",
+    "originalLanguage": null,
+    "coverImageUrl": null,
+    "binding": "Μαλακό εξώφυλλο",
+    "edition": null,
+    "dimensions": null,
+    "place": "Αθήνα",
+    "category": null,
+    "series": "Σύγχρονη Ελληνική Πεζογραφία",
+    "price": null,
+    "weight": null,
+    "biblionetId": "72584",
+    "biblionetCategoryId": null,
+    "issueNumber": null,
+    "publicationMonthYear": null,
+    "reviewed": true,
+    "publisher": {
+      "id": 1,
+      "documentId": "doc-1",
+      "name": "Νεφέλη",
+      "biblionetCompanyId": "212",
+      "address": "Ασκληπιού 57, Αθήνα",
+      "phone": null,
+      "email": null,
+      "website": null,
+      "alternativeName": null,
+      "qualifier": null,
+      "reviewed": true
+    },
+    "subjects": [
+      {
+        "id": 1,
+        "documentId": "doc-1",
+        "subjectTitle": "Νεοελληνική πεζογραφία",
+        "subjectDDC": "889.3",
+        "biblionetSubjectId": "20"
       }
-    }
+    ],
+    "contributors": [
+      {
+        "id": 1,
+        "person": {
+          "id": 1,
+          "documentId": "doc-1",
+          "name": "Νίκη Λοϊζίδη",
+          "qualifier": null,
+          "firstname": "Νίκη",
+          "middlename": null,
+          "lastname": "Λοϊζίδη",
+          "bornYear": "1950",
+          "deathYear": null,
+          "biography": null,
+          "biblionetPersonId": "15521",
+          "reviewed": true
+        },
+        "role": {
+          "id": 1,
+          "documentId": "doc-1",
+          "name": "Συγγραφέας",
+          "biblionetTypeId": "1"
+        }
+      },
+      {
+        "id": 2,
+        "person": {
+          "id": 2,
+          "documentId": "doc-2",
+          "name": "Παναγιώτης Σκόνδρας",
+          "qualifier": "1960-",
+          "firstname": null,
+          "middlename": null,
+          "lastname": null,
+          "bornYear": null,
+          "deathYear": null,
+          "biography": null,
+          "biblionetPersonId": "1232",
+          "reviewed": true
+        },
+        "role": {
+          "id": 2,
+          "documentId": "doc-2",
+          "name": "Μεταφραστής",
+          "biblionetTypeId": "2"
+        }
+      }
+    ],
+    "copies": [
+      {
+        "id": 1,
+        "documentId": "doc-1",
+        "copyNumber": 1,
+        "isAvailable": true,
+        "condition": "NEW",
+        "library": {
+          "id": 1,
+          "documentId": "doc-1",
+          "name": "Βιβλιοθήκη Fixtures 1",
+          "description": null
+        }
+      },
+      {
+        "id": 2,
+        "documentId": "doc-2",
+        "copyNumber": 2,
+        "isAvailable": false,
+        "condition": "NEW",
+        "library": {
+          "id": 1,
+          "documentId": "doc-1",
+          "name": "Βιβλιοθήκη Fixtures 1",
+          "description": null
+        }
+      }
+    ]
   },
   "meta": {}
 }

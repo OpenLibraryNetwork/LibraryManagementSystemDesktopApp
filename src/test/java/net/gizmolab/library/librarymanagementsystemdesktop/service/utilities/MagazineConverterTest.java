@@ -53,9 +53,11 @@ class MagazineConverterTest {
 
     @Test
     void copyOfAnIssueShowsWhichIssue() throws Exception {
-        CopyDTO copy = DTOConverter.copyFromJson(json("{\"id\":4,\"attributes\":{\"copyNumber\":1,\"isAvailable\":true,"
-                + "\"publication\":{\"data\":{\"id\":9,\"attributes\":{\"title\":\"Κοινωνικός Αναρχισμός\",\"type\":\"Περιοδικό\","
-                + "\"issueNumber\":\"5\",\"publicationMonthYear\":\"Δεκέμβριος 2016\"}}}}}"));
+        CopyDTO copy = DTOConverter.copyFromJson(json("{\"id\":4,\"documentId\":\"c4\",\"copyNumber\":1,\"isAvailable\":true,"
+                + "\"publication\":{\"id\":9,\"documentId\":\"i9\",\"title\":\"Κοινωνικός Αναρχισμός\",\"type\":\"Περιοδικό\","
+                + "\"issueNumber\":\"5\",\"publicationMonthYear\":\"Δεκέμβριος 2016\"}}"));
         assertEquals("Κοινωνικός Αναρχισμός — τεύχ. 5 (Δεκέμβριος 2016)", copy.getPublicationTitle());
+        assertEquals("c4", copy.getDocumentId());
+        assertEquals("i9", copy.getPublicationDocumentId());
     }
 }

@@ -2,32 +2,28 @@
   "data": [
     {
       "id": 1,
-      "attributes": {
-        "title": "Κοινωνικός Αναρχισμός",
+      "documentId": "doc-1",
+      "title": "Κοινωνικός Αναρχισμός",
+      "qualifier": null,
+      "issn": "2241-5580",
+      "place": "Θεσσαλονίκη",
+      "periodicity": null,
+      "nlgBiblionumber": "633300",
+      "reviewed": true,
+      "publisher": {
+        "id": 1,
+        "documentId": "doc-1",
+        "name": "Ελευθεριακές Εκδόσεις Κουρσάλ",
+        "biblionetCompanyId": null,
+        "address": null,
+        "phone": null,
+        "email": null,
+        "website": null,
+        "alternativeName": null,
         "qualifier": null,
-        "issn": "2241-5580",
-        "place": "Θεσσαλονίκη",
-        "periodicity": null,
-        "nlgBiblionumber": "633300",
-        "reviewed": true,
-        "publisher": {
-          "data": {
-            "id": 1,
-            "attributes": {
-              "name": "Ελευθεριακές Εκδόσεις Κουρσάλ",
-              "biblionetCompanyId": null,
-              "address": null,
-              "phone": null,
-              "email": null,
-              "website": null,
-              "alternativeName": null,
-              "qualifier": null,
-              "reviewed": false
-            }
-          }
-        },
-        "issuesInLibrary": 1
-      }
+        "reviewed": false
+      },
+      "issuesInLibrary": 1
     }
   ],
   "meta": {

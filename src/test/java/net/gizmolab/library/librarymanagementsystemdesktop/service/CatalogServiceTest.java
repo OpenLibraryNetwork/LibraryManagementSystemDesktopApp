@@ -65,10 +65,10 @@ class CatalogServiceTest {
         PersonDraft draft = new PersonDraft();
         draft.setFirstname("Νέο");
         server.on("POST", "/api/persons/local", 201,
-                "{\"source\":\"local\",\"data\":{\"id\":9,\"attributes\":{\"name\":\"Νέο\",\"reviewed\":false}}}");
+                "{\"source\":\"local\",\"data\":{\"id\":9,\"documentId\":\"ps9\",\"name\":\"Νέο\",\"reviewed\":false}}");
         CatalogService.CreateResult<PersonDTO> created = catalog.createPerson(draft);
         assertFalse(created.isDuplicate());
-        assertEquals(9L, created.created().getId());
+        assertEquals("ps9", created.created().getDocumentId());
 
         server.on("POST", "/api/persons/local", 409, fixture("persons-local-duplicate-409.json"));
         CatalogService.CreateResult<PersonDTO> dup = catalog.createPerson(draft);
@@ -79,10 +79,10 @@ class CatalogServiceTest {
     @Test
     void publicationLocalBiblionetOrDuplicate() throws Exception {
         server.on("POST", "/api/books/local", 201,
-                "{\"source\":\"local\",\"data\":{\"id\":12,\"attributes\":{\"title\":\"Μανιφέστο\",\"type\":\"Μπροσούρα\"}}}");
+                "{\"source\":\"local\",\"data\":{\"id\":12,\"documentId\":\"bk12\",\"title\":\"Μανιφέστο\",\"type\":\"Μπροσούρα\"}}");
         CatalogService.PublicationCreateResult local = catalog.createPublication(brochureDraft());
         assertEquals(CatalogService.Source.LOCAL, local.source());
-        assertEquals(12L, local.publication().getId());
+        assertEquals("bk12", local.publication().getDocumentId());
 
         server.on("POST", "/api/books/local", 200, fixture("isbn-lookup-found.json"));
         assertEquals(CatalogService.Source.BIBLIONET, catalog.createPublication(brochureDraft()).source());
@@ -111,15 +111,15 @@ class CatalogServiceTest {
 
     @Test
     void subjectsLoadEveryPage() throws Exception { // final review: Strapi maxLimit is 100
-        String page = "{\"data\":[{\"id\":%d,\"attributes\":{\"subjectTitle\":\"Θέμα %d\",\"subjectDDC\":\"%d\"}}],"
+        String page = "{\"data\":[{\"id\":%d,\"documentId\":\"s%d\",\"subjectTitle\":\"Θέμα %d\",\"subjectDDC\":\"%d\"}],"
                 + "\"meta\":{\"pagination\":{\"page\":%d,\"pageSize\":100,\"pageCount\":2,\"total\":2}}}";
         server.onSequence("GET", "/api/subjects", List.of(
-                new Object[]{200, String.format(page, 1, 1, 100, 1)},
-                new Object[]{200, String.format(page, 2, 2, 200, 2)}));
+                new Object[]{200, String.format(page, 1, 1, 1, 100, 1)},
+                new Object[]{200, String.format(page, 2, 2, 2, 200, 2)}));
 
         List<SubjectDTO> subjects = catalog.getSubjects();
 
-        assertEquals(List.of(1L, 2L), subjects.stream().map(SubjectDTO::getId).toList());
+        assertEquals(List.of("s1", "s2"), subjects.stream().map(SubjectDTO::getDocumentId).toList());
         assertEquals(2, server.requests().size());
         assertTrue(server.requests().get(1).contains("pagination[page]=2"), server.requests().get(1));
         assertTrue(server.requests().stream().allMatch(r -> r.contains("pagination[pageSize]=100")));
@@ -127,10 +127,10 @@ class CatalogServiceTest {
 
     @Test
     void copiesContinueAfterTheHighestNumberEvenBeyond100() { // final review minor: only the highest is fetched
-        server.on("GET", "/api/copies", 200, "{\"data\":[{\"id\":150,\"attributes\":{\"copyNumber\":150}}]}");
-        server.on("POST", "/api/copies", 200, "{\"data\":{\"id\":151,\"attributes\":{\"copyNumber\":151}}}");
+        server.on("GET", "/api/copies", 200, "{\"data\":[{\"id\":150,\"documentId\":\"c150\",\"copyNumber\":150}]}");
+        server.on("POST", "/api/copies", 200, "{\"data\":{\"id\":151,\"documentId\":\"c151\",\"copyNumber\":151}}");
 
-        assertTrue(catalog.addCopies(5L, 3L, 1, "NEW").isComplete());
+        assertTrue(catalog.addCopies("p5", "l3", 1, "NEW").isComplete());
 
         assertTrue(server.requests().get(0).contains("sort=copyNumber:desc&pagination[pageSize]=1"), server.requests().get(0));
         assertTrue(server.bodies().stream().anyMatch(b -> b.contains("\"copyNumber\":151")));
@@ -139,10 +139,10 @@ class CatalogServiceTest {
     @Test
     void copiesContinueAfterExistingNumbers() { // Review Focus 3
         server.on("GET", "/api/copies", 200,
-                "{\"data\":[{\"id\":1,\"attributes\":{\"copyNumber\":1}},{\"id\":2,\"attributes\":{\"copyNumber\":2}}]}");
-        server.on("POST", "/api/copies", 200, "{\"data\":{\"id\":10,\"attributes\":{\"copyNumber\":3}}}");
+                "{\"data\":[{\"id\":1,\"documentId\":\"c1\",\"copyNumber\":1},{\"id\":2,\"documentId\":\"c2\",\"copyNumber\":2}]}");
+        server.on("POST", "/api/copies", 200, "{\"data\":{\"id\":10,\"documentId\":\"c10\",\"copyNumber\":3}}");
 
-        CatalogService.CopiesResult r = catalog.addCopies(5L, 3L, 2, "GOOD");
+        CatalogService.CopiesResult r = catalog.addCopies("p5", "l3", 2, "GOOD");
 
         assertTrue(r.isComplete());
         assertEquals(2, r.created());
@@ -151,17 +151,18 @@ class CatalogServiceTest {
         assertTrue(posted.get(0).contains("\"copyNumber\":3"));
         assertTrue(posted.get(1).contains("\"copyNumber\":4"));
         assertTrue(posted.get(0).contains("\"condition\":\"GOOD\""));
-        assertTrue(server.requests().get(0).contains("filters[publication][id][$eq]=5&filters[library][id][$eq]=3"));
+        assertTrue(posted.get(0).contains("\"publication\":\"p5\""), posted.get(0));
+        assertTrue(server.requests().get(0).contains("filters[publication][documentId][$eq]=p5&filters[library][documentId][$eq]=l3"));
     }
 
     @Test
     void copiesStopAtFirstFailure() {
         server.on("GET", "/api/copies", 200, "{\"data\":[]}");
         server.onSequence("POST", "/api/copies", List.of(
-                new Object[]{200, "{\"data\":{\"id\":10}}"},
+                new Object[]{200, "{\"data\":{\"id\":10,\"documentId\":\"c10\"}}"},
                 new Object[]{500, "Internal Server Error"}));
 
-        CatalogService.CopiesResult r = catalog.addCopies(5L, 3L, 3, "NEW");
+        CatalogService.CopiesResult r = catalog.addCopies("p5", "l3", 3, "NEW");
 
         assertFalse(r.isComplete());
         assertEquals(1, r.created());
@@ -206,7 +207,7 @@ class CatalogServiceTest {
     @Test
     void issuesComeSortedWithTheLibraryCopies() throws Exception {
         server.on("GET", "/api/books", 200, fixture("issues-of-magazine.json"));
-        List<PublicationDTO> issues = catalog.getIssues(1L, null);
+        List<PublicationDTO> issues = catalog.getIssues("m1", null);
         assertEquals(List.of("5", "10", "Άνοιξη 2020"), issues.stream()
                 .map(i -> i.getIssueNumber() != null ? i.getIssueNumber() : i.getPublicationMonthYear()).toList());
         assertEquals(1, issues.get(0).getTotalCopies());
@@ -215,13 +216,13 @@ class CatalogServiceTest {
 
     @Test
     void issuesLoadEveryPage() throws Exception { // final review M-4: Strapi maxLimit is 100
-        String page = "{\"data\":[{\"id\":%d,\"attributes\":{\"title\":\"Π\",\"type\":\"Περιοδικό\",\"issueNumber\":\"%s\"}}],"
+        String page = "{\"data\":[{\"id\":%d,\"documentId\":\"i%<d\",\"title\":\"Π\",\"type\":\"Περιοδικό\",\"issueNumber\":\"%s\"}],"
                 + "\"meta\":{\"pagination\":{\"page\":%d,\"pageSize\":100,\"pageCount\":2,\"total\":2}}}";
         server.onSequence("GET", "/api/books", List.of(
                 new Object[]{200, String.format(page, 1, "101", 1)},
                 new Object[]{200, String.format(page, 2, "7", 2)}));
 
-        List<PublicationDTO> issues = catalog.getIssues(9L, null);
+        List<PublicationDTO> issues = catalog.getIssues("m9", null);
 
         assertEquals(List.of("7", "101"), issues.stream().map(PublicationDTO::getIssueNumber).toList());
         assertEquals(2, server.requests().size());
@@ -234,7 +235,7 @@ class CatalogServiceTest {
         PublicationDraft draft = new PublicationDraft();
         draft.setType(PublicationDraft.PERIODICAL);
         draft.setTitle("Κοινωνικός Αναρχισμός");
-        draft.setMagazineId(1L);
+        draft.setMagazineId("m1");
         draft.setIssueNumber("05");
         CatalogService.PublicationCreateResult result = catalog.createPublication(draft);
         assertTrue(result.isDuplicate());

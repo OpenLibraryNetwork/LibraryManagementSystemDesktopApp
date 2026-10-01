@@ -15,8 +15,8 @@ public class BorrowDTO {
     private String userLastName;
 
     // Strapi references
-    private Long strapiCopyId;
-    private Long strapiPublicationId;
+    private String strapiCopyDocumentId;
+    private String strapiPublicationDocumentId;
     private Integer copyNumber;
 
     // Cached publication info (from Borrow entity)
@@ -56,10 +56,10 @@ public class BorrowDTO {
     public void setUserFirstName(String userFirstName) { this.userFirstName = userFirstName; }
     public String getUserLastName() { return userLastName; }
     public void setUserLastName(String userLastName) { this.userLastName = userLastName; }
-    public Long getStrapiCopyId() { return strapiCopyId; }
-    public void setStrapiCopyId(Long strapiCopyId) { this.strapiCopyId = strapiCopyId; }
-    public Long getStrapiPublicationId() { return strapiPublicationId; }
-    public void setStrapiPublicationId(Long strapiPublicationId) { this.strapiPublicationId = strapiPublicationId; }
+    public String getStrapiCopyDocumentId() { return strapiCopyDocumentId; }
+    public void setStrapiCopyDocumentId(String strapiCopyDocumentId) { this.strapiCopyDocumentId = strapiCopyDocumentId; }
+    public String getStrapiPublicationDocumentId() { return strapiPublicationDocumentId; }
+    public void setStrapiPublicationDocumentId(String strapiPublicationDocumentId) { this.strapiPublicationDocumentId = strapiPublicationDocumentId; }
     public Integer getCopyNumber() { return copyNumber; }
     public void setCopyNumber(Integer copyNumber) { this.copyNumber = copyNumber; }
     public String getPublicationTitle() { return publicationTitle; }

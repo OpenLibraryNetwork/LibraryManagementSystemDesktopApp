@@ -14,12 +14,12 @@ class DraftsTest {
 
     private static PersonDTO person(long id) {
         PersonDTO p = new PersonDTO();
-        p.setId(id);
+        p.setDocumentId("p" + id);
         p.setName("P" + id);
         return p;
     }
 
-    private static final ContributorRoleDTO AUTHOR = new ContributorRoleDTO(1L, "Συγγραφέας", "1");
+    private static final ContributorRoleDTO AUTHOR = new ContributorRoleDTO("r1", "Συγγραφέας", "1");
 
     @Test
     void brochurePayloadHasOnlyFilledFields() {
@@ -30,9 +30,9 @@ class DraftsTest {
         d.setYearText("2019");
         d.setPagesText("");
         d.setLanguage("Ελληνικά");
-        d.setPublisherId(7L);
+        d.setPublisherId("pb7");
         d.setContributors(List.of(new ContributorDTO(person(3), AUTHOR)));
-        d.setSubjectIds(List.of(20L));
+        d.setSubjectIds(List.of("s20"));
         d.setIsbn("123"); // ignored for brochures
 
         assertTrue(d.validate().isEmpty());
@@ -41,9 +41,9 @@ class DraftsTest {
                 "title", "Για την αυτοοργάνωση",
                 "yearPublished", 2019,
                 "language", "Ελληνικά",
-                "publisher", 7L,
-                "contributors", List.of(Map.of("person", 3L, "role", 1L)),
-                "subjects", List.of(20L))), d.toPayload());
+                "publisher", "pb7",
+                "contributors", List.of(Map.of("person", "p3", "role", "r1")),
+                "subjects", List.of("s20"))), d.toPayload());
     }
 
     @Test
@@ -100,13 +100,13 @@ class DraftsTest {
         d.setTitle("Κοινωνικός Αναρχισμός");
         assertEquals(java.util.Set.of("magazine", "issue"), d.validate().keySet());
 
-        d.setMagazineId(3L);
+        d.setMagazineId("m3");
         d.setPeriod(" Άνοιξη 2020 ");
         assertTrue(d.validate().isEmpty());
         @SuppressWarnings("unchecked")
         java.util.Map<String, Object> data = (java.util.Map<String, Object>) d.toPayload().get("data");
         assertEquals("Περιοδικό", data.get("type"));
-        assertEquals(3L, data.get("magazine"));
+        assertEquals("m3", data.get("magazine"));
         assertEquals("Άνοιξη 2020", data.get("publicationMonthYear"));
         assertFalse(data.containsKey("issueNumber"));
         assertFalse(data.containsKey("isbn"));
@@ -121,10 +121,10 @@ class DraftsTest {
         d.setTitle(" Κοινωνικός Αναρχισμός ");
         d.setIssn("22415580");
         d.setPlace("Θεσσαλονίκη");
-        d.setPublisherId(4L);
+        d.setPublisherId("pb4");
         assertTrue(d.validate().isEmpty());
         @SuppressWarnings("unchecked")
         java.util.Map<String, Object> data = (java.util.Map<String, Object>) d.toPayload().get("data");
-        assertEquals(java.util.Map.of("title", "Κοινωνικός Αναρχισμός", "issn", "2241-5580", "place", "Θεσσαλονίκη", "publisher", 4L), data);
+        assertEquals(java.util.Map.of("title", "Κοινωνικός Αναρχισμός", "issn", "2241-5580", "place", "Θεσσαλονίκη", "publisher", "pb4"), data);
     }
 }

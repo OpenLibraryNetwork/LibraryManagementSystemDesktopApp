@@ -22,8 +22,8 @@ public interface BorrowRepository extends JpaRepository<Borrow, Long> {
     List<Borrow> findByUserAndReturned(User user, boolean returned);
 
     // === By Strapi Copy ID ===
-    Optional<Borrow> findByUserAndStrapiCopyIdAndReturned(User user, Long strapiCopyId, boolean returned);
-    List<Borrow> findByStrapiCopyIdAndReturned(Long strapiCopyId, boolean returned);
+    Optional<Borrow> findByUserAndStrapiCopyDocumentIdAndReturned(User user, String strapiCopyDocumentId, boolean returned);
+    List<Borrow> findByStrapiCopyDocumentIdAndReturned(String strapiCopyDocumentId, boolean returned);
 
     // === By return status ===
     List<Borrow> findByReturned(boolean returned);

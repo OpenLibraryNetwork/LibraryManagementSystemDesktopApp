@@ -16,7 +16,7 @@ public final class IssueOrder {
             .thenComparing(p -> firstNumber(p.getIssueNumber()), Comparator.nullsLast(Comparator.naturalOrder()))
             .thenComparing(p -> SearchText.normalize(nz(p.getIssueNumber())))
             .thenComparing(p -> SearchText.normalize(nz(p.getPublicationMonthYear())))
-            .thenComparing(p -> p.getId() == null ? 0L : p.getId());
+            .thenComparing(p -> nz(p.getDocumentId()));
 
     private IssueOrder() {}
 

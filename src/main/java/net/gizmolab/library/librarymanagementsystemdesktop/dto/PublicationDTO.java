@@ -8,7 +8,7 @@ import java.util.List;
  * Maps to Strapi Book (Έντυπα) content type.
  */
 public class PublicationDTO {
-    private Long id;                  // Strapi ID
+    private String documentId;
     private String title;
     private String type;              // "Βιβλίο", "Μπροσούρα", "Περιοδικό"
     private String isbn;              // only for Βιβλίο
@@ -37,7 +37,7 @@ public class PublicationDTO {
     // Periodical-specific
     private String issueNumber;
     private String publicationMonthYear;
-    private Long magazineId;
+    private String magazineDocumentId;
     private String magazineTitle;
 
     // Relations (flattened for display)
@@ -52,8 +52,8 @@ public class PublicationDTO {
     public PublicationDTO() {}
 
     // --- Getters & Setters ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getDocumentId() { return documentId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
     public String getTitle() { return title; }
     public void setTitle(String title) { this.title = title; }
     public String getType() { return type; }
@@ -84,8 +84,8 @@ public class PublicationDTO {
     public void setIssueNumber(String issueNumber) { this.issueNumber = issueNumber; }
     public String getPublicationMonthYear() { return publicationMonthYear; }
     public void setPublicationMonthYear(String publicationMonthYear) { this.publicationMonthYear = publicationMonthYear; }
-    public Long getMagazineId() { return magazineId; }
-    public void setMagazineId(Long magazineId) { this.magazineId = magazineId; }
+    public String getMagazineDocumentId() { return magazineDocumentId; }
+    public void setMagazineDocumentId(String magazineDocumentId) { this.magazineDocumentId = magazineDocumentId; }
     public String getMagazineTitle() { return magazineTitle; }
     public void setMagazineTitle(String magazineTitle) { this.magazineTitle = magazineTitle; }
     public PublisherDTO getPublisher() { return publisher; }

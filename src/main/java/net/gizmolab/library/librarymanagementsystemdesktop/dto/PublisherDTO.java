@@ -4,7 +4,7 @@ package net.gizmolab.library.librarymanagementsystemdesktop.dto;
  * DTO for Strapi Publisher (Εκδότες) content type.
  */
 public class PublisherDTO {
-    private Long id;              // Strapi ID (was publisherId)
+    private String documentId;
     private String name;
     private String biblionetCompanyId;
     private String address;
@@ -15,14 +15,14 @@ public class PublisherDTO {
 
     public PublisherDTO() {}
 
-    public PublisherDTO(Long id, String name) {
-        this.id = id;
+    public PublisherDTO(String documentId, String name) {
+        this.documentId = documentId;
         this.name = name;
     }
 
     // --- Getters & Setters ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getDocumentId() { return documentId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getBiblionetCompanyId() { return biblionetCompanyId; }

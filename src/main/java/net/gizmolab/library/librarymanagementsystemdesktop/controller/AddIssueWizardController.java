@@ -209,7 +209,7 @@ public class AddIssueWizardController extends AddPublicationWizardController {
         shown(magazinePane, false);
         shown(issuesPane, true);
         show(Page.START);
-        BackgroundTasks.run(() -> catalog.getIssues(chosen.getId(), null), issues -> {
+        BackgroundTasks.run(() -> catalog.getIssues(chosen.getDocumentId(), null), issues -> {
             if (magazine != chosen) return; // the librarian went back and chose another magazine
             issuesTable.getItems().setAll(issues);
             issuesPlaceholder.setText("Δεν υπάρχουν ακόμη τεύχη αυτού του περιοδικού στο δίκτυο. Επιλέξτε «Νέο τεύχος».");

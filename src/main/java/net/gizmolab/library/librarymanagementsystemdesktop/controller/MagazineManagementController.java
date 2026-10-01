@@ -84,7 +84,7 @@ public class MagazineManagementController extends BaseManagementController<Magaz
         String heading = i18nManager.getMessage("magazine.issuesOf");
         issuesTitleLabel.setText(magazine == null ? heading : heading + ": " + magazine.getDisplayName());
         if (magazine == null) return;
-        BackgroundTasks.run(() -> catalog.getIssues(magazine.getId(), AuthService.getCurrentLibraryId()), issues -> {
+        BackgroundTasks.run(() -> catalog.getIssues(magazine.getDocumentId(), AuthService.getCurrentLibraryDocumentId()), issues -> {
             if (issuesGate.isLatest(token)) issuesTable.getItems().setAll(issues);
         }, error -> {
             if (issuesGate.isLatest(token)) issuesPlaceholder.setText(UserMessages.describe(error));
@@ -124,16 +124,16 @@ public class MagazineManagementController extends BaseManagementController<Magaz
     protected void addNewItem() {
         MagazineDTO selected = getSelectedItem();
         openAddIssueWizard(selected);
-        Long keep = selected != null ? selected.getId() : null;
+        String keep = selected != null ? selected.getDocumentId() : null;
         refreshData();
         Platform.runLater(() -> reselect(keep)); // the refresh replaced the rows and cleared the selection
     }
 
     /** Selects the magazine with this id again (its issues reload through the selection listener). */
-    private void reselect(Long magazineId) {
+    private void reselect(String magazineId) {
         if (magazineId == null) return;
         tableView.getItems().stream()
-                .filter(m -> magazineId.equals(m.getId()))
+                .filter(m -> magazineId.equals(m.getDocumentId()))
                 .findFirst()
                 .ifPresent(m -> tableView.getSelectionModel().select(m));
     }

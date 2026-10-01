@@ -2,8 +2,7 @@ package net.gizmolab.library.librarymanagementsystemdesktop.dto;
 
 /** Person (author, translator, …) from the shared authority file. */
 public class PersonDTO {
-    private Long id;
-    private String name;
+    private String documentId;private String name;
     private String qualifier;
     private String firstname;
     private String middlename;
@@ -35,8 +34,8 @@ public class PersonDTO {
 
     private static boolean isBlank(String s) { return s == null || s.trim().isEmpty(); }
 
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getDocumentId() { return documentId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
     public String getQualifier() { return qualifier; }

@@ -12,10 +12,11 @@ import java.util.List;
 /**
  * Converts between Strapi JSON responses and DTOs.
  *
- * Strapi v4 response format:
- * - Single: { "data": { "id": N, "attributes": { ... } } }
- * - List:   { "data": [ { "id": N, "attributes": { ... } }, ... ] }
- * - Relations: { "data": { "id": N, "attributes": { ... } } } nested
+ * Strapi 5 response format (flat):
+ * - Single: { "data": { "id": N, "documentId": "…", ... } }
+ * - List:   { "data": [ { "id": N, "documentId": "…", ... }, ... ] }
+ * - Relations: the related object (or an array of objects) in place, without a "data" wrapper.
+ * Records are identified by documentId; the numeric id is not used by the client.
  */
 public class DTOConverter {
 
@@ -25,17 +26,16 @@ public class DTOConverter {
 
     /**
      * Parse a Strapi Book response into PublicationDTO.
-     * Accepts either the wrapper { "data": { "id", "attributes" } }
-     * or the inner { "id", "attributes" } directly.
+     * Accepts either the wrapper { "data": { ... } } or the record itself.
      */
     public static PublicationDTO publicationFromJson(JsonNode node) {
-        return publicationFromJson(node, net.gizmolab.library.librarymanagementsystemdesktop.service.AuthService.getCurrentLibraryId());
+        return publicationFromJson(node, net.gizmolab.library.librarymanagementsystemdesktop.service.AuthService.getCurrentLibraryDocumentId());
     }
 
     /**
-     * @param currentLibraryId copies of other libraries are not counted; null counts every copy
+     * @param currentLibraryDocumentId copies of other libraries are not counted; null counts every copy
      */
-    public static PublicationDTO publicationFromJson(JsonNode node, Long currentLibraryId) {
+    public static PublicationDTO publicationFromJson(JsonNode node, String currentLibraryDocumentId) {
         if (node == null) return null;
 
         // Handle wrapper: { "data": { ... } }
@@ -45,9 +45,9 @@ public class DTOConverter {
         if (node == null || node.isNull()) return null;
 
         PublicationDTO dto = new PublicationDTO();
-        dto.setId(node.path("id").asLong());
+        dto.setDocumentId(textOrNull(node, "documentId"));
 
-        JsonNode attr = node.has("attributes") ? node.get("attributes") : node;
+        JsonNode attr = node;
 
         dto.setTitle(textOrNull(attr, "title"));
         dto.setType(textOrNull(attr, "type"));
@@ -80,8 +80,8 @@ public class DTOConverter {
         JsonNode contributorsNode = attr.path("contributors");
         if (contributorsNode.isArray()) {
             for (JsonNode row : contributorsNode) {
-                PersonDTO person = personFromJson(row.path("person").path("data"));
-                ContributorRoleDTO role = roleFromJson(row.path("role").path("data"));
+                PersonDTO person = personFromJson(row.path("person"));
+                ContributorRoleDTO role = roleFromJson(row.path("role"));
                 if (person != null && role != null) {
                     contributors.add(new ContributorDTO(person, role));
                 }
@@ -91,13 +91,13 @@ public class DTOConverter {
         dto.setReviewed(attr.path("reviewed").asBoolean(false));
 
         // Parse publisher relation
-        JsonNode publisherNode = attr.path("publisher").path("data");
-        if (!publisherNode.isNull() && !publisherNode.isMissingNode()) {
+        JsonNode publisherNode = attr.path("publisher");
+        if (publisherNode.isObject()) {
             dto.setPublisher(publisherFromJson(publisherNode));
         }
 
         // Parse subjects relation
-        JsonNode subjectsNode = attr.path("subjects").path("data");
+        JsonNode subjectsNode = attr.path("subjects");
         if (subjectsNode.isArray()) {
             List<SubjectDTO> subjects = new ArrayList<>();
             for (JsonNode subjectNode : subjectsNode) {
@@ -108,27 +108,21 @@ public class DTOConverter {
 
 
         // Parse copies relation (count only for the current library)
-        JsonNode copiesNode = attr.path("copies").path("data");
+        JsonNode copiesNode = attr.path("copies");
         if (copiesNode.isArray()) {
             int total = 0;
             int available = 0;
             for (JsonNode copyNode : copiesNode) {
-                JsonNode copyAttr = copyNode.has("attributes") ? copyNode.get("attributes") : copyNode;
-                
-                // If library relation is populated, check if the copy belongs to this library
-                if (currentLibraryId != null) {
-                    JsonNode libNode = copyAttr.path("library").path("data");
-                    if (libNode != null && !libNode.isNull() && !libNode.isMissingNode()) {
-                        long copyLibraryId = libNode.path("id").asLong(0);
-                        if (copyLibraryId > 0 && copyLibraryId != currentLibraryId) {
-                            // Skip copies belonging to other libraries
-                            continue;
-                        }
+                // Skip copies known to belong to another library
+                if (currentLibraryDocumentId != null) {
+                    String copyLibrary = textOrNull(copyNode.path("library"), "documentId");
+                    if (copyLibrary != null && !copyLibrary.equals(currentLibraryDocumentId)) {
+                        continue;
                     }
                 }
-                
+
                 total++;
-                if (copyAttr.path("isAvailable").asBoolean(false)) {
+                if (copyNode.path("isAvailable").asBoolean(false)) {
                     available++;
                 }
             }
@@ -137,11 +131,10 @@ public class DTOConverter {
         }
 
         // Parse magazine relation (for periodicals)
-        JsonNode magNode = attr.path("magazine").path("data");
-        if (!magNode.isNull() && !magNode.isMissingNode()) {
-            dto.setMagazineId(magNode.path("id").asLong());
-            JsonNode magAttr = magNode.has("attributes") ? magNode.get("attributes") : magNode;
-            dto.setMagazineTitle(textOrNull(magAttr, "title"));
+        JsonNode magNode = attr.path("magazine");
+        if (magNode.isObject()) {
+            dto.setMagazineDocumentId(textOrNull(magNode, "documentId"));
+            dto.setMagazineTitle(textOrNull(magNode, "title"));
         }
 
         return dto;
@@ -176,18 +169,17 @@ public class DTOConverter {
         if (node == null || node.isNull()) return null;
 
         CopyDTO dto = new CopyDTO();
-        dto.setId(node.path("id").asLong());
+        dto.setDocumentId(textOrNull(node, "documentId"));
 
-        JsonNode attr = node.has("attributes") ? node.get("attributes") : node;
+        JsonNode attr = node;
         dto.setCopyNumber(attr.path("copyNumber").asInt(1));
         dto.setAvailable(attr.path("isAvailable").asBoolean(true));
         dto.setCondition(textOrNull(attr, "condition"));
 
         // Parse publication relation
-        JsonNode pubNode = attr.path("publication").path("data");
-        if (!pubNode.isNull() && !pubNode.isMissingNode()) {
-            dto.setPublicationId(pubNode.path("id").asLong());
-            JsonNode pubAttr = pubNode.has("attributes") ? pubNode.get("attributes") : pubNode;
+        JsonNode pubAttr = attr.path("publication");
+        if (pubAttr.isObject()) {
+            dto.setPublicationDocumentId(textOrNull(pubAttr, "documentId"));
             String title = textOrNull(pubAttr, "title");
             if (PublicationDetailFormatter.PERIODICAL.equals(textOrNull(pubAttr, "type"))) {
                 String label = PublicationDetailFormatter.issueLabel(
@@ -198,11 +190,10 @@ public class DTOConverter {
         }
 
         // Parse library relation
-        JsonNode libNode = attr.path("library").path("data");
-        if (!libNode.isNull() && !libNode.isMissingNode()) {
-            dto.setLibraryId(libNode.path("id").asLong());
-            JsonNode libAttr = libNode.has("attributes") ? libNode.get("attributes") : libNode;
-            dto.setLibraryName(textOrNull(libAttr, "name"));
+        JsonNode libNode = attr.path("library");
+        if (libNode.isObject()) {
+            dto.setLibraryDocumentId(textOrNull(libNode, "documentId"));
+            dto.setLibraryName(textOrNull(libNode, "name"));
         }
 
         return dto;
@@ -231,8 +222,8 @@ public class DTOConverter {
         if (node == null) return null;
 
         PersonDTO dto = new PersonDTO();
-        dto.setId(node.path("id").asLong());
-        JsonNode attr = node.has("attributes") ? node.get("attributes") : node;
+        dto.setDocumentId(textOrNull(node, "documentId"));
+        JsonNode attr = node;
         dto.setName(textOrNull(attr, "name"));
         dto.setQualifier(textOrNull(attr, "qualifier"));
         dto.setFirstname(textOrNull(attr, "firstname"));
@@ -263,8 +254,8 @@ public class DTOConverter {
     public static ContributorRoleDTO roleFromJson(JsonNode node) {
         node = unwrap(node);
         if (node == null) return null;
-        JsonNode attr = node.has("attributes") ? node.get("attributes") : node;
-        return new ContributorRoleDTO(node.path("id").asLong(), textOrNull(attr, "name"), textOrNull(attr, "biblionetTypeId"));
+        JsonNode attr = node;
+        return new ContributorRoleDTO(textOrNull(node, "documentId"), textOrNull(attr, "name"), textOrNull(attr, "biblionetTypeId"));
     }
 
     /** Accepts { "data": {...} }, {...}, null, NullNode or MissingNode; returns the inner node or null. */
@@ -287,9 +278,9 @@ public class DTOConverter {
         if (node == null || node.isNull()) return null;
 
         PublisherDTO dto = new PublisherDTO();
-        dto.setId(node.path("id").asLong());
+        dto.setDocumentId(textOrNull(node, "documentId"));
 
-        JsonNode attr = node.has("attributes") ? node.get("attributes") : node;
+        JsonNode attr = node;
         dto.setName(textOrNull(attr, "name"));
         dto.setBiblionetCompanyId(textOrNull(attr, "biblionetCompanyId"));
         dto.setAddress(textOrNull(attr, "address"));
@@ -303,7 +294,7 @@ public class DTOConverter {
         if (attr.has("bookCount")) {
             dto.setBookCount(attr.path("bookCount").asInt(0));
         } else {
-            JsonNode booksNode = attr.path("books").path("data");
+            JsonNode booksNode = attr.path("books");
             if (booksNode.isArray()) {
                 dto.setBookCount(booksNode.size());
             }
@@ -337,9 +328,9 @@ public class DTOConverter {
         if (node == null || node.isNull()) return null;
 
         MagazineDTO dto = new MagazineDTO();
-        dto.setId(node.path("id").asLong());
+        dto.setDocumentId(textOrNull(node, "documentId"));
 
-        JsonNode attr = node.has("attributes") ? node.get("attributes") : node;
+        JsonNode attr = node;
         dto.setTitle(textOrNull(attr, "title"));
         dto.setIssn(textOrNull(attr, "issn"));
         dto.setQualifier(textOrNull(attr, "qualifier"));
@@ -348,8 +339,8 @@ public class DTOConverter {
         dto.setNlgBiblionumber(textOrNull(attr, "nlgBiblionumber"));
         dto.setIssuesInLibrary(attr.path("issuesInLibrary").asInt(0));
 
-        JsonNode pubNode = attr.path("publisher").path("data");
-        if (!pubNode.isNull() && !pubNode.isMissingNode()) {
+        JsonNode pubNode = attr.path("publisher");
+        if (pubNode.isObject()) {
             dto.setPublisher(publisherFromJson(pubNode));
         }
 
@@ -382,8 +373,8 @@ public class DTOConverter {
 
         BorrowDTO dto = new BorrowDTO();
         dto.setId(borrow.getId());
-        dto.setStrapiCopyId(borrow.getStrapiCopyId());
-        dto.setStrapiPublicationId(borrow.getStrapiPublicationId());
+        dto.setStrapiCopyDocumentId(borrow.getStrapiCopyDocumentId());
+        dto.setStrapiPublicationDocumentId(borrow.getStrapiPublicationDocumentId());
         dto.setCopyNumber(borrow.getCopyNumber());
 
         // Cached publication info
@@ -436,9 +427,9 @@ public class DTOConverter {
         if (node == null || node.isNull()) return null;
 
         SubjectDTO dto = new SubjectDTO();
-        dto.setId(node.path("id").asLong());
+        dto.setDocumentId(textOrNull(node, "documentId"));
 
-        JsonNode attr = node.has("attributes") ? node.get("attributes") : node;
+        JsonNode attr = node;
         dto.setSubjectTitle(textOrNull(attr, "subjectTitle"));
         dto.setSubjectDDC(textOrNull(attr, "subjectDDC"));
         dto.setBiblionetSubjectId(textOrNull(attr, "biblionetSubjectId"));
@@ -488,11 +479,11 @@ public class DTOConverter {
     }
 
     // ═══════════════════════════════════════════════════════
-    // Pagination — from Strapi v4 meta
+    // Pagination — from Strapi meta
     // ═══════════════════════════════════════════════════════
 
     /**
-     * Extract pagination metadata from a Strapi v4 response.
+     * Extract pagination metadata from a Strapi response.
      *
      * Expected format:
      * { "meta": { "pagination": { "page": 1, "pageSize": 15, "pageCount": 10, "total": 150 } } }

@@ -72,8 +72,8 @@ public class CopyManagementModalController extends BaseController {
         Task<List<CopyDTO>> task = new Task<>() {
             @Override
             protected List<CopyDTO> call() throws Exception {
-                Long libId = AuthService.getCurrentLibraryId();
-                JsonNode response = strapiApiClient.getCopiesForPublication(publication.getId(), libId);
+                String libId = AuthService.getCurrentLibraryDocumentId();
+                JsonNode response = strapiApiClient.getCopiesForPublication(publication.getDocumentId(), libId);
                 return DTOConverter.copiesFromJson(response);
             }
         };
@@ -130,7 +130,7 @@ public class CopyManagementModalController extends BaseController {
             Task<Void> task = new Task<>() {
                 @Override
                 protected Void call() throws Exception {
-                    strapiApiClient.createCopy(publication.getId(), number, condition);
+                    strapiApiClient.createCopy(publication.getDocumentId(), number, condition);
                     return null;
                 }
             };
@@ -171,7 +171,7 @@ public class CopyManagementModalController extends BaseController {
             Task<Void> task = new Task<>() {
                 @Override
                 protected Void call() throws Exception {
-                    strapiApiClient.updateCopyCondition(selected.getId(), newCondition);
+                    strapiApiClient.updateCopyCondition(selected.getDocumentId(), newCondition);
                     return null;
                 }
             };
@@ -199,7 +199,7 @@ public class CopyManagementModalController extends BaseController {
             Task<Void> task = new Task<>() {
                 @Override
                 protected Void call() throws Exception {
-                    strapiApiClient.deleteCopy(selected.getId());
+                    strapiApiClient.deleteCopy(selected.getDocumentId());
                     return null;
                 }
             };

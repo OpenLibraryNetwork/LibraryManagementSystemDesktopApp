@@ -68,17 +68,17 @@ public class PublisherPublicationsModalController {
     private int totalPages = 1;
 
     // Context
-    private Long publisherId;
+    private String publisherId; // documentId
     private Stage dialogStage;
 
-    public void setPublisherId(Long publisherId) {
+    public void setPublisherId(String publisherId) {
         this.publisherId = publisherId;
         loadData();
     }
 
     public void setPublisher(PublisherDTO publisher) {
         if (publisher != null) {
-            this.publisherId = publisher.getId();
+            this.publisherId = publisher.getDocumentId();
             loadData();
         }
     }
@@ -180,7 +180,7 @@ public class PublisherPublicationsModalController {
         Task<List<PublicationDTO>> loadTask = new Task<>() {
             @Override
             protected List<PublicationDTO> call() throws Exception {
-                Long libId = net.gizmolab.library.librarymanagementsystemdesktop.service.AuthService.getCurrentLibraryId();
+                String libId = net.gizmolab.library.librarymanagementsystemdesktop.service.AuthService.getCurrentLibraryDocumentId();
                 JsonNode response = strapiApiClient.getPublisherBooksInLibrary(publisherId, libId);
                 return DTOConverter.publicationsFromJson(response);
             }
@@ -292,7 +292,7 @@ public class PublisherPublicationsModalController {
             PublicationDetailWindow.open(fxmlLoaderFactory, publicationsTable.getScene().getWindow(), publication);
             loadData(); // copies may have changed
         } catch (Exception e) {
-            logger.error("Failed to open publication {}", publication.getId(), e);
+            logger.error("Failed to open publication {}", publication.getDocumentId(), e);
             new Alert(Alert.AlertType.ERROR, UserMessages.describe(e)).showAndWait();
         }
     }

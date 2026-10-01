@@ -12,10 +12,10 @@ public final class AuthorWorksFilter {
 
     private AuthorWorksFilter() {}
 
-    public static List<PublicationDTO> authoredBy(List<PublicationDTO> publications, Long personId) {
+    public static List<PublicationDTO> authoredBy(List<PublicationDTO> publications, String personDocumentId) {
         return publications.stream()
                 .filter(pub -> pub.getContributors().stream().anyMatch(c ->
-                        personId.equals(c.getPerson().getId()) && c.getRole().isAuthor()))
+                        personDocumentId.equals(c.getPerson().getDocumentId()) && c.getRole().isAuthor()))
                 .toList();
     }
 }

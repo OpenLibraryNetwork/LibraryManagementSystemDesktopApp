@@ -5,23 +5,23 @@ package net.gizmolab.library.librarymanagementsystemdesktop.dto;
  * Maps to Strapi Subject (Θέματα DDC) content type.
  */
 public class SubjectDTO {
-    private Long id;                  // Strapi ID
+    private String documentId;
     private String subjectTitle;      // Τίτλος θέματος (e.g., "Νεοελληνική πεζογραφία")
     private String subjectDDC;        // DDC κωδικός (e.g., "889.3")
     private String biblionetSubjectId; // Biblionet Subject ID
 
     public SubjectDTO() {}
 
-    public SubjectDTO(Long id, String subjectTitle, String subjectDDC, String biblionetSubjectId) {
-        this.id = id;
+    public SubjectDTO(String documentId, String subjectTitle, String subjectDDC, String biblionetSubjectId) {
+        this.documentId = documentId;
         this.subjectTitle = subjectTitle;
         this.subjectDDC = subjectDDC;
         this.biblionetSubjectId = biblionetSubjectId;
     }
 
     // --- Getters & Setters ---
-    public Long getId() { return id; }
-    public void setId(Long id) { this.id = id; }
+    public String getDocumentId() { return documentId; }
+    public void setDocumentId(String documentId) { this.documentId = documentId; }
 
     public String getSubjectTitle() { return subjectTitle; }
     public void setSubjectTitle(String subjectTitle) { this.subjectTitle = subjectTitle; }

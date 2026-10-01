@@ -45,6 +45,7 @@ public class AuthService {
     // In-memory state (loaded from keystore on startup)
     private String jwt;
     private Long libraryId;
+    private String libraryDocumentId;
     private String strapiBaseUrl;
     private Long userId;
     private boolean online = false;
@@ -259,11 +260,21 @@ public class AuthService {
         return libraryId;
     }
 
+    /** The authenticated user's library documentId (Strapi 5). */
+    public String getLibraryDocumentId() {
+        return libraryDocumentId;
+    }
+
     public static Long getCurrentLibraryId() {
         if (instance != null) {
             return instance.libraryId;
         }
         return null;
+    }
+
+    /** The authenticated user's library documentId (Strapi 5), or null when there is no session. */
+    public static String getCurrentLibraryDocumentId() {
+        return instance != null ? instance.libraryDocumentId : null;
     }
 
     /**

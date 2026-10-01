@@ -9,12 +9,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class AuthorWorksFilterTest {
 
-    private static final ContributorRoleDTO AUTHOR = new ContributorRoleDTO(1L, "Συγγραφέας", "1");
-    private static final ContributorRoleDTO TRANSLATOR = new ContributorRoleDTO(2L, "Μεταφραστής", "2");
+    private static final ContributorRoleDTO AUTHOR = new ContributorRoleDTO("r1", "Συγγραφέας", "1");
+    private static final ContributorRoleDTO TRANSLATOR = new ContributorRoleDTO("r2", "Μεταφραστής", "2");
 
     private static PersonDTO person(long id) {
         PersonDTO p = new PersonDTO();
-        p.setId(id);
+        p.setDocumentId("p" + id);
         p.setName("P" + id);
         return p;
     }
@@ -37,6 +37,6 @@ class AuthorWorksFilterTest {
                 pub("Άλλου", new ContributorDTO(other, AUTHOR)));
 
         assertEquals(List.of("Συγγραφέας", "Και τα δύο"),
-                AuthorWorksFilter.authoredBy(fromServer, 10L).stream().map(PublicationDTO::getTitle).toList());
+                AuthorWorksFilter.authoredBy(fromServer, "p10").stream().map(PublicationDTO::getTitle).toList());
     }
 }

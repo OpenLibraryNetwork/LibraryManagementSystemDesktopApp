@@ -2,35 +2,33 @@
   "data": [
     {
       "id": 1,
-      "attributes": {
-        "name": "Νίκη Λοϊζίδη",
-        "qualifier": null,
-        "firstname": "Νίκη",
-        "middlename": null,
-        "lastname": "Λοϊζίδη",
-        "bornYear": "1950",
-        "deathYear": null,
-        "biography": null,
-        "biblionetPersonId": "15521",
-        "reviewed": true,
-        "bookCount": 1
-      }
+      "documentId": "doc-1",
+      "name": "Νίκη Λοϊζίδη",
+      "qualifier": null,
+      "firstname": "Νίκη",
+      "middlename": null,
+      "lastname": "Λοϊζίδη",
+      "bornYear": "1950",
+      "deathYear": null,
+      "biography": null,
+      "biblionetPersonId": "15521",
+      "reviewed": true,
+      "bookCount": 1
     },
     {
       "id": 3,
-      "attributes": {
-        "name": "Ομάδα Γειτονιάς",
-        "qualifier": null,
-        "firstname": null,
-        "middlename": null,
-        "lastname": null,
-        "bornYear": null,
-        "deathYear": null,
-        "biography": null,
-        "biblionetPersonId": null,
-        "reviewed": false,
-        "bookCount": 1
-      }
+      "documentId": "doc-3",
+      "name": "Ομάδα Γειτονιάς",
+      "qualifier": null,
+      "firstname": null,
+      "middlename": null,
+      "lastname": null,
+      "bornYear": null,
+      "deathYear": null,
+      "biography": null,
+      "biblionetPersonId": null,
+      "reviewed": false,
+      "bookCount": 1
     }
   ],
   "meta": {

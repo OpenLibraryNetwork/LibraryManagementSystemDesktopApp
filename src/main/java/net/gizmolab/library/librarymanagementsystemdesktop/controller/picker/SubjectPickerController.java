@@ -32,7 +32,7 @@ public class SubjectPickerController extends BaseController {
     @FXML private Label countLabel;
 
     private List<SubjectDTO> all = List.of();
-    private final Map<Long, BooleanProperty> checked = new LinkedHashMap<>();
+    private final Map<String, BooleanProperty> checked = new LinkedHashMap<>();
 
     @FXML
     private void initialize() {
@@ -50,7 +50,7 @@ public class SubjectPickerController extends BaseController {
     }
 
     private BooleanProperty checkedProperty(SubjectDTO subject) {
-        return checked.computeIfAbsent(subject.getId(), id -> {
+        return checked.computeIfAbsent(subject.getDocumentId(), id -> {
             BooleanProperty property = new SimpleBooleanProperty(false);
             property.addListener((obs, was, is) -> updateCount());
             return property;
@@ -68,8 +68,8 @@ public class SubjectPickerController extends BaseController {
         filterField.clear();
     }
 
-    public List<Long> getSelectedSubjectIds() {
-        List<Long> ids = new ArrayList<>();
+    public List<String> getSelectedSubjectIds() {
+        List<String> ids = new ArrayList<>();
         checked.forEach((id, property) -> { if (property.get()) ids.add(id); });
         return ids;
     }

@@ -16,7 +16,7 @@ public class MagazineDraft {
     private String issn;
     private String place;
     private String periodicity;
-    private Long publisherId;
+    private String publisherId; // documentId
 
     public Map<String, String> validate() {
         Map<String, String> errors = new LinkedHashMap<>();
@@ -44,5 +44,5 @@ public class MagazineDraft {
     public void setIssn(String issn) { this.issn = issn; }
     public void setPlace(String place) { this.place = place; }
     public void setPeriodicity(String periodicity) { this.periodicity = periodicity; }
-    public void setPublisherId(Long publisherId) { this.publisherId = publisherId; }
+    public void setPublisherId(String publisherId) { this.publisherId = publisherId; }
 }

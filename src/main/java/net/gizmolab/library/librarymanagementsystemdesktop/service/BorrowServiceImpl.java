@@ -51,7 +51,7 @@ public class BorrowServiceImpl implements IBorrowService {
         // Throws ConflictException if already borrowed
         // Throws AuthenticationExpiredException if 401
         try {
-            strapiApiClient.borrowCopy(copy.getId());
+            strapiApiClient.borrowCopy(copy.getDocumentId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to borrow copy from Strapi: " + e.getMessage(), e);
         }
@@ -59,8 +59,8 @@ public class BorrowServiceImpl implements IBorrowService {
         // 2. H2: Create local Borrow record with cached fields
         Borrow borrow = new Borrow();
         borrow.setUser(user);
-        borrow.setStrapiCopyId(copy.getId());
-        borrow.setStrapiPublicationId(pub.getId());
+        borrow.setStrapiCopyDocumentId(copy.getDocumentId());
+        borrow.setStrapiPublicationDocumentId(pub.getDocumentId());
         borrow.setCopyNumber(copy.getCopyNumber());
         borrow.setPublicationTitle(pub.getTitle());
         borrow.setPublicationType(pub.getType());
@@ -81,7 +81,7 @@ public class BorrowServiceImpl implements IBorrowService {
 
         // 1. Strapi: atomic return (sets isAvailable=true)
         try {
-            strapiApiClient.returnCopy(borrow.getStrapiCopyId());
+            strapiApiClient.returnCopy(borrow.getStrapiCopyDocumentId());
         } catch (Exception e) {
             throw new RuntimeException("Failed to return copy to Strapi: " + e.getMessage(), e);
         }

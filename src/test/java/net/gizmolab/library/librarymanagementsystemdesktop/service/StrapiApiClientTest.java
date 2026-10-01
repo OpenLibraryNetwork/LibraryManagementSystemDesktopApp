@@ -22,6 +22,7 @@ class StrapiApiClientTest {
     private StrapiApiClient client;
     private final List<String> requestedUris = new CopyOnWriteArrayList<>();
     private final List<String> requestBodies = new CopyOnWriteArrayList<>();
+    private final List<String> upgradeHeaders = new CopyOnWriteArrayList<>();
     private volatile int status = 200;
     private volatile String body = "{\"data\":[],\"meta\":{\"pagination\":{\"page\":1,\"pageSize\":25,\"pageCount\":1,\"total\":0}}}";
 
@@ -32,6 +33,8 @@ class StrapiApiClientTest {
             requestedUris.add(exchange.getRequestURI().getRawPath()
                     + (exchange.getRequestURI().getRawQuery() != null ? "?" + exchange.getRequestURI().getRawQuery() : ""));
             requestBodies.add(new String(exchange.getRequestBody().readAllBytes(), StandardCharsets.UTF_8));
+            String upgrade = exchange.getRequestHeaders().getFirst("Upgrade");
+            if (upgrade != null) upgradeHeaders.add(upgrade);
             byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
             exchange.getResponseHeaders().add("Content-Type", "application/json");
             exchange.sendResponseHeaders(status, bytes.length);
@@ -211,5 +214,13 @@ class StrapiApiClientTest {
         assertEquals("{\"documentId\":\"c1\"}", requestBodies.get(3));
         assertEquals("/api/copies/c1", uris.get(4));
         assertEquals("/api/copies/c1", uris.get(5));
+    }
+
+    @Test
+    void requestsDoNotAskForAnHttp2Upgrade() throws Exception {
+        // Strapi 5 in develop mode never answers a request carrying "Upgrade: h2c" (the JDK client's default)
+        client.getPublicationById("bk9");
+        client.borrowCopy("c1");
+        assertEquals(List.of(), upgradeHeaders);
     }
 }

@@ -69,6 +69,8 @@ public class AuthService {
 
     public AuthService() {
         this.httpClient = HttpClient.newBuilder()
+                // HTTP/1.1 only: the default HTTP/2 client sends "Upgrade: h2c", which Strapi 5 in develop mode never answers
+                .version(HttpClient.Version.HTTP_1_1)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
         this.objectMapper = new ObjectMapper();

@@ -21,6 +21,7 @@ class AuthServiceLoginTest {
 
     private HttpServer server;
     private KeyStoreService keyStore;
+    private volatile String upgradeHeader;
     private AuthService auth;
 
     @BeforeEach
@@ -39,6 +40,7 @@ class AuthServiceLoginTest {
     private String serverAnswering(int status, String body) throws IOException {
         server = HttpServer.create(new InetSocketAddress("127.0.0.1", 0), 0);
         server.createContext("/api/auth/local", exchange -> {
+            upgradeHeader = exchange.getRequestHeaders().getFirst("Upgrade");
             byte[] bytes = body.getBytes(StandardCharsets.UTF_8);
             exchange.getResponseHeaders().add("Content-Type", "application/json");
             exchange.sendResponseHeaders(status, bytes.length);
@@ -73,6 +75,7 @@ class AuthServiceLoginTest {
         assertTrue(auth.isAuthenticated());
         assertEquals("libA", auth.getLibraryDocumentId());
         verify(keyStore).storeSecret(KeyStoreService.KEY_JWT, "t");
+        assertNull(upgradeHeader); // Strapi 5 in develop mode never answers a request carrying "Upgrade: h2c"
     }
 
     @Test

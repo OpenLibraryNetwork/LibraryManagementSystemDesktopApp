@@ -10,7 +10,7 @@ import net.gizmolab.library.librarymanagementsystemdesktop.util.TableCellFactory
 import net.gizmolab.library.librarymanagementsystemdesktop.config.FXMLLoaderFactory;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.UserMessages;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.AuthorWorksFilter;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

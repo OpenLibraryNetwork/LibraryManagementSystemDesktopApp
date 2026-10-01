@@ -1,8 +1,7 @@
 package net.gizmolab.library.librarymanagementsystemdesktop.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -47,8 +46,8 @@ public class StrapiApiClient {
                 .version(HttpClient.Version.HTTP_1_1)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
-        this.objectMapper = new ObjectMapper();
-        this.objectMapper.registerModule(new JavaTimeModule());
+        // Jackson 3: java.time support is built in
+        this.objectMapper = tools.jackson.databind.json.JsonMapper.builder().build();
     }
 
     // ═══════════════════════════════════════════════════════
@@ -154,8 +153,8 @@ public class StrapiApiClient {
         if (body == null || body.isBlank()) return null;
         try {
             JsonNode message = objectMapper.readTree(body).path("error").path("message");
-            return message.isTextual() ? message.asText() : null;
-        } catch (IOException e) {
+            return message.isString() ? message.asString() : null;
+        } catch (tools.jackson.core.JacksonException e) {
             return null;
         }
     }

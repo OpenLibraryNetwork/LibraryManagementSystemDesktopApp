@@ -7,7 +7,7 @@ import net.gizmolab.library.librarymanagementsystemdesktop.service.utilities.DTO
 import net.gizmolab.library.librarymanagementsystemdesktop.util.PopularPublications;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.PublicationDetailFormatter;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.*;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;

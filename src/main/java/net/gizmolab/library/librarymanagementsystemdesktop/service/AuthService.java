@@ -1,7 +1,7 @@
 package net.gizmolab.library.librarymanagementsystemdesktop.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.JsonNode;
+import tools.jackson.databind.ObjectMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,7 +73,7 @@ public class AuthService {
                 .version(HttpClient.Version.HTTP_1_1)
                 .connectTimeout(Duration.ofSeconds(10))
                 .build();
-        this.objectMapper = new ObjectMapper();
+        this.objectMapper = tools.jackson.databind.json.JsonMapper.builder().build();
     }
 
     /**
@@ -158,7 +158,7 @@ public class AuthService {
             JsonNode json = objectMapper.readTree(response.body());
 
             // Extract JWT
-            String newJwt = json.path("jwt").asText(null);
+            String newJwt = json.path("jwt").asString(null);
             if (newJwt == null || newJwt.isEmpty()) {
                 log.error("Login response missing JWT");
                 return LoginResult.FAILED;
@@ -169,12 +169,12 @@ public class AuthService {
             Long newUserId = userNode.path("id").asLong(0);
 
             // Only librarians use the desktop app; checked before anything is stored
-            if (!"librarian".equals(userNode.path("role").path("type").asText())) {
+            if (!"librarian".equals(userNode.path("role").path("type").asString())) {
                 log.warn("Login refused — user {} is not a librarian", newUserId);
                 return LoginResult.NOT_LIBRARIAN;
             }
 
-            String newLibraryDocumentId = userNode.path("library").path("documentId").asText(null);
+            String newLibraryDocumentId = userNode.path("library").path("documentId").asString(null);
             if (newLibraryDocumentId == null || newLibraryDocumentId.isEmpty()) {
                 log.error("User has no assigned library — cannot proceed");
                 return LoginResult.NO_LIBRARY;

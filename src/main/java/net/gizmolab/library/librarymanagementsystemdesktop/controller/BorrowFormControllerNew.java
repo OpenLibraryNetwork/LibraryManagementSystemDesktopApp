@@ -10,7 +10,7 @@ import net.gizmolab.library.librarymanagementsystemdesktop.service.IBorrowServic
 import net.gizmolab.library.librarymanagementsystemdesktop.service.IUserService;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.StrapiApiClient;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.utilities.DTOConverter;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.PublicationDetailFormatter;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;

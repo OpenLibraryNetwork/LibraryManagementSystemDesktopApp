@@ -3,7 +3,7 @@ package net.gizmolab.library.librarymanagementsystemdesktop.service.utilities;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.PublicationDetailFormatter;
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.*;
 import net.gizmolab.library.librarymanagementsystemdesktop.model.Borrow;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -463,7 +463,7 @@ public class DTOConverter {
     private static String textOrNull(JsonNode node, String field) {
         JsonNode value = node.get(field);
         if (value == null || value.isNull()) return null;
-        return value.asText();
+        return value.asString();
     }
 
     private static Integer intOrNull(JsonNode node, String field) {

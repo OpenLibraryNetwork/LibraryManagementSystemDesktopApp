@@ -1,6 +1,6 @@
 package net.gizmolab.library.librarymanagementsystemdesktop.service.utilities;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
+import tools.jackson.databind.ObjectMapper;
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.PublicationDTO;
 import org.junit.jupiter.api.Test;
 

@@ -6,7 +6,7 @@ import net.gizmolab.library.librarymanagementsystemdesktop.dto.PublicationDTO;
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.StrapiPageResponse;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.StrapiApiClient;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.utilities.DTOConverter;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.fxml.FXML;
 import javafx.scene.control.TableColumn;

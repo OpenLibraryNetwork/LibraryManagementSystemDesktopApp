@@ -7,7 +7,7 @@ import net.gizmolab.library.librarymanagementsystemdesktop.service.AuthService;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.StrapiApiClient;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.utilities.DTOConverter;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.PublicationDetailFormatter;
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;

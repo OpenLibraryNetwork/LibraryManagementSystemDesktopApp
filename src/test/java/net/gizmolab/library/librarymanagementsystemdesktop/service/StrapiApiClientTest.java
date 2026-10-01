@@ -223,4 +223,13 @@ class StrapiApiClientTest {
         client.borrowCopy("c1");
         assertEquals(List.of(), upgradeHeaders);
     }
+
+    @Test
+    void nonJsonErrorBodyKeepsTheStatus() { // Review Focus 2: e.g. an HTML 502 page from a proxy
+        status = 502;
+        body = "<html><body>Bad Gateway</body></html>";
+        StrapiApiClient.StrapiApiException ex =
+                assertThrows(StrapiApiClient.StrapiApiException.class, () -> client.get("/api/books"));
+        assertEquals(502, ex.getStatus());
+    }
 }

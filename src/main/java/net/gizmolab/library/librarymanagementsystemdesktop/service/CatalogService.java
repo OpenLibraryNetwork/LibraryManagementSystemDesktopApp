@@ -1,6 +1,6 @@
 package net.gizmolab.library.librarymanagementsystemdesktop.service;
 
-import com.fasterxml.jackson.databind.JsonNode;
+import tools.jackson.databind.JsonNode;
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.*;
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.draft.MagazineDraft;
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.draft.PersonDraft;
@@ -119,7 +119,7 @@ public class CatalogService {
 
     public MagazineLookupResult lookupIssn(String issnOrCode) throws IOException, InterruptedException {
         JsonNode response = api.magazineIssnLookup(issnOrCode);
-        MagazineSource source = switch (response.path("source").asText("")) {
+        MagazineSource source = switch (response.path("source").asString("")) {
             case "catalog" -> MagazineSource.CATALOG;
             case "nlg" -> MagazineSource.NLG;
             case "not-found" -> MagazineSource.NOT_FOUND;
@@ -128,7 +128,7 @@ public class CatalogService {
         };
         JsonNode data = response.path("data");
         return new MagazineLookupResult(source, data.isObject() ? DTOConverter.magazineFromJson(data) : null,
-                response.path("issn").asText(null));
+                response.path("issn").asString(null));
     }
 
     public List<MagazineDTO> searchMagazines(String query) throws IOException, InterruptedException {
@@ -195,14 +195,14 @@ public class CatalogService {
                 T item = convert.apply(node);
                 if (item != null) result.add(item);
             }
-        } catch (IOException | RuntimeException parseError) {
+        } catch (RuntimeException parseError) { // Jackson 3: JacksonException is unchecked
             // No readable candidates: the caller still knows it is a duplicate
         }
         return result;
     }
 
     private static Source sourceOf(JsonNode response) {
-        return switch (response.path("source").asText("")) {
+        return switch (response.path("source").asString("")) {
             case "catalog" -> Source.CATALOG;
             case "biblionet" -> Source.BIBLIONET;
             case "not-found" -> Source.NOT_FOUND;

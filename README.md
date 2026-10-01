@@ -194,6 +194,7 @@ The client stores only patron and borrow data locally. All publication/catalog d
 - Separate from authentication credentials
 
 ### Backup and Recovery
+> Implemented in `BackupService` but not yet available in the application: there is no menu or schedule that runs it.
 - Hybrid encryption: AES-256-GCM (data) + RSA-2048-OAEP (session key)
 - RSA public key stored locally (encrypts backups)
 - RSA private key held offline by administrator (decrypts for recovery)
@@ -284,8 +285,7 @@ src/main/java/net/gizmolab/library/librarymanagementsystemdesktop/
 ├── LibraryManagementFXApplication.java        # JavaFX application entry
 ├── config/
 │   ├── DataSourceConfig.java                  # H2 encrypted DataSource
-│   ├── FXMLLoaderFactory.java                 # Spring-aware FXML loader
-│   └── JavaFXConfig.java                      # JavaFX-Spring integration
+│   └── FXMLLoaderFactory.java                 # Spring-aware FXML loader
 ├── controller/
 │   ├── base/
 │   │   ├── BaseController.java                # Common controller utilities
@@ -325,7 +325,7 @@ src/main/java/net/gizmolab/library/librarymanagementsystemdesktop/
 ├── service/
 │   ├── AuthService.java                     # Strapi login, JWT management
 │   ├── KeyStoreService.java                 # OS keystore (DEK, JWT, config)
-│   ├── BackupService.java                   # RSA-encrypted backups
+│   ├── BackupService.java                   # RSA-encrypted backups (not wired to the UI yet)
 │   ├── StrapiApiClient.java                 # HTTP client for Strapi REST API
 │   ├── IBorrowService.java                  # Borrow operations interface
 │   ├── BorrowServiceImpl.java              # Borrow orchestrator (Strapi + H2)
@@ -338,8 +338,7 @@ src/main/java/net/gizmolab/library/librarymanagementsystemdesktop/
 │   ├── IconProvider.java                  # FontAwesome icon utilities
 │   ├── ValidationManager.java            # Input validation
 │   └── utilities/
-│       ├── DTOConverter.java              # Strapi JSON -> DTO conversion
-│       └── BorrowUtility.java            # Borrow helper methods
+│       └── DTOConverter.java              # Strapi JSON -> DTO conversion
 └── util/
     ├── PaginationHelper.java              # Pagination calculations
     ├── TableCellFactory.java              # TableView cell factories

@@ -13,8 +13,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.HBox;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.net.URL;
 import java.util.List;
@@ -39,7 +37,6 @@ import java.util.function.Predicate;
  */
 public abstract class BaseManagementController<T> extends BaseController implements Initializable {
 
-    private static final Logger logger = LoggerFactory.getLogger(BaseManagementController.class);
 
     // Common FXML components that should be present in management views
     @FXML protected TextField searchField;
@@ -616,13 +613,6 @@ public abstract class BaseManagementController<T> extends BaseController impleme
      */
     protected List<T> getSelectedItems() {
         return tableView.getSelectionModel().getSelectedItems();
-    }
-
-    /**
-     * Selects an item in the table.
-     */
-    protected void selectItem(T item) {
-        tableView.getSelectionModel().select(item);
     }
 
     /**

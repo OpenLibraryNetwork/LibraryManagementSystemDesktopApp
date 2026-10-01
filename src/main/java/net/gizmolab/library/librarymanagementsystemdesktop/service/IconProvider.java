@@ -81,21 +81,6 @@ public class IconProvider {
     }
 
     /**
-     * Get a themed icon with specified color class.
-     * @param iconName Name of the icon
-     * @param size Size of the icon in pixels
-     * @param colorClass CSS color class to apply
-     * @return Node representing the themed icon
-     */
-    public Node getThemedIcon(String iconName, double size, String colorClass) {
-        Node icon = getIcon(iconName, size);
-        if (icon != null && colorClass != null && !colorClass.trim().isEmpty()) {
-            icon.getStyleClass().add(colorClass);
-        }
-        return icon;
-    }
-
-    /**
      * Map icon names to FontAwesome icons.
      * @param iconName Name of the icon
      * @return FontAwesomeIcon enum value
@@ -169,19 +154,4 @@ public class IconProvider {
         return faIcon;
     }
 
-    /**
-     * Clear the icon cache.
-     */
-    public void clearCache() {
-        iconCache.clear();
-        logger.info("Icon cache cleared");
-    }
-
-    /**
-     * Get the current cache size.
-     * @return Number of cached icon mappings
-     */
-    public int getCacheSize() {
-        return iconCache.size();
-    }
 }

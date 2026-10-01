@@ -22,57 +22,6 @@ public class KeyboardAccessibilityHelper {
     private static final Logger logger = LoggerFactory.getLogger(KeyboardAccessibilityHelper.class);
     
     /**
-     * Ensures all interactive elements in a container are keyboard accessible.
-     * Sets focusTraversable to true for buttons, text fields, combo boxes, etc.
-     * 
-     * @param container The container to process
-     */
-    public static void ensureKeyboardAccessibility(Pane container) {
-        if (container == null) {
-            return;
-        }
-        
-        List<Node> interactiveNodes = findInteractiveNodes(container);
-        
-        for (Node node : interactiveNodes) {
-            // Ensure the node is focusable
-            if (!node.isFocusTraversable()) {
-                node.setFocusTraversable(true);
-                logger.debug("Enabled focus traversal for: " + node.getClass().getSimpleName());
-            }
-            
-            // Add accessible text if missing for icon-only buttons
-            if (node instanceof Button) {
-                Button button = (Button) node;
-                ensureAccessibleText(button);
-            }
-        }
-        
-        logger.info("Keyboard accessibility ensured for {} interactive elements", interactiveNodes.size());
-    }
-    
-    /**
-     * Sets explicit tab order for a list of nodes.
-     * 
-     * @param nodes The nodes in desired tab order
-     */
-    public static void setTabOrder(List<Node> nodes) {
-        if (nodes == null || nodes.isEmpty()) {
-            return;
-        }
-        
-        // JavaFX handles tab order based on scene graph order by default
-        // We ensure all nodes are focusTraversable
-        for (Node node : nodes) {
-            if (node instanceof Control) {
-                node.setFocusTraversable(true);
-            }
-        }
-        
-        logger.debug("Tab order set for {} nodes", nodes.size());
-    }
-    
-    /**
      * Adds a keyboard shortcut to a scene.
      * 
      * @param scene The scene to add the shortcut to
@@ -180,38 +129,6 @@ public class KeyboardAccessibilityHelper {
     }
     
     /**
-     * Adds theme toggle keyboard shortcut (Ctrl+T).
-     * 
-     * @param scene The scene
-     * @param themeToggleAction Action to toggle theme
-     */
-    public static void addThemeToggleShortcut(Scene scene, Runnable themeToggleAction) {
-        if (scene == null || themeToggleAction == null) {
-            return;
-        }
-        
-        addKeyboardShortcut(scene,
-            new KeyCodeCombination(KeyCode.T, KeyCombination.CONTROL_DOWN),
-            themeToggleAction, "Toggle theme");
-    }
-    
-    /**
-     * Adds settings dialog keyboard shortcut (Ctrl+,).
-     * 
-     * @param scene The scene
-     * @param settingsAction Action to open settings
-     */
-    public static void addSettingsShortcut(Scene scene, Runnable settingsAction) {
-        if (scene == null || settingsAction == null) {
-            return;
-        }
-        
-        addKeyboardShortcut(scene,
-            new KeyCodeCombination(KeyCode.COMMA, KeyCombination.CONTROL_DOWN),
-            settingsAction, "Open settings");
-    }
-    
-    /**
      * Finds all interactive nodes in a container recursively.
      * 
      * @param node The node to search
@@ -258,75 +175,4 @@ public class KeyboardAccessibilityHelper {
                node instanceof TreeView;
     }
     
-    /**
-     * Ensures a button has accessible text (tooltip or aria label).
-     * 
-     * @param button The button to check
-     */
-    private static void ensureAccessibleText(Button button) {
-        // If button has no text but has a graphic (icon-only button)
-        if ((button.getText() == null || button.getText().trim().isEmpty()) && 
-            button.getGraphic() != null) {
-            
-            // Check if it already has a tooltip
-            if (button.getTooltip() == null) {
-                // Try to infer tooltip from style classes or ID
-                String tooltipText = inferTooltipText(button);
-                if (tooltipText != null) {
-                    button.setTooltip(new Tooltip(tooltipText));
-                    logger.debug("Added tooltip to icon-only button: {}", tooltipText);
-                }
-            }
-        }
-    }
-    
-    /**
-     * Infers tooltip text from button properties.
-     * 
-     * @param button The button
-     * @return Inferred tooltip text or null
-     */
-    private static String inferTooltipText(Button button) {
-        // Check ID
-        String id = button.getId();
-        if (id != null) {
-            if (id.contains("add") || id.contains("new")) return "Add";
-            if (id.contains("edit")) return "Edit";
-            if (id.contains("delete") || id.contains("remove")) return "Delete";
-            if (id.contains("refresh")) return "Refresh";
-            if (id.contains("search")) return "Search";
-            if (id.contains("filter")) return "Filter";
-            if (id.contains("settings")) return "Settings";
-            if (id.contains("theme")) return "Toggle Theme";
-        }
-        
-        // Check style classes
-        for (String styleClass : button.getStyleClass()) {
-            if (styleClass.contains("add")) return "Add";
-            if (styleClass.contains("edit")) return "Edit";
-            if (styleClass.contains("delete")) return "Delete";
-            if (styleClass.contains("refresh")) return "Refresh";
-        }
-        
-        return null;
-    }
-    
-    /**
-     * Requests focus on the first focusable element in a container.
-     * Useful for dialogs and forms.
-     * 
-     * @param container The container
-     */
-    public static void focusFirstElement(Pane container) {
-        if (container == null) {
-            return;
-        }
-        
-        List<Node> interactiveNodes = findInteractiveNodes(container);
-        if (!interactiveNodes.isEmpty()) {
-            Node firstNode = interactiveNodes.get(0);
-            firstNode.requestFocus();
-            logger.debug("Focus requested on first element: {}", firstNode.getClass().getSimpleName());
-        }
-    }
 }

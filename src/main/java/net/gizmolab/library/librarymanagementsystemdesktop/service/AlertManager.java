@@ -4,7 +4,6 @@ import net.gizmolab.library.librarymanagementsystemdesktop.util.StylesheetHelper
 import javafx.application.Platform;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
-import javafx.scene.control.TextInputDialog;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,63 +128,6 @@ public class AlertManager {
         return confirmed;
     }
 
-    /**
-     * Shows a text input dialog with localized prompt.
-     * Returns the entered text or null if cancelled.
-     */
-    public Optional<String> showTextInput(String titleKey, String promptKey, String defaultValue) {
-        String title = i18nManager.getMessage(titleKey);
-        String prompt = i18nManager.getMessage(promptKey);
-        
-        TextInputDialog dialog = new TextInputDialog(defaultValue);
-        dialog.setTitle(title);
-        dialog.setHeaderText(null);
-        dialog.setContentText(prompt);
-        
-        // Apply modern CSS theme
-        StylesheetHelper.applyModernTheme(dialog);
-        
-        // Apply modern styling
-        dialog.getDialogPane().getStyleClass().add("dialog-modern");
-        dialog.getDialogPane().getStyleClass().add("text-input-dialog");
-        
-        // Apply dialog open animation
-        dialog.setOnShowing(event -> AnimationHelper.dialogOpenAnimation(dialog));
-        
-        return dialog.showAndWait();
-    }
-
-    /**
-     * Shows an exception dialog with detailed error information.
-     */
-    public void showException(String operation, Exception exception) {
-        logger.error("Exception during {}: {}", operation, exception.getMessage(), exception);
-        
-        String title = i18nManager.getMessage("error.title");
-        String message = i18nManager.getMessage("error.operation.failed", operation, exception.getMessage());
-        
-        Alert alert = createAlert(Alert.AlertType.ERROR, title, message);
-        
-        // Add expandable details for debugging
-        if (logger.isDebugEnabled()) {
-            alert.getDialogPane().setExpandableContent(createExceptionDetails(exception));
-        }
-        
-        alert.showAndWait();
-    }
-
-    /**
-     * Shows a validation error dialog with field-specific message.
-     */
-    public void showValidationError(String fieldName, String validationMessageKey, Object... args) {
-        String title = i18nManager.getMessage("validation.error.title");
-        String fieldLabel = i18nManager.getMessage("field." + fieldName);
-        String validationMessage = i18nManager.getMessage(validationMessageKey, args);
-        String message = i18nManager.getMessage("validation.error.message", fieldLabel, validationMessage);
-        
-        showErrorDialog(title, message);
-    }
-
     // Private helper methods
 
     private void showErrorDialog(String title, String message) {
@@ -233,26 +175,6 @@ public class AlertManager {
         alert.setOnShowing(event -> AnimationHelper.dialogOpenAnimation(alert));
         
         return alert;
-    }
-
-    private javafx.scene.Node createExceptionDetails(Exception exception) {
-        javafx.scene.control.TextArea textArea = new javafx.scene.control.TextArea();
-        textArea.setEditable(false);
-        textArea.setWrapText(true);
-        textArea.setMaxWidth(Double.MAX_VALUE);
-        textArea.setMaxHeight(Double.MAX_VALUE);
-        
-        StringBuilder details = new StringBuilder();
-        details.append("Exception: ").append(exception.getClass().getSimpleName()).append("\n");
-        details.append("Message: ").append(exception.getMessage()).append("\n\n");
-        details.append("Stack Trace:\n");
-        
-        for (StackTraceElement element : exception.getStackTrace()) {
-            details.append(element.toString()).append("\n");
-        }
-        
-        textArea.setText(details.toString());
-        return textArea;
     }
 
     private void runOnFXThread(Runnable runnable) {

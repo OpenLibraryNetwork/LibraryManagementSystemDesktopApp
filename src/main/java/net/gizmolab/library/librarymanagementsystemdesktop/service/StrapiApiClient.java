@@ -205,18 +205,6 @@ public class StrapiApiClient {
         return get(url);
     }
 
-    /**
-     * Get all publications of a specific type.
-     */
-    public JsonNode searchByType(String type) throws IOException, InterruptedException {
-        String libId = AuthService.getCurrentLibraryDocumentId();
-        String url = "/api/books?filters[type][$eq]=" + encode(type) + "&" + BOOK_POPULATE + "&pagination[pageSize]=100";
-        if (libId != null) {
-            url += "&filters[copies][library][documentId][$eq]=" + libId;
-        }
-        return get(url);
-    }
-
 
     /**
      * Get publications with server-side pagination, optional type filter and search.

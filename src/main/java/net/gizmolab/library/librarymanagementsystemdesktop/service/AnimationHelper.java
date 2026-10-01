@@ -3,10 +3,7 @@ package net.gizmolab.library.librarymanagementsystemdesktop.service;
 import javafx.animation.FadeTransition;
 import javafx.animation.Interpolator;
 import javafx.animation.ScaleTransition;
-import javafx.animation.Transition;
 import javafx.animation.AnimationTimer;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Node;
 import javafx.scene.control.Dialog;
 import javafx.util.Duration;
@@ -24,83 +21,6 @@ public class AnimationHelper {
     private static final int TARGET_FPS = 30;
     private static boolean animationsEnabled = true;
     private static PerformanceMonitor performanceMonitor = new PerformanceMonitor();
-
-    /**
-     * Fades in a node from transparent to fully opaque.
-     *
-     * @param node the node to fade in
-     * @param duration the duration of the fade animation
-     */
-    public static void fadeIn(Node node, Duration duration) {
-        if (!animationsEnabled) {
-            node.setOpacity(1.0);
-            return;
-        }
-        
-        performanceMonitor.startMonitoring();
-        FadeTransition fade = new FadeTransition(duration, node);
-        fade.setFromValue(0.0);
-        fade.setToValue(1.0);
-        fade.setInterpolator(Interpolator.EASE_OUT);
-        fade.setOnFinished(e -> performanceMonitor.stopMonitoring());
-        fade.play();
-    }
-
-    /**
-     * Fades out a node from fully opaque to transparent.
-     *
-     * @param node the node to fade out
-     * @param duration the duration of the fade animation
-     * @param onFinished event handler to execute when animation completes
-     */
-    public static void fadeOut(Node node, Duration duration, EventHandler<ActionEvent> onFinished) {
-        if (!animationsEnabled) {
-            node.setOpacity(0.0);
-            if (onFinished != null) {
-                onFinished.handle(new ActionEvent());
-            }
-            return;
-        }
-        
-        performanceMonitor.startMonitoring();
-        FadeTransition fade = new FadeTransition(duration, node);
-        fade.setFromValue(1.0);
-        fade.setToValue(0.0);
-        fade.setInterpolator(Interpolator.EASE_IN);
-        fade.setOnFinished(e -> {
-            performanceMonitor.stopMonitoring();
-            if (onFinished != null) {
-                onFinished.handle(e);
-            }
-        });
-        fade.play();
-    }
-
-    /**
-     * Scales a node from one scale to another.
-     *
-     * @param node the node to scale
-     * @param fromScale the starting scale value
-     * @param toScale the ending scale value
-     * @param duration the duration of the scale animation
-     */
-    public static void scaleTransition(Node node, double fromScale, double toScale, Duration duration) {
-        if (!animationsEnabled) {
-            node.setScaleX(toScale);
-            node.setScaleY(toScale);
-            return;
-        }
-        
-        performanceMonitor.startMonitoring();
-        ScaleTransition scale = new ScaleTransition(duration, node);
-        scale.setFromX(fromScale);
-        scale.setFromY(fromScale);
-        scale.setToX(toScale);
-        scale.setToY(toScale);
-        scale.setInterpolator(Interpolator.EASE_BOTH);
-        scale.setOnFinished(e -> performanceMonitor.stopMonitoring());
-        scale.play();
-    }
 
     /**
      * Applies an opening animation to a dialog (fade in + scale up).
@@ -145,115 +65,6 @@ public class AnimationHelper {
         scale.play();
     }
 
-    /**
-     * Applies a closing animation to a dialog (fade out + scale down).
-     * The dialog scales from 1.0 to 0.8 while fading out.
-     *
-     * @param dialog the dialog to animate
-     * @param onFinished event handler to execute when animation completes
-     */
-    public static void dialogCloseAnimation(Dialog<?> dialog, EventHandler<ActionEvent> onFinished) {
-        Node dialogPane = dialog.getDialogPane();
-        Duration duration = Duration.millis(200);
-        
-        if (!animationsEnabled) {
-            dialogPane.setOpacity(0.0);
-            dialogPane.setScaleX(0.8);
-            dialogPane.setScaleY(0.8);
-            if (onFinished != null) {
-                onFinished.handle(new ActionEvent());
-            }
-            return;
-        }
-        
-        performanceMonitor.startMonitoring();
-        
-        // Fade out
-        FadeTransition fade = new FadeTransition(duration, dialogPane);
-        fade.setFromValue(1.0);
-        fade.setToValue(0.0);
-        fade.setInterpolator(Interpolator.EASE_IN);
-        fade.setOnFinished(e -> {
-            performanceMonitor.stopMonitoring();
-            if (onFinished != null) {
-                onFinished.handle(e);
-            }
-        });
-        
-        // Scale down
-        ScaleTransition scale = new ScaleTransition(duration, dialogPane);
-        scale.setFromX(1.0);
-        scale.setFromY(1.0);
-        scale.setToX(0.8);
-        scale.setToY(0.8);
-        scale.setInterpolator(Interpolator.EASE_IN);
-        
-        fade.play();
-        scale.play();
-    }
-
-    /**
-     * Creates a hover transition for a node.
-     * The node slightly scales up (1.05x) with a smooth transition.
-     *
-     * @param node the node to create hover transition for
-     * @return the transition that can be played on hover
-     */
-    public static Transition createHoverTransition(Node node) {
-        Duration duration = Duration.millis(200);
-        ScaleTransition scale = new ScaleTransition(duration, node);
-        scale.setToX(1.05);
-        scale.setToY(1.05);
-        scale.setInterpolator(Interpolator.EASE_BOTH);
-        return scale;
-    }
-
-    /**
-     * Enable or disable animations globally.
-     * 
-     * @param enabled true to enable animations, false to disable
-     */
-    public static void setAnimationsEnabled(boolean enabled) {
-        animationsEnabled = enabled;
-        logger.info("Animations {}", enabled ? "enabled" : "disabled");
-    }
-    
-    /**
-     * Check if animations are currently enabled.
-     * 
-     * @return true if animations are enabled, false otherwise
-     */
-    public static boolean areAnimationsEnabled() {
-        return animationsEnabled;
-    }
-    
-    /**
-     * Get the current average FPS during animations.
-     * 
-     * @return average FPS, or 0 if no monitoring data available
-     */
-    public static double getCurrentFPS() {
-        return performanceMonitor.getAverageFPS();
-    }
-    
-    /**
-     * Get the minimum FPS threshold for automatic animation disabling.
-     * 
-     * @return minimum FPS threshold
-     */
-    public static int getMinFPSThreshold() {
-        return MIN_FPS_THRESHOLD;
-    }
-    
-    /**
-     * Get the target FPS for animations.
-     * 
-     * @return target FPS
-     */
-    public static int getTargetFPS() {
-        return TARGET_FPS;
-    }
-    
     /**
      * Inner class for monitoring animation performance.
      * Tracks frame rate and automatically disables animations if performance degrades.
@@ -327,16 +138,5 @@ public class AnimationHelper {
             }
         }
         
-        /**
-         * Get the average FPS from recent measurements.
-         * 
-         * @return average FPS, or 0 if no measurements available
-         */
-        public double getAverageFPS() {
-            if (measurementCount == 0) {
-                return 0;
-            }
-            return totalFPS / measurementCount;
-        }
     }
 }

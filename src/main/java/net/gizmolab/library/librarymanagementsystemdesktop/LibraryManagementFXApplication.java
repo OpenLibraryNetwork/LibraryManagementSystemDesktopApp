@@ -100,32 +100,6 @@ public class LibraryManagementFXApplication extends Application {
         }
     }
 
-    /**
-     * Shows a theme error notification to the user.
-     * This is a fallback method that creates a simple alert if NotificationManager is not available.
-     *
-     * @param scene the scene to attach the notification to
-     * @param message the error message to display
-     */
-    private void showThemeErrorNotification(Scene scene, String message) {
-        // Create a simple alert dialog for theme errors
-        javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
-            javafx.scene.control.Alert.AlertType.WARNING
-        );
-        alert.setTitle("Theme Loading Warning");
-        alert.setHeaderText("Theme System Notice");
-        alert.setContentText(message);
-        
-        // Show alert in a non-blocking way
-        Platform.runLater(() -> {
-            alert.show();
-            // Auto-close after 5 seconds
-            javafx.animation.PauseTransition delay = new javafx.animation.PauseTransition(javafx.util.Duration.seconds(5));
-            delay.setOnFinished(event -> alert.close());
-            delay.play();
-        });
-    }
-
     @Override
     public void stop() throws Exception {
         // Close Spring context when JavaFX application stops

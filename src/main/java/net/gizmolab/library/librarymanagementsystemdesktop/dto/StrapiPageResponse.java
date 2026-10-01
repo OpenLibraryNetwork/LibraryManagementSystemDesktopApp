@@ -81,14 +81,6 @@ public class StrapiPageResponse<T> {
         return total;
     }
 
-    public boolean hasNextPage() {
-        return page < pageCount;
-    }
-
-    public boolean hasPreviousPage() {
-        return page > 1;
-    }
-
     @Override
     public String toString() {
         return "StrapiPageResponse{" +

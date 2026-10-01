@@ -119,13 +119,6 @@ public class KeyStoreService {
     }
 
     /**
-     * Check if a secret exists in the OS keystore.
-     */
-    public boolean hasSecret(String key) {
-        return getSecret(key) != null;
-    }
-
-    /**
      * Generate a cryptographically secure random DEK (256-bit)
      * and store it in the keystore.
      * @return the generated DEK as Base64 string

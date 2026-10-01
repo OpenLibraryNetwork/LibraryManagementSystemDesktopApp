@@ -214,13 +214,6 @@ public class AuthService {
     }
 
     /**
-     * Test connection to Strapi with the current JWT.
-     */
-    private boolean testConnection() {
-        return sessionCheckStatus() == 200;
-    }
-
-    /**
      * HTTP status of GET /api/users/me with the current JWT, or -1 when the server cannot be reached.
      */
     private int sessionCheckStatus() {
@@ -245,13 +238,6 @@ public class AuthService {
      */
     public boolean isOnline() {
         return online;
-    }
-
-    /**
-     * Refresh online status by testing connection.
-     */
-    public void refreshOnlineStatus() {
-        this.online = testConnection();
     }
 
     /**

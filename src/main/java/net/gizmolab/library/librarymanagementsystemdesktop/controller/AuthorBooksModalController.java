@@ -72,11 +72,6 @@ public class AuthorBooksModalController {
     private String authorId; // documentId
     private Stage dialogStage;
 
-    public void setAuthorId(String authorId) {
-        this.authorId = authorId;
-        loadData();
-    }
-
     public void setAuthor(PersonDTO author) {
         if (author != null) {
             this.authorId = author.getDocumentId();

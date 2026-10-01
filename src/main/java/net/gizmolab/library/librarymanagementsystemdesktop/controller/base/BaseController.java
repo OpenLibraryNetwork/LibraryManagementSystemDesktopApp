@@ -61,17 +61,6 @@ public abstract class BaseController {
     }
     
     /**
-     * Updates the main status bar.
-     * If a callback is set, it will be invoked with the localized message.
-     */
-    protected void updateMainStatus(String messageKey, Object... args) {
-        if (statusUpdateCallback != null) {
-            String message = getLocalizedMessage(messageKey, args);
-            statusUpdateCallback.accept(message);
-        }
-    }
-
-    /**
      * Shows an error dialog with the specified title and message.
      * Delegates to the AlertManager when it is set, otherwise falls back to a plain JavaFX dialog.
      */
@@ -261,27 +250,6 @@ public abstract class BaseController {
     }
 
     /**
-     * Validates that a string is not null or empty.
-     */
-    protected boolean isValidString(String value) {
-        return value != null && !value.trim().isEmpty();
-    }
-
-    /**
-     * Validates that a number is positive.
-     */
-    protected boolean isPositiveNumber(Number value) {
-        return value != null && value.doubleValue() > 0;
-    }
-
-    /**
-     * Validates that a number is non-negative.
-     */
-    protected boolean isNonNegativeNumber(Number value) {
-        return value != null && value.doubleValue() >= 0;
-    }
-
-    /**
      * Safely executes a runnable on the JavaFX Application Thread.
      */
     protected void runOnFXThread(Runnable runnable) {
@@ -297,13 +265,6 @@ public abstract class BaseController {
      */
     protected void logInfo(String message, Object... args) {
         logger.info("[{}] {}", this.getClass().getSimpleName(), String.format(message, args));
-    }
-
-    /**
-     * Logs a warning message with the controller class name.
-     */
-    protected void logWarning(String message, Object... args) {
-        logger.warn("[{}] {}", this.getClass().getSimpleName(), String.format(message, args));
     }
 
     /**

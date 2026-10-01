@@ -4,11 +4,9 @@ import net.gizmolab.library.librarymanagementsystemdesktop.model.Borrow;
 import net.gizmolab.library.librarymanagementsystemdesktop.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 /**
  * Repository for local Borrow records.
@@ -17,19 +15,12 @@ import java.util.Optional;
 @Repository
 public interface BorrowRepository extends JpaRepository<Borrow, Long> {
 
-    // === By User ===
-    List<Borrow> findByUser(User user);
     List<Borrow> findByUserAndReturned(User user, boolean returned);
 
-    // === By Strapi Copy ID ===
-    Optional<Borrow> findByUserAndStrapiCopyDocumentIdAndReturned(User user, String strapiCopyDocumentId, boolean returned);
-    List<Borrow> findByStrapiCopyDocumentIdAndReturned(String strapiCopyDocumentId, boolean returned);
 
     // === By return status ===
     List<Borrow> findByReturned(boolean returned);
 
-    // === Counts ===
-    int countByUserAndReturned(User user, boolean returned);
 
     @Query("SELECT COUNT(b) FROM Borrow b")
     Long countAllBorrows();
@@ -47,6 +38,4 @@ public interface BorrowRepository extends JpaRepository<Borrow, Long> {
     @Query("SELECT b FROM Borrow b JOIN FETCH b.user WHERE b.returned = false")
     List<Borrow> findActiveWithUser();
 
-    @Query("SELECT b FROM Borrow b JOIN FETCH b.user WHERE b.user = :user AND b.returned = false")
-    List<Borrow> findActiveByUser(@Param("user") User user);
 }

@@ -19,6 +19,9 @@ public class LibraryManagementFXApplication extends Application {
 
     private ConfigurableApplicationContext springContext;
 
+    /** Set when Spring could not start (e.g. the local database does not open); start() then explains it and exits. */
+    private Exception startupFailure;
+
     @Override
     public void init() throws Exception {
         // Set JavaFX mode property
@@ -28,11 +31,27 @@ public class LibraryManagementFXApplication extends Application {
         SpringApplication app = new SpringApplication(LibraryManagementSystemApplication.class);
         // Disable web server for JavaFX mode
         app.setWebApplicationType(WebApplicationType.NONE);
-        springContext = app.run();
+        try {
+            springContext = app.run();
+        } catch (Exception e) {
+            startupFailure = e;
+        }
     }
 
     @Override
     public void start(Stage primaryStage) throws Exception {
+        if (startupFailure != null) {
+            String message = net.gizmolab.library.librarymanagementsystemdesktop.util.StartupFailure.message(startupFailure);
+            System.err.println("Startup failed: " + message);
+            startupFailure.printStackTrace();
+            javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
+                    javafx.scene.control.Alert.AlertType.ERROR, message, javafx.scene.control.ButtonType.OK);
+            alert.setTitle("Library Management System");
+            alert.setHeaderText("Η εφαρμογή δεν μπόρεσε να ξεκινήσει");
+            alert.showAndWait();
+            Platform.exit();
+            return;
+        }
         // Set User Agent Stylesheet to null (no default theme)
         Application.setUserAgentStylesheet(null);
         System.out.println("Removed default User Agent Stylesheet - using custom CSS only");

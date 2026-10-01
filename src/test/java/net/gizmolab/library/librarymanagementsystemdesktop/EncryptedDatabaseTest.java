@@ -59,8 +59,13 @@ class EncryptedDatabaseTest {
         }
         ((HikariDataSource) again).close();
 
-        DataSource wrongKey = encrypted("dek-two");
-        assertThrows(SQLException.class, () -> wrongKey.getConnection().close());
-        ((HikariDataSource) wrongKey).close();
+        // the data source opens the file at once, so a wrong key fails right there
+        IllegalStateException wrongKey = assertThrows(IllegalStateException.class, () -> encrypted("dek-two"));
+        assertTrue(hasSqlCause(wrongKey), "H2's SQLException must stay in the cause chain");
+    }
+
+    private static boolean hasSqlCause(Throwable t) {
+        for (; t != null; t = t.getCause()) if (t instanceof SQLException) return true;
+        return false;
     }
 }

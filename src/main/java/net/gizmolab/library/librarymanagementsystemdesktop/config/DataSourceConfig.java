@@ -51,12 +51,12 @@ public class DataSourceConfig {
             String url = h2Path.startsWith("mem:")
                     ? "jdbc:h2:" + h2Path + ";DB_CLOSE_DELAY=-1"
                     : "jdbc:h2:file:" + h2Path + ";DB_CLOSE_ON_EXIT=FALSE;AUTO_RECONNECT=TRUE;FILE_LOCK=NO";
-            return DataSourceBuilder.create()
+            return opened(DataSourceBuilder.create()
                     .driverClassName("org.h2.Driver")
                     .url(url)
                     .username("sa")
                     .password("")
-                    .build();
+                    .build());
         }
 
         // Get or create DEK
@@ -72,11 +72,30 @@ public class DataSourceConfig {
 
         log.info("Configured encrypted H2 database at: {}", h2Path);
 
-        return DataSourceBuilder.create()
+        return opened(DataSourceBuilder.create()
                 .driverClassName("org.h2.Driver")
                 .url(h2Url)
                 .username("sa")
                 .password(h2Password)
-                .build();
+                .build());
+    }
+
+    /**
+     * Opens one connection now. A database that does not open (older file version, wrong key, already in use)
+     * fails here with H2's own error as the cause; later, Hibernate would hide it behind "Unable to determine Dialect".
+     */
+    private static DataSource opened(DataSource dataSource) {
+        try (java.sql.Connection ignored = dataSource.getConnection()) {
+            return dataSource;
+        } catch (Exception e) {
+            if (dataSource instanceof AutoCloseable closeable) {
+                try {
+                    closeable.close();
+                } catch (Exception closeError) {
+                    e.addSuppressed(closeError);
+                }
+            }
+            throw new IllegalStateException("The local database could not be opened", e);
+        }
     }
 }

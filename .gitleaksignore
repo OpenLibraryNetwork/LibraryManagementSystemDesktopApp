@@ -1,0 +1,2 @@
+# Code that writes keys in PEM format (the BEGIN PRIVATE KEY text is a constant), not a key
+8ef4ff849b05c83ab39fe53ab5a342526377d34e:src/main/java/net/gizmolab/library/librarymanagementsystemdesktop/service/BackupService.java:private-key:330

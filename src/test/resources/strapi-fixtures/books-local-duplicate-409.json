@@ -71,7 +71,11 @@
             "id": 1,
             "documentId": "library-1",
             "name": "Βιβλιοθήκη Fixtures 2β 1",
-            "description": null
+            "description": null,
+            "address": null,
+            "email": null,
+            "phone": null,
+            "website": null
           }
         }
       ]

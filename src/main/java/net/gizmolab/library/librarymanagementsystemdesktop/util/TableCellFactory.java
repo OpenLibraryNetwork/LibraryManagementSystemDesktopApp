@@ -9,7 +9,9 @@ import javafx.util.Callback;
  * Utility class for creating custom TableView cell factories.
  * Provides factories for text cells with ellipsis/tooltip support and numeric cells with right alignment.
  */
-public class TableCellFactory {
+public final class TableCellFactory {
+
+    private TableCellFactory() {}
 
     /**
      * Creates a cell factory that displays text with ellipsis when truncated
@@ -41,7 +43,7 @@ public class TableCellFactory {
                         tooltip.setWrapText(true);
                         tooltip.setMaxWidth(400);
                         setTooltip(tooltip);
-                    } catch (Exception e) {
+                    } catch (Exception _) {
                         // Fallback to simple text rendering on error
                         setText(item.toString());
                         setTooltip(null);
@@ -70,7 +72,7 @@ public class TableCellFactory {
                     try {
                         setText(item.toString());
                         setStyle("-fx-alignment: CENTER-RIGHT;");
-                    } catch (Exception e) {
+                    } catch (Exception _) {
                         // Fallback to simple text rendering on error
                         setText(item.toString());
                     }

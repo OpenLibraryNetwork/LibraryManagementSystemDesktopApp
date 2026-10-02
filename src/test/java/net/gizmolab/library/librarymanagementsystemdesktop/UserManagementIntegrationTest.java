@@ -17,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional
-public class UserManagementIntegrationTest {
+class UserManagementIntegrationTest {
 
     @Autowired
     private IUserService userService;
@@ -26,7 +26,7 @@ public class UserManagementIntegrationTest {
     private UserManagementController userManagementController;
 
     @Test
-    public void testUserServiceIntegration() {
+    void testUserServiceIntegration() {
         // Test that we can create and retrieve users
         User user = new User();
         user.setFirstname("John");
@@ -53,13 +53,13 @@ public class UserManagementIntegrationTest {
     }
 
     @Test
-    public void testUserManagementControllerExists() {
+    void testUserManagementControllerExists() {
         // Test that the controller is properly injected
         assertNotNull(userManagementController);
     }
 
     @Test
-    public void testUserDTOConversion() {
+    void testUserDTOConversion() {
         // Test UserDTO functionality
         UserDTO userDTO = new UserDTO();
         userDTO.setFirstname("Jane");

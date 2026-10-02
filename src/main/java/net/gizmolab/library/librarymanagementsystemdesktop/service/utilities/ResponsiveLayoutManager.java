@@ -29,7 +29,6 @@ public class ResponsiveLayoutManager {
     private final Stage stage;
     private final Scene scene;
     private final BooleanProperty compactMode;
-    private PauseTransition resizeDebouncer;
     
     /**
      * Creates a new ResponsiveLayoutManager for the given stage.
@@ -40,9 +39,11 @@ public class ResponsiveLayoutManager {
         this.stage = stage;
         this.scene = stage.getScene();
         this.compactMode = new SimpleBooleanProperty(false);
-        
+    }
+
+    /** Starts following the window size; the stage's listeners keep this manager alive. */
+    public void start() {
         initializeResizeHandling();
-        
         logger.info("ResponsiveLayoutManager initialized for stage");
     }
     
@@ -51,20 +52,12 @@ public class ResponsiveLayoutManager {
      */
     private void initializeResizeHandling() {
         // Create debouncer for resize events
-        resizeDebouncer = new PauseTransition(RESIZE_DEBOUNCE);
+        PauseTransition resizeDebouncer = new PauseTransition(RESIZE_DEBOUNCE);
         resizeDebouncer.setOnFinished(event -> handleResize());
         
-        // Listen to width changes
-        stage.widthProperty().addListener((observable, oldValue, newValue) -> {
-            // Restart the debouncer on each resize event
-            resizeDebouncer.playFromStart();
-        });
-        
-        // Listen to height changes
-        stage.heightProperty().addListener((observable, oldValue, newValue) -> {
-            // Restart the debouncer on each resize event
-            resizeDebouncer.playFromStart();
-        });
+        // Width and height changes restart the debouncer
+        stage.widthProperty().addListener((observable, oldValue, newValue) -> resizeDebouncer.playFromStart());
+        stage.heightProperty().addListener((observable, oldValue, newValue) -> resizeDebouncer.playFromStart());
         
         // Initial layout adjustment
         handleResize();

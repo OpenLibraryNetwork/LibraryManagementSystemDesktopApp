@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.Locale;
@@ -155,16 +156,12 @@ class I18nTranslationBugfixTest {
             "This provides ultimate fallback when locale-specific bundles fail.");
         
         // Verify it can be loaded as a ResourceBundle
-        try {
-            ResourceBundle bundle = ResourceBundle.getBundle("messages");
-            assertNotNull(bundle, "Default bundle should be loadable");
-            
-            // Verify it contains at least some keys
-            assertTrue(bundle.containsKey("app.title"), 
-                "Default bundle should contain common keys like 'app.title'");
-        } catch (Exception e) {
-            fail("Default bundle should be loadable without errors: " + e.getMessage());
-        }
+        ResourceBundle bundle = ResourceBundle.getBundle("messages");
+        assertNotNull(bundle, "Default bundle should be loadable");
+        
+        // Verify it contains at least some keys
+        assertTrue(bundle.containsKey("app.title"), 
+            "Default bundle should contain common keys like 'app.title'");
     }
 
     /**
@@ -174,38 +171,34 @@ class I18nTranslationBugfixTest {
      */
     @Test
     @Label("Test 1.4: Greek properties file has UTF-8 encoding")
-    void greekPropertiesFileHasUTF8Encoding() {
+    void greekPropertiesFileHasUTF8Encoding() throws IOException {
         File greekPropsFile = new File("src/main/resources/messages_el.properties");
         assertTrue(greekPropsFile.exists(), "Greek properties file should exist");
         
-        try {
-            // Try to read the file with UTF-8 encoding
-            Properties props = new Properties();
-            try (InputStreamReader reader = new InputStreamReader(
-                    new FileInputStream(greekPropsFile), StandardCharsets.UTF_8)) {
-                props.load(reader);
-            }
-            
-            // Check a known Greek key
-            String appTitle = props.getProperty("app.title");
-            assertNotNull(appTitle, "app.title should exist in Greek properties");
-            
-            // Should not contain question marks (corruption indicator)
-            assertFalse(appTitle.contains("?"), 
-                "Greek text should not contain '?' characters indicating corruption. " +
-                "Got: " + appTitle);
-            
-            // Should contain Greek characters
-            boolean containsGreekChar = appTitle.chars()
-                .anyMatch(c -> (c >= 0x0370 && c <= 0x03FF));
-            
-            assertTrue(containsGreekChar, 
-                "Greek text should contain actual Greek characters. " +
-                "Got: " + appTitle);
-                
-        } catch (Exception e) {
-            fail("Should be able to read Greek properties file with UTF-8 encoding: " + e.getMessage());
+        // Try to read the file with UTF-8 encoding
+        Properties props = new Properties();
+        try (InputStreamReader reader = new InputStreamReader(
+                new FileInputStream(greekPropsFile), StandardCharsets.UTF_8)) {
+            props.load(reader);
         }
+        
+        // Check a known Greek key
+        String appTitle = props.getProperty("app.title");
+        assertNotNull(appTitle, "app.title should exist in Greek properties");
+        
+        // Should not contain question marks (corruption indicator)
+        assertFalse(appTitle.contains("?"), 
+            "Greek text should not contain '?' characters indicating corruption. " +
+            "Got: " + appTitle);
+        
+        // Should contain Greek characters
+        boolean containsGreekChar = appTitle.chars()
+            .anyMatch(c -> (c >= 0x0370 && c <= 0x03FF));
+        
+        assertTrue(containsGreekChar, 
+            "Greek text should contain actual Greek characters. " +
+            "Got: " + appTitle);
+            
     }
 
     /**
@@ -228,7 +221,7 @@ class I18nTranslationBugfixTest {
             "This indicates currentBundle is null. Got: " + appTitle);
         
         // Should return actual content
-        assertTrue(appTitle.length() > 0, 
+        assertFalse(appTitle.isEmpty(), 
             "getMessage() should return non-empty content");
         
         // For English default, should be "Library System"

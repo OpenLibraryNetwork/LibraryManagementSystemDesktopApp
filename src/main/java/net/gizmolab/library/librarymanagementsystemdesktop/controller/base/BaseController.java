@@ -3,7 +3,6 @@ package net.gizmolab.library.librarymanagementsystemdesktop.controller.base;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.AlertManager;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.GlobalExceptionHandler;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.I18nManager;
-import net.gizmolab.library.librarymanagementsystemdesktop.service.ValidationManager;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.StylesheetHelper;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.UserMessages;
 import javafx.application.Platform;
@@ -31,9 +30,6 @@ public abstract class BaseController {
 
     @Autowired
     protected AlertManager alertManager;
-
-    @Autowired
-    protected ValidationManager validationManager;
 
     @Autowired
     protected GlobalExceptionHandler exceptionHandler;
@@ -264,7 +260,7 @@ public abstract class BaseController {
      * Logs an info message with the controller class name.
      */
     protected void logInfo(String message, Object... args) {
-        logger.info("[{}] {}", this.getClass().getSimpleName(), String.format(message, args));
+        if (logger.isInfoEnabled()) logger.info("[{}] {}", this.getClass().getSimpleName(), String.format(message, args));
     }
 
     /**

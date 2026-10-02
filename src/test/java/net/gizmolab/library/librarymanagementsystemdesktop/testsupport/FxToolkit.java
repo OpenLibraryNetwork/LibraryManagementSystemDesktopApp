@@ -20,7 +20,7 @@ public final class FxToolkit {
         CountDownLatch latch = new CountDownLatch(1);
         try {
             Platform.startup(latch::countDown);
-        } catch (IllegalStateException alreadyRunning) {
+        } catch (IllegalStateException _) {
             latch.countDown();
         }
         if (!latch.await(10, TimeUnit.SECONDS)) {

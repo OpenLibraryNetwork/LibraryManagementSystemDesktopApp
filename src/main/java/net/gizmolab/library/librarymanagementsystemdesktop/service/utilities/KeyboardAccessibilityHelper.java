@@ -17,7 +17,9 @@ import java.util.List;
  * Utility class for enhancing keyboard accessibility throughout the application.
  * Provides methods to ensure proper tab order, keyboard shortcuts, and focus management.
  */
-public class KeyboardAccessibilityHelper {
+public final class KeyboardAccessibilityHelper {
+
+    private KeyboardAccessibilityHelper() {}
     
     private static final Logger logger = LoggerFactory.getLogger(KeyboardAccessibilityHelper.class);
     
@@ -141,8 +143,7 @@ public class KeyboardAccessibilityHelper {
             interactiveNodes.add(node);
         }
         
-        if (node instanceof Pane) {
-            Pane pane = (Pane) node;
+        if (node instanceof Pane pane) {
             for (Node child : pane.getChildren()) {
                 interactiveNodes.addAll(findInteractiveNodes(child));
             }

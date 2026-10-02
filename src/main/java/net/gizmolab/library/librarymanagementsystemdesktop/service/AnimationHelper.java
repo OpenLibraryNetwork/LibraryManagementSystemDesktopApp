@@ -15,7 +15,10 @@ import org.slf4j.LoggerFactory;
  * Provides static methods for common UI animations with easing functions.
  * Monitors animation performance and automatically disables animations if FPS drops below threshold.
  */
-public class AnimationHelper {
+public final class AnimationHelper {
+
+    private AnimationHelper() {}
+
     private static final Logger logger = LoggerFactory.getLogger(AnimationHelper.class);
     private static final int MIN_FPS_THRESHOLD = 20;
     private static final int TARGET_FPS = 30;
@@ -102,8 +105,8 @@ public class AnimationHelper {
                         
                         // Check if FPS drops below threshold
                         if (frameCount > 10 && fps < MIN_FPS_THRESHOLD) {
-                            logger.warn("Animation FPS dropped to {}, below threshold of {}. Disabling animations.", 
-                                    String.format("%.1f", fps), MIN_FPS_THRESHOLD);
+                            logger.warn("Animation FPS dropped to {}, below threshold of {}. Disabling animations.",
+                                    (int) fps, MIN_FPS_THRESHOLD);
                             animationsEnabled = false;
                             stopMonitoring();
                         }
@@ -128,7 +131,7 @@ public class AnimationHelper {
             // Log performance metrics
             if (measurementCount > 0) {
                 double avgFPS = totalFPS / measurementCount;
-                logger.debug("Animation completed. Average FPS: {}", String.format("%.1f", avgFPS));
+                if (logger.isDebugEnabled()) logger.debug("Animation completed. Average FPS: {}", String.format("%.1f", avgFPS));
                 
                 if (avgFPS >= TARGET_FPS) {
                     logger.debug("Animation performance meets target FPS of {}", TARGET_FPS);

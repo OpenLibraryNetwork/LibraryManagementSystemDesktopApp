@@ -152,9 +152,7 @@ public abstract class BaseManagementController<T> extends BaseController impleme
         if (searchField != null) {
             if (isServerSidePagination()) {
                 // Server-side: debounced search with API call
-                searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-                    scheduleServerSearch(newValue);
-                });
+                searchField.textProperty().addListener((observable, oldValue, newValue) -> scheduleServerSearch(newValue));
             } else {
                 // Client-side: immediate filtering
                 searchField.textProperty().addListener((observable, oldValue, newValue) -> {

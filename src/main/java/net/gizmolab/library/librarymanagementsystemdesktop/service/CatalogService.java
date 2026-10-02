@@ -195,7 +195,7 @@ public class CatalogService {
                 T item = convert.apply(node);
                 if (item != null) result.add(item);
             }
-        } catch (RuntimeException parseError) { // Jackson 3: JacksonException is unchecked
+        } catch (RuntimeException _) { // Jackson 3: JacksonException is unchecked
             // No readable candidates: the caller still knows it is a duplicate
         }
         return result;

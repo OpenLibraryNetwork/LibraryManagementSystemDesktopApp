@@ -2,9 +2,6 @@ package net.gizmolab.library.librarymanagementsystemdesktop;
 
 import javafx.application.Platform;
 import net.gizmolab.library.librarymanagementsystemdesktop.testsupport.FxToolkit;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 import org.junit.jupiter.api.*;
 
@@ -34,7 +31,6 @@ import static org.junit.jupiter.api.Assertions.*;
 class SidebarNavigationButtonVisibilityTest {
 
     private Stage testStage;
-    private Scene testScene;
 
     @BeforeAll
     static void setUpClass() throws Exception {
@@ -74,7 +70,7 @@ class SidebarNavigationButtonVisibilityTest {
     @Test
     @Order(1)
     @DisplayName("Test 1: CSS file contains purple background color for sidebar")
-    void testCSSContainsPurpleBackground() throws Exception {
+    void testCSSContainsPurpleBackground() {
         // Read the CSS file and verify it contains the purple background color
         InputStream cssStream = getClass().getResourceAsStream("/css/modern-theme.css");
         assertNotNull(cssStream, "CSS file should exist");
@@ -105,7 +101,7 @@ class SidebarNavigationButtonVisibilityTest {
     @Test
     @Order(2)
     @DisplayName("Test 2: CSS file contains button styling for sidebar")
-    void testCSSContainsButtonStyling() throws Exception {
+    void testCSSContainsButtonStyling() {
         // Read the CSS file and verify it contains button styling
         InputStream cssStream = getClass().getResourceAsStream("/css/modern-theme.css");
         assertNotNull(cssStream, "CSS file should exist");
@@ -130,7 +126,7 @@ class SidebarNavigationButtonVisibilityTest {
     @Test
     @Order(3)
     @DisplayName("Test 3: CSS file contains hover effect styling")
-    void testCSSContainsHoverEffects() throws Exception {
+    void testCSSContainsHoverEffects() {
         // Read the CSS file and verify it contains hover effects
         InputStream cssStream = getClass().getResourceAsStream("/css/modern-theme.css");
         assertNotNull(cssStream, "CSS file should exist");
@@ -175,7 +171,7 @@ class SidebarNavigationButtonVisibilityTest {
     @Test
     @Order(4)
     @DisplayName("Test 4: CSS file contains active button indicator styling")
-    void testCSSContainsActiveButtonStyling() throws Exception {
+    void testCSSContainsActiveButtonStyling() {
         // Read the CSS file and verify it contains active button styling
         InputStream cssStream = getClass().getResourceAsStream("/css/modern-theme.css");
         assertNotNull(cssStream, "CSS file should exist");
@@ -214,7 +210,7 @@ class SidebarNavigationButtonVisibilityTest {
     @Test
     @Order(5)
     @DisplayName("Test 5: FXML file contains navigation buttons with correct styleClasses")
-    void testFXMLContainsNavigationButtons() throws Exception {
+    void testFXMLContainsNavigationButtons() {
         // Read the FXML file and verify it contains navigation buttons
         InputStream fxmlStream = getClass().getResourceAsStream("/fxml/main-navigation.fxml");
         assertNotNull(fxmlStream, "FXML file should exist");
@@ -246,7 +242,7 @@ class SidebarNavigationButtonVisibilityTest {
     @Test
     @Order(6)
     @DisplayName("Test 6: Verify contrast between button text and purple background")
-    void testButtonTextContrast() throws Exception {
+    void testButtonTextContrast() {
         // Read the CSS file
         InputStream cssStream = getClass().getResourceAsStream("/css/modern-theme.css");
         assertNotNull(cssStream, "CSS file should exist");
@@ -273,7 +269,7 @@ class SidebarNavigationButtonVisibilityTest {
     @Test
     @Order(7)
     @DisplayName("Test 7: Verify rounded corners are defined for sidebar")
-    void testRoundedCornersForSidebar() throws Exception {
+    void testRoundedCornersForSidebar() {
         // Read the CSS file
         InputStream cssStream = getClass().getResourceAsStream("/css/modern-theme.css");
         assertNotNull(cssStream, "CSS file should exist");
@@ -292,18 +288,6 @@ class SidebarNavigationButtonVisibilityTest {
         assertTrue(
             cssContent.contains("0 12 12 0") || cssContent.contains("12"),
             "CSS should define rounded corners with appropriate radius value"
-        );
-    }
-
-    /**
-     * Helper method to verify a button has the correct styleClass
-     */
-    private void verifyButtonHasCorrectStyleClass(Button button, String buttonName) {
-        assertNotNull(button, buttonName + " should not be null");
-        assertTrue(
-            button.getStyleClass().contains("sidebar-button") || 
-            button.getStyleClass().contains("nav-item"),
-            buttonName + " should have sidebar-button or nav-item styleClass"
         );
     }
 

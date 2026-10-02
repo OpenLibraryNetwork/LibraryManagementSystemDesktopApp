@@ -92,11 +92,11 @@ public class AuthorManagementController extends BaseManagementController<PersonD
     }
 
     // Read-only: no add, edit or delete of persons from the library client.
-    @Override protected void addNewItem() {}
-    @Override protected void deleteSelectedItems() {}
+    @Override protected void addNewItem() { /* read-only here */ }
+    @Override protected void deleteSelectedItems() { /* read-only here */ }
     @Override protected PersonDTO showAddEditDialog(PersonDTO item) { return null; }
     @Override protected PersonDTO saveItem(PersonDTO item) { return item; }
-    @Override protected void deleteItem(PersonDTO item) {}
+    @Override protected void deleteItem(PersonDTO item) { /* read-only here */ }
 
     @Override protected String getEntityTypeName() { return "Author"; }
     @Override protected String getEntityDisplayName(PersonDTO item) { return item.getDisplayName(); }

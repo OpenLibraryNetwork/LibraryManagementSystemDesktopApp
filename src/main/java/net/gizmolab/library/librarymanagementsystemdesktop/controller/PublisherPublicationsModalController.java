@@ -139,9 +139,7 @@ public class PublisherPublicationsModalController {
 
     private void setupSearchFunctionality() {
         if (searchField != null) {
-            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-                applyFilters();
-            });
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         }
     }
 
@@ -167,10 +165,7 @@ public class PublisherPublicationsModalController {
             if (pub.getAuthorNames() != null && pub.getAuthorNames().toLowerCase().contains(lowerCaseFilter)) {
                 return true;
             }
-            if (pub.getType() != null && pub.getType().toLowerCase().contains(lowerCaseFilter)) {
-                return true;
-            }
-            return false;
+            return pub.getType() != null && pub.getType().toLowerCase().contains(lowerCaseFilter);
         };
     }
 

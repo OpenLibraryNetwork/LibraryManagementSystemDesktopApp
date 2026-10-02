@@ -134,7 +134,6 @@ public class UserFormController extends BaseController {
     }
 
     private boolean validateLastName() {
-        String lastName = lastNameField.getText();
         // Last name is optional in the model, so we don't require it
         hideFieldError(lastNameErrorLabel);
         return true;
@@ -142,11 +141,9 @@ public class UserFormController extends BaseController {
 
     private boolean validateEmail() {
         String email = emailField.getText();
-        if (email != null && !email.trim().isEmpty()) {
-            if (!EMAIL_PATTERN.matcher(email).matches()) {
-                showFieldError(emailErrorLabel, i18nManager.getMessage("validation.invalid.email", i18nManager.getMessage("user.email")));
-                return false;
-            }
+        if (email != null && !email.trim().isEmpty() && !EMAIL_PATTERN.matcher(email).matches()) {
+            showFieldError(emailErrorLabel, i18nManager.getMessage("validation.invalid.email", i18nManager.getMessage("user.email")));
+            return false;
         }
         hideFieldError(emailErrorLabel);
         return true;
@@ -228,12 +225,10 @@ public class UserFormController extends BaseController {
 
         saveTask.setOnFailed(e -> {
             Throwable exception = saveTask.getException();
-            Platform.runLater(() -> {
-                showError(i18nManager.getMessage("error.title"), 
-                         i18nManager.getMessage("error.operation.failed", 
-                                              isEditMode ? i18nManager.getMessage("user.operation.update") : i18nManager.getMessage("user.operation.create"), 
-                                              exception.getMessage()));
-            });
+            Platform.runLater(() -> showError(i18nManager.getMessage("error.title"),
+                    i18nManager.getMessage("error.operation.failed",
+                            isEditMode ? i18nManager.getMessage("user.operation.update") : i18nManager.getMessage("user.operation.create"),
+                            exception.getMessage())));
         });
 
         new Thread(saveTask).start();
@@ -255,13 +250,13 @@ public class UserFormController extends BaseController {
     }
 
     private User convertToEntity(UserDTO userDTO) {
-        User user = new User();
-        user.setUserId(userDTO.getUserId());
-        user.setFirstname(userDTO.getFirstname());
-        user.setLastname(userDTO.getLastname());
-        user.setEmail(userDTO.getEmail());
-        user.setPhone(userDTO.getPhone());
-        return user;
+        User entity = new User();
+        entity.setUserId(userDTO.getUserId());
+        entity.setFirstname(userDTO.getFirstname());
+        entity.setLastname(userDTO.getLastname());
+        entity.setEmail(userDTO.getEmail());
+        entity.setPhone(userDTO.getPhone());
+        return entity;
     }
 
     private UserDTO convertToDTO(User user) {

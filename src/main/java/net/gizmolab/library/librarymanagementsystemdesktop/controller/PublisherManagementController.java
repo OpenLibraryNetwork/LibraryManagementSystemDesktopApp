@@ -99,11 +99,11 @@ public class PublisherManagementController extends BaseManagementController<Publ
     }
 
     // Read-only: no add, edit or delete of publishers from the library client.
-    @Override protected void addNewItem() {}
-    @Override protected void deleteSelectedItems() {}
+    @Override protected void addNewItem() { /* read-only here */ }
+    @Override protected void deleteSelectedItems() { /* read-only here */ }
     @Override protected PublisherDTO showAddEditDialog(PublisherDTO item) { return null; }
     @Override protected PublisherDTO saveItem(PublisherDTO item) { return item; }
-    @Override protected void deleteItem(PublisherDTO item) {}
+    @Override protected void deleteItem(PublisherDTO item) { /* read-only here */ }
 
     private static String nz(String s) {
         return s == null ? "" : s.replaceAll("\\s+", " ").trim(); // Biblionet addresses contain line breaks

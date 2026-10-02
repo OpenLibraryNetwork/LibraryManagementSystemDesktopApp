@@ -4,7 +4,8 @@ public class ContributorRoleDTO {
     /** Biblionet ContributorTypeID of "Συγγραφέας". The role is recognised by this id, never by name. */
     public static final String AUTHOR_TYPE_ID = "1";
 
-    private String documentId;private String name;
+    private String documentId;
+    private String name;
     private String biblionetTypeId;
 
     public ContributorRoleDTO() {}

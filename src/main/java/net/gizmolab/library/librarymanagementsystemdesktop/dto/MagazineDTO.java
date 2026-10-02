@@ -2,7 +2,8 @@ package net.gizmolab.library.librarymanagementsystemdesktop.dto;
 
 /** A magazine title of the shared catalog (issues are publications of type "Περιοδικό"). */
 public class MagazineDTO {
-    private String documentId;private String title;
+    private String documentId;
+    private String title;
     private String qualifier;
     private String issn;
     private String place;

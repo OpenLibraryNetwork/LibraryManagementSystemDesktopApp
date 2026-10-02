@@ -35,8 +35,6 @@ public class BorrowDTO {
     private boolean overdue;
     private String status;             // "Active", "Overdue", "Returned"
 
-    public BorrowDTO() {}
-
     // --- Convenience methods ---
     public String getUserFullName() {
         return ((userFirstName != null ? userFirstName : "") + " " +

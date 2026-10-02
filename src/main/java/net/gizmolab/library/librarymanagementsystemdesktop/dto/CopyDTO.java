@@ -17,8 +17,6 @@ public class CopyDTO {
     private String libraryDocumentId;
     private String libraryName;
 
-    public CopyDTO() {}
-
     // --- Getters & Setters ---
     public String getDocumentId() { return documentId; }
     public void setDocumentId(String documentId) { this.documentId = documentId; }

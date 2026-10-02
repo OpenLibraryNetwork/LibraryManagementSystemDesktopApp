@@ -19,7 +19,9 @@ import java.util.List;
  * - Relations: the related object (or an array of objects) in place, without a "data" wrapper.
  * Records are identified by documentId; the numeric id is not used by the client.
  */
-public class DTOConverter {
+public final class DTOConverter {
+
+    private DTOConverter() {}
 
     // ═══════════════════════════════════════════════════════
     // Publication (Έντυπα) — from Strapi JSON
@@ -39,7 +41,7 @@ public class DTOConverter {
     public static PublicationDTO publicationFromJson(JsonNode node, String currentLibraryDocumentId) {
         if (node == null) return null;
 
-        // Handle wrapper: { "data": { ... } }
+        // Unwrap a single-entry response, where the entry sits under "data"
         if (node.has("data") && !node.get("data").isArray()) {
             node = node.get("data");
         }

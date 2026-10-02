@@ -90,7 +90,7 @@ public class PublicationSummaryController extends BaseController {
             }
         });
         image.errorProperty().addListener((obs, oldV, isError) -> {
-            if (isError) logInfo("Cover not loaded: %s", url);
+            if (Boolean.TRUE.equals(isError)) logInfo("Cover not loaded: %s", url);
         });
     }
 }

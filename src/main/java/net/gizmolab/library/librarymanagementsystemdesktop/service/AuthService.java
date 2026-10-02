@@ -135,7 +135,7 @@ public class AuthService {
             if (scheme.equalsIgnoreCase("https")) return true;
             return scheme.equalsIgnoreCase("http")
                     && (host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1") || host.equals("[::1]"));
-        } catch (java.net.URISyntaxException e) {
+        } catch (java.net.URISyntaxException _) {
             return false;
         }
     }
@@ -174,13 +174,15 @@ public class AuthService {
                     .build();
 
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
+            int status = response.statusCode();
+            String responseBody = response.body();
 
-            if (response.statusCode() == 400 || response.statusCode() == 401) {
-                log.warn("Login rejected — status {}: {}", response.statusCode(), response.body());
+            if (status == 400 || status == 401) {
+                log.warn("Login rejected — status {}: {}", status, responseBody);
                 return LoginResult.BAD_CREDENTIALS;
             }
-            if (response.statusCode() != 200) {
-                log.warn("Login failed — status {}: {}", response.statusCode(), response.body());
+            if (status != 200) {
+                log.warn("Login failed — status {}: {}", status, responseBody);
                 return LoginResult.FAILED;
             }
 

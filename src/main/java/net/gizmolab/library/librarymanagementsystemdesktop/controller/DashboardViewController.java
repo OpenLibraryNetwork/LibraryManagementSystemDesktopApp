@@ -6,7 +6,6 @@ import net.gizmolab.library.librarymanagementsystemdesktop.dto.PublicationDTO;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.utilities.DTOConverter;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.PopularPublications;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.PublicationDetailFormatter;
-import net.gizmolab.library.librarymanagementsystemdesktop.service.*;
 import tools.jackson.databind.JsonNode;
 import javafx.concurrent.Task;
 import javafx.fxml.FXML;
@@ -35,7 +34,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
-import java.util.stream.Collectors;
 
 @Component
 public class DashboardViewController extends BaseController implements Initializable {

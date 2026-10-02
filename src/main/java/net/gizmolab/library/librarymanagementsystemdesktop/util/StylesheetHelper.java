@@ -10,7 +10,9 @@ import org.slf4j.LoggerFactory;
 /**
  * Helper class for applying modern theme CSS to JavaFX components.
  */
-public class StylesheetHelper {
+public final class StylesheetHelper {
+
+    private StylesheetHelper() {}
     
     private static final Logger logger = LoggerFactory.getLogger(StylesheetHelper.class);
     private static final String MODERN_THEME_CSS = "/css/modern-theme.css";

@@ -16,7 +16,6 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * Borrow service — orchestrates Strapi + local H2.
@@ -135,7 +134,7 @@ public class BorrowServiceImpl implements IBorrowService {
     public List<BorrowDTO> getAllBorrowsAsDTO() {
         return borrowRepository.findAllWithUser().stream()
                 .map(DTOConverter::convertBorrowToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -143,7 +142,7 @@ public class BorrowServiceImpl implements IBorrowService {
     public List<BorrowDTO> getActiveBorrowsAsDTO() {
         return borrowRepository.findActiveWithUser().stream()
                 .map(DTOConverter::convertBorrowToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -151,7 +150,7 @@ public class BorrowServiceImpl implements IBorrowService {
     public List<BorrowDTO> getBorrowHistoryAsDTO() {
         return getBorrowHistory().stream()
                 .map(DTOConverter::convertBorrowToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
@@ -161,6 +160,6 @@ public class BorrowServiceImpl implements IBorrowService {
                 .orElseThrow(() -> new EntityNotFoundException("User not found: " + userId));
         return getBorrowHistoryByUser(user).stream()
                 .map(DTOConverter::convertBorrowToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 }

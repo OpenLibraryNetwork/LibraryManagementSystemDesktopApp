@@ -102,13 +102,5 @@ public class UserServiceImpl implements IUserService {
         return userRepository.count();
     }
 
-    // Helper method to perform validation using the UserValidator
-    /*private void validateUser(UserDTO userDto) {
-        Errors errors = new BeanPropertyBindingResult(userDto, "user");
-        userValidator.validate(userDto, errors);
-        if (errors.hasErrors()) {
-            throw new IllegalArgumentException("Invalid user data");
-        }
-    }*/
 
 }

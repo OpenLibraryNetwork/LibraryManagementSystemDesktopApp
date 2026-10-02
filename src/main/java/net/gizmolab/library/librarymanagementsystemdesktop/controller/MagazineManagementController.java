@@ -148,11 +148,11 @@ public class MagazineManagementController extends BaseManagementController<Magaz
     }
 
     // Magazines are corrected by the cataloguer (Strapi admin), never from the library client.
-    @Override protected void editSelectedItem() {}
-    @Override protected void deleteSelectedItems() {}
+    @Override protected void editSelectedItem() { /* read-only here */ }
+    @Override protected void deleteSelectedItems() { /* read-only here */ }
     @Override protected MagazineDTO showAddEditDialog(MagazineDTO item) { return null; }
     @Override protected MagazineDTO saveItem(MagazineDTO item) { return item; }
-    @Override protected void deleteItem(MagazineDTO item) {}
+    @Override protected void deleteItem(MagazineDTO item) { /* read-only here */ }
 
     @Override protected String getEntityTypeName() { return "Magazine"; }
     @Override protected String getEntityDisplayName(MagazineDTO item) { return item.getDisplayName(); }

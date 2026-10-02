@@ -3,7 +3,6 @@ package net.gizmolab.library.librarymanagementsystemdesktop.controller;
 import net.gizmolab.library.librarymanagementsystemdesktop.config.FXMLLoaderFactory;
 import net.gizmolab.library.librarymanagementsystemdesktop.controller.base.BaseController;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.*;
-import net.gizmolab.library.librarymanagementsystemdesktop.service.*;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.utilities.KeyboardAccessibilityHelper;
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -113,12 +112,10 @@ public class MainNavigationController extends BaseController implements Initiali
         try {
             var result = fxmlLoaderFactory.<Node, LoginController>loadWithController("/fxml/login-screen.fxml");
             LoginController loginController = result.getController();
-            loginController.setOnLoginSuccess(() -> {
-                Platform.runLater(() -> {
-                    contentArea.getChildren().clear();
-                    initializeMainUI();
-                });
-            });
+            loginController.setOnLoginSuccess(() -> Platform.runLater(() -> {
+                contentArea.getChildren().clear();
+                initializeMainUI();
+            }));
             contentArea.getChildren().clear();
             contentArea.getChildren().add(result.getRoot());
         } catch (Exception e) {
@@ -213,13 +210,11 @@ public class MainNavigationController extends BaseController implements Initiali
                 connectionStatusLabel.getStyleClass().add(online ? "status-online" : "status-offline");
             });
         });
-        task.setOnFailed(e -> {
-            Platform.runLater(() -> {
-                connectionStatusLabel.setText("● Offline");
-                connectionStatusLabel.getStyleClass().removeAll("status-online", "status-offline");
-                connectionStatusLabel.getStyleClass().add("status-offline");
-            });
-        });
+        task.setOnFailed(e -> Platform.runLater(() -> {
+            connectionStatusLabel.setText("● Offline");
+            connectionStatusLabel.getStyleClass().removeAll("status-online", "status-offline");
+            connectionStatusLabel.getStyleClass().add("status-offline");
+        }));
         Thread t = new Thread(task);
         t.setDaemon(true);
         t.start();
@@ -376,7 +371,7 @@ public class MainNavigationController extends BaseController implements Initiali
      * Changes the application language.
      */
     private void changeLanguage(Locale locale) {
-        logger.info("Changing language to: " + locale);
+        logger.info("Changing language to: {}", locale);
         try {
             i18nManager.setLocale(locale);
             updateStatus("status.language.changed");
@@ -394,7 +389,7 @@ public class MainNavigationController extends BaseController implements Initiali
             try {
                 String message = i18nManager.getMessage(messageKey, args);
                 statusLabel.setText(message);
-            } catch (Exception e) {
+            } catch (Exception _) {
                 statusLabel.setText(messageKey);
             }
         });
@@ -409,9 +404,7 @@ public class MainNavigationController extends BaseController implements Initiali
      * Sets up i18n bindings and listeners.
      */
     private void setupI18nBindings() {
-        i18nManager.currentLocaleProperty().addListener((observable, oldLocale, newLocale) -> {
-            Platform.runLater(this::refreshUI);
-        });
+        i18nManager.currentLocaleProperty().addListener((observable, oldLocale, newLocale) -> Platform.runLater(this::refreshUI));
     }
 
     /**

@@ -132,25 +132,25 @@ class SidebarDimensionsTest {
 
     @Test
     @DisplayName("CSS should not override sidebar width")
-    void testCSSDoesNotOverrideWidth() throws Exception {
+    void testCSSDoesNotOverrideWidth() {
         assertTrue(true);
     }
 
     @Test
     @DisplayName("CSS should not override sidebar spacing")
-    void testCSSDoesNotOverrideSpacing() throws Exception {
+    void testCSSDoesNotOverrideSpacing() {
         assertTrue(true);
     }
 
     @Test
     @DisplayName("CSS should not override sidebar padding")
-    void testCSSDoesNotOverridePadding() throws Exception {
+    void testCSSDoesNotOverridePadding() {
         assertTrue(true);
     }
 
     @Test
     @DisplayName("Sidebar button padding should remain unchanged")
-    void testButtonPaddingRemains10x16() throws Exception {
+    void testButtonPaddingRemains10x16() {
         String cssContent = loadCSSContent();
         
         // Verify button padding is still 10px 16px
@@ -176,7 +176,7 @@ class SidebarDimensionsTest {
     /**
      * Helper method to load CSS content as string
      */
-    private String loadCSSContent() throws Exception {
+    private String loadCSSContent() {
         InputStream cssStream = getClass().getResourceAsStream(CSS_PATH);
         assertNotNull(cssStream, "CSS file should exist");
         

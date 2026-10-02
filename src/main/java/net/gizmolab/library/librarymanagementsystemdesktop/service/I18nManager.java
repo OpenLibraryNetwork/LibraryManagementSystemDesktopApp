@@ -57,7 +57,7 @@ public class I18nManager {
                 return key;
             }
             return currentBundle.getString(key);
-        } catch (Exception e) {
+        } catch (Exception _) {
             // Return the key if message not found
             return key;
         }
@@ -74,7 +74,7 @@ public class I18nManager {
         try {
             String message = currentBundle.getString(key);
             return MessageFormat.format(message, params);
-        } catch (Exception e) {
+        } catch (Exception _) {
             // Return the key if message not found
             return key;
         }
@@ -154,11 +154,11 @@ public class I18nManager {
     private void loadResourceBundle(Locale locale) {
         try {
             currentBundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, locale);
-        } catch (Exception e) {
+        } catch (Exception _) {
             try {
                 // Fallback to default locale
                 currentBundle = ResourceBundle.getBundle(BUNDLE_BASE_NAME, DEFAULT_LOCALE);
-            } catch (Exception fallbackException) {
+            } catch (Exception _) {
                 currentBundle = null;
             }
         }

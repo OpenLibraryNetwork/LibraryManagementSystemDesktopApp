@@ -2,7 +2,8 @@ package net.gizmolab.library.librarymanagementsystemdesktop.dto;
 
 /** Person (author, translator, …) from the shared authority file. */
 public class PersonDTO {
-    private String documentId;private String name;
+    private String documentId;
+    private String name;
     private String qualifier;
     private String firstname;
     private String middlename;
@@ -13,8 +14,6 @@ public class PersonDTO {
     private String biblionetPersonId;
     private boolean reviewed;
     private int bookCount;
-
-    public PersonDTO() {}
 
     /** "Name (qualifier)" when a qualifier exists, otherwise the name. */
     public String getDisplayName() {

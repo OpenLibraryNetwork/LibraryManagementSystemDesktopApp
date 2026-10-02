@@ -4,7 +4,6 @@ import net.gizmolab.library.librarymanagementsystemdesktop.controller.base.BaseC
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.CopyDTO;
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.PublicationDTO;
 import net.gizmolab.library.librarymanagementsystemdesktop.model.User;
-import net.gizmolab.library.librarymanagementsystemdesktop.service.*;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.AuthService;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.IBorrowService;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.IUserService;
@@ -143,9 +142,7 @@ public class BorrowFormControllerNew extends BaseController {
                 return userService.getAllUsers();
             }
         };
-        task.setOnSucceeded(e -> {
-            userComboBox.getItems().setAll(task.getValue());
-        });
+        task.setOnSucceeded(e -> userComboBox.getItems().setAll(task.getValue()));
         Thread t = new Thread(task);
         t.setDaemon(true);
         t.start();
@@ -254,10 +251,10 @@ public class BorrowFormControllerNew extends BaseController {
             saveButton.setDisable(false);
             Throwable ex = task.getException();
             if (ex instanceof StrapiApiClient.ConflictException ||
-                (ex.getCause() != null && ex.getCause() instanceof StrapiApiClient.ConflictException)) {
+                ex.getCause() instanceof StrapiApiClient.ConflictException) {
                 showWarning("Σύγκρουση", "Αυτό το αντίτυπο είναι ήδη δανεισμένο");
             } else if (ex instanceof StrapiApiClient.AuthenticationExpiredException ||
-                (ex.getCause() != null && ex.getCause() instanceof StrapiApiClient.AuthenticationExpiredException)) {
+                ex.getCause() instanceof StrapiApiClient.AuthenticationExpiredException) {
                 showWarning("Συνεδρία", "Η συνεδρία έληξε. Συνδεθείτε ξανά.");
             } else {
                 handleException("Borrow failed", (Exception) ex);

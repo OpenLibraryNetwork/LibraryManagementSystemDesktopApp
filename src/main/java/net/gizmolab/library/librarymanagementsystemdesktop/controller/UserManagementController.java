@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component;
 
 import java.util.List;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 @Component
 public class UserManagementController extends BaseManagementController<UserDTO> {
@@ -119,11 +118,7 @@ public class UserManagementController extends BaseManagementController<UserDTO> 
             }
 
             // Search in phone
-            if (user.getPhone() != null && user.getPhone().toLowerCase().contains(lowerCaseFilter)) {
-                return true;
-            }
-
-            return false;
+            return user.getPhone() != null && user.getPhone().toLowerCase().contains(lowerCaseFilter);
         };
     }
 
@@ -132,16 +127,12 @@ public class UserManagementController extends BaseManagementController<UserDTO> 
         List<User> users = userService.getAllUsersWithActiveBorrows();
         return users.stream()
                 .map(this::convertToDTO)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     @Override
     protected UserDTO showAddEditDialog(UserDTO user) {
         try {
-            // Use Spring's FXMLLoaderFactory for proper dependency injection and i18n
-            FXMLLoaderFactory fxmlLoaderFactory =
-                getApplicationContext().getBean(FXMLLoaderFactory.class);
-            
             var loadResult = fxmlLoaderFactory.<javafx.scene.Parent, UserFormController>loadWithController("/fxml/user-form-dialog.fxml");
             
             Stage dialogStage = new Stage();
@@ -252,7 +243,7 @@ public class UserManagementController extends BaseManagementController<UserDTO> 
             controller.setDialogStage(modalStage);
 
             modalStage.showAndWait();
-        } catch (Exception e) {
+        } catch (Exception _) {
             showError(i18nManager.getMessage("error.title"), i18nManager.getMessage("borrowHistory.error.open"));
         }
     }

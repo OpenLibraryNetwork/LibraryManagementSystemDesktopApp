@@ -61,7 +61,7 @@ class ApplicationStartupTest {
     }
 
     @AfterAll
-    static void tearDownClass() throws Exception {
+    static void tearDownClass() {
         // Clean up Spring context
         if (springContext != null) {
             springContext.close();
@@ -125,7 +125,6 @@ class ApplicationStartupTest {
     void testCSSLoadsWithoutParsingErrors() throws Exception {
         CountDownLatch latch = new CountDownLatch(1);
         AtomicReference<Scene> sceneRef = new AtomicReference<>();
-        AtomicBoolean cssErrorDetected = new AtomicBoolean(false);
         
         // Capture System.err to detect CSS parsing errors
         ByteArrayOutputStream errContent = new ByteArrayOutputStream();

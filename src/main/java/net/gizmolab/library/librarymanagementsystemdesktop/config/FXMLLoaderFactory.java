@@ -2,6 +2,8 @@ package net.gizmolab.library.librarymanagementsystemdesktop.config;
 
 import net.gizmolab.library.librarymanagementsystemdesktop.service.I18nManager;
 import javafx.fxml.FXMLLoader;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Component;
 
@@ -14,6 +16,8 @@ import java.net.URL;
  */
 @Component
 public class FXMLLoaderFactory {
+
+    private static final Logger log = LoggerFactory.getLogger(FXMLLoaderFactory.class);
 
     private final ApplicationContext applicationContext;
 
@@ -67,7 +71,7 @@ public class FXMLLoaderFactory {
                 I18nManager i18nManager =
                     applicationContext.getBean(I18nManager.class);
                 currentLocale = i18nManager.getCurrentLocale();
-            } catch (Exception e) {
+            } catch (Exception _) {
                 // Fall back to system default if I18nManager is not available
             }
             
@@ -75,7 +79,7 @@ public class FXMLLoaderFactory {
             loader.setResources(bundle);
         } catch (Exception e) {
             // If resource bundle is not found, continue without it
-            System.out.println("Warning: Could not load resource bundle 'messages': " + e.getMessage());
+            log.warn("Could not load resource bundle 'messages': {}", e.getMessage());
         }
         
         return loader.load();
@@ -102,7 +106,7 @@ public class FXMLLoaderFactory {
                 I18nManager i18nManager =
                     applicationContext.getBean(I18nManager.class);
                 currentLocale = i18nManager.getCurrentLocale();
-            } catch (Exception e) {
+            } catch (Exception _) {
                 // Fall back to system default if I18nManager is not available
             }
             
@@ -110,7 +114,7 @@ public class FXMLLoaderFactory {
             loader.setResources(bundle);
         } catch (Exception e) {
             // If resource bundle is not found, continue without it
-            System.out.println("Warning: Could not load resource bundle 'messages': " + e.getMessage());
+            log.warn("Could not load resource bundle 'messages': {}", e.getMessage());
         }
         
         T root = loader.load();

@@ -96,7 +96,7 @@ public class KeyStoreService {
         }
         try {
             return keyring.getPassword(SERVICE_NAME, key);
-        } catch (PasswordAccessException e) {
+        } catch (PasswordAccessException _) {
             log.debug("Secret '{}' not found in OS keystore", key);
             return inMemoryStore.get(key); // Try fallback
         }
@@ -113,7 +113,7 @@ public class KeyStoreService {
         try {
             keyring.deletePassword(SERVICE_NAME, key);
             log.debug("Deleted secret '{}' from OS keystore", key);
-        } catch (PasswordAccessException e) {
+        } catch (PasswordAccessException _) {
             log.debug("Secret '{}' not found for deletion", key);
         }
         inMemoryStore.remove(key);

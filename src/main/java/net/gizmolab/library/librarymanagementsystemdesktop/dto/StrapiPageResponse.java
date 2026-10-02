@@ -40,9 +40,6 @@ public class StrapiPageResponse<T> {
     }
 
     /**
-     * Creates an empty response (no results).
-     */
-    /**
      * An empty page for a failed load, carrying a Greek message for the user
      * (so a 403 or an unreachable server is not mistaken for "no items").
      */

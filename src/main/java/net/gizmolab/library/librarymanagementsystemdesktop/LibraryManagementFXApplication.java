@@ -57,7 +57,7 @@ public class LibraryManagementFXApplication extends Application {
         }
         // Set User Agent Stylesheet to null (no default theme)
         Application.setUserAgentStylesheet(null);
-        System.out.println("Removed default User Agent Stylesheet - using custom CSS only");
+        log.info("Removed default User Agent Stylesheet - using custom CSS only");
         
         // Get FXMLLoaderFactory from Spring context
         FXMLLoaderFactory fxmlLoaderFactory = springContext.getBean(FXMLLoaderFactory.class);
@@ -73,14 +73,14 @@ public class LibraryManagementFXApplication extends Application {
             // APPLY CUSTOM CSS
             scene.getStylesheets().clear();
             scene.getStylesheets().add(getClass().getResource("/css/modern-theme.css").toExternalForm());
-            System.out.println("Applied custom modern theme CSS");
+            log.info("Applied custom modern theme CSS");
             
             primaryStage.setScene(scene);
             primaryStage.setMinWidth(1024);
             primaryStage.setMinHeight(600);
             
             // Initialize ResponsiveLayoutManager for responsive behavior
-            ResponsiveLayoutManager responsiveLayoutManager = new ResponsiveLayoutManager(primaryStage);
+            new ResponsiveLayoutManager(primaryStage).start();
             
             // Handle application close
             primaryStage.setOnCloseRequest(event -> {

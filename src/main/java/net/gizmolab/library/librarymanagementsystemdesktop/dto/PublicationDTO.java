@@ -49,8 +49,6 @@ public class PublicationDTO {
     private int totalCopies;
     private int availableCopies;
 
-    public PublicationDTO() {}
-
     // --- Getters & Setters ---
     public String getDocumentId() { return documentId; }
     public void setDocumentId(String documentId) { this.documentId = documentId; }

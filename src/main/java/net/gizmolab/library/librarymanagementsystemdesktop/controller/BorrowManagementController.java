@@ -129,6 +129,8 @@ public class BorrowManagementController extends BaseManagementController<BorrowD
                         case "overdue":
                             getStyleClass().add("status-overdue");
                             break;
+                        default:
+                            break; // an unknown status gets no colour
                     }
                 }
             }
@@ -138,9 +140,7 @@ public class BorrowManagementController extends BaseManagementController<BorrowD
         borrowsTable.setPlaceholder(new Label(i18nManager.getMessage("status.loading.borrows")));
 
         // Setup selection listener for return button
-        borrowsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            updateButtonStates();
-        });
+        borrowsTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> updateButtonStates());
     }
 
     private void setupStatusFilter() {

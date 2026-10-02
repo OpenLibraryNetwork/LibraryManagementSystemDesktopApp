@@ -142,6 +142,7 @@ public class BorrowHistoryModalController {
                     case "active": return new SimpleStringProperty(i18nManager.getMessage("borrowHistory.status.active"));
                     case "returned": return new SimpleStringProperty(i18nManager.getMessage("borrowHistory.status.returned"));
                     case "overdue": return new SimpleStringProperty(i18nManager.getMessage("borrowHistory.status.overdue"));
+                    default: break; // an unknown status is shown as it is
                 }
             }
             return new SimpleStringProperty(status != null ? status : "");
@@ -186,24 +187,18 @@ public class BorrowHistoryModalController {
             );
             statusFilterComboBox.setValue(i18nManager.getMessage("borrowHistory.filter.all"));
 
-            statusFilterComboBox.valueProperty().addListener((obs, oldValue, newValue) -> {
-                applyFilters();
-            });
+            statusFilterComboBox.valueProperty().addListener((obs, oldValue, newValue) -> applyFilters());
         }
     }
 
     private void setupSearchFunctionality() {
         if (searchField != null) {
-            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-                applyFilters();
-            });
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         }
     }
 
     private void setupSelectionListener() {
-        historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
-            updateReturnButtonState();
-        });
+        historyTable.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> updateReturnButtonState());
     }
 
     private void updateReturnButtonState() {
@@ -241,10 +236,7 @@ public class BorrowHistoryModalController {
             if (dto.getAuthorName() != null && dto.getAuthorName().toLowerCase().contains(lowerCaseFilter)) {
                 return true;
             }
-            if (dto.getIsbn() != null && dto.getIsbn().toLowerCase().contains(lowerCaseFilter)) {
-                return true;
-            }
-            return false;
+            return dto.getIsbn() != null && dto.getIsbn().toLowerCase().contains(lowerCaseFilter);
         };
     }
 

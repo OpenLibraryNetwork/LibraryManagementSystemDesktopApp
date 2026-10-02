@@ -16,7 +16,6 @@ import javafx.fxml.FXML;
 import javafx.scene.control.*;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Stage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -83,9 +82,7 @@ public class CopyManagementModalController extends BaseController {
             updateStatusLabel();
         });
 
-        task.setOnFailed(e -> {
-            handleException("Failed to load copies", (Exception) task.getException());
-        });
+        task.setOnFailed(e -> handleException("Failed to load copies", (Exception) task.getException()));
 
         Thread th = new Thread(task);
         th.setDaemon(true);

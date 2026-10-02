@@ -155,7 +155,7 @@ public class StrapiApiClient {
         try {
             JsonNode message = objectMapper.readTree(body).path("error").path("message");
             return message.isString() ? message.asString() : null;
-        } catch (tools.jackson.core.JacksonException e) {
+        } catch (tools.jackson.core.JacksonException _) {
             return null;
         }
     }
@@ -177,10 +177,10 @@ public class StrapiApiClient {
                     .build();
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             return response.statusCode() < 500;
-        } catch (InterruptedException e) {
+        } catch (InterruptedException _) {
             Thread.currentThread().interrupt();
             return false;
-        } catch (Exception e) {
+        } catch (Exception _) {
             return false;
         }
     }

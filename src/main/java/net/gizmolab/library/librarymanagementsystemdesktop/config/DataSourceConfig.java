@@ -85,7 +85,7 @@ public class DataSourceConfig {
      * fails here with H2's own error as the cause; later, Hibernate would hide it behind "Unable to determine Dialect".
      */
     private static DataSource opened(DataSource dataSource) {
-        try (java.sql.Connection ignored = dataSource.getConnection()) {
+        try (var _ = dataSource.getConnection()) {
             return dataSource;
         } catch (Exception e) {
             if (dataSource instanceof AutoCloseable closeable) {

@@ -132,9 +132,7 @@ public class AuthorBooksModalController {
 
     private void setupSearchFunctionality() {
         if (searchField != null) {
-            searchField.textProperty().addListener((observable, oldValue, newValue) -> {
-                applyFilters();
-            });
+            searchField.textProperty().addListener((observable, oldValue, newValue) -> applyFilters());
         }
     }
 
@@ -160,11 +158,8 @@ public class AuthorBooksModalController {
             if (pub.getIsbn() != null && pub.getIsbn().toLowerCase().contains(lowerCaseFilter)) {
                 return true;
             }
-            if (pub.getPublisher() != null && pub.getPublisher().getName() != null
-                    && pub.getPublisher().getName().toLowerCase().contains(lowerCaseFilter)) {
-                return true;
-            }
-            return false;
+            return pub.getPublisher() != null && pub.getPublisher().getName() != null
+                    && pub.getPublisher().getName().toLowerCase().contains(lowerCaseFilter);
         };
     }
 

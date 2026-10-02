@@ -17,12 +17,9 @@ import java.util.ResourceBundle;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Bug Condition Exploration Tests for i18n Translation Fix
- * 
- * **CRITICAL**: These tests MUST FAIL on unfixed code - failure confirms the bugs exist
- * **DO NOT attempt to fix the tests or the code when they fail**
- * **NOTE**: These tests encode the expected behavior - they will validate the fix when they pass after implementation
- * **GOAL**: Surface counterexamples that demonstrate the three bugs exist
+ * Regression tests for the i18n translation fix (bundle available at construction,
+ * Greek text not corrupted, a default fallback bundle) and for the behaviour that had to stay the same.
+ * setLocale() is synchronous: the locale listener runs inside the property's set(), so no test needs to wait.
  */
 class I18nTranslationBugfixTest {
 
@@ -94,14 +91,7 @@ class I18nTranslationBugfixTest {
         // Create I18nManager and set Greek locale
         I18nManager i18nManager = new I18nManager();
         i18nManager.setLocale(Locale.of("el", "GR"));
-        
-        // Small delay to ensure listener execution completes
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        
+
         String result = i18nManager.getMessage(key);
         
         // Greek text should not contain question marks (indicating corrupted encoding)
@@ -263,24 +253,10 @@ class I18nTranslationBugfixTest {
         Locale oppositeLocale = "en".equals(targetLocale.getLanguage()) ? 
             Locale.of("el", "GR") : Locale.ENGLISH;
         i18nManager.setLocale(oppositeLocale);
-        
-        // Wait for listener to execute
-        try {
-            Thread.sleep(150);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        
+
         // Now switch to target locale (this is the behavior we're testing)
         i18nManager.setLocale(targetLocale);
-        
-        // Wait for listener to execute
-        try {
-            Thread.sleep(150);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        
+
         // Verify the locale was changed
         assertEquals(targetLocale.getLanguage(), i18nManager.getCurrentLocale().getLanguage(),
             "Current locale should match the target locale after setLocale()");
@@ -324,24 +300,10 @@ class I18nTranslationBugfixTest {
         // Create first I18nManager and set locale
         I18nManager i18nManager1 = new I18nManager();
         i18nManager1.setLocale(locale);
-        
-        // Wait for preference to be saved
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        
+
         // Create second I18nManager (simulating app restart)
         I18nManager i18nManager2 = new I18nManager();
-        
-        // Wait for initialization
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        
+
         // Verify the saved locale was loaded
         assertEquals(locale.getLanguage(), i18nManager2.getCurrentLocale().getLanguage(),
             "Newly created I18nManager should load the saved locale preference");
@@ -366,11 +328,6 @@ class I18nTranslationBugfixTest {
         
         // Ensure bundle is loaded by switching locale
         i18nManager.setLocale(Locale.ENGLISH);
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
         
         // Try to get message for invalid key
         String result = i18nManager.getMessage(invalidKey);
@@ -413,11 +370,6 @@ class I18nTranslationBugfixTest {
         
         // Ensure bundle is loaded
         i18nManager.setLocale(Locale.ENGLISH);
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
         
         // Test getMessage with parameters
         // Even if the key doesn't have parameters, it should not throw an exception
@@ -457,22 +409,10 @@ class I18nTranslationBugfixTest {
         
         // Switch to Greek first (to ensure we're testing a real change)
         i18nManager.setLocale(Locale.of("el", "GR"));
-        try {
-            Thread.sleep(150);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
         
         // Now switch to English (this is the behavior we're testing)
         i18nManager.setLocale(Locale.ENGLISH);
-        
-        // Wait for locale change
-        try {
-            Thread.sleep(150);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        
+
         // Get message for the key
         String result = i18nManager.getMessage(key);
         
@@ -505,22 +445,12 @@ class I18nTranslationBugfixTest {
         
         // Test with English locale
         i18nManager.setLocale(Locale.ENGLISH);
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
         
         assertTrue(i18nManager.isEnglish(), "isEnglish() should return true for English locale");
         assertFalse(i18nManager.isGreek(), "isGreek() should return false for English locale");
         
         // Test with Greek locale
         i18nManager.setLocale(Locale.of("el", "GR"));
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
         
         assertTrue(i18nManager.isGreek(), "isGreek() should return true for Greek locale");
         assertFalse(i18nManager.isEnglish(), "isEnglish() should return false for Greek locale");
@@ -559,14 +489,7 @@ class I18nTranslationBugfixTest {
         
         // Change locale
         i18nManager.setLocale(Locale.of("el", "GR"));
-        
-        // Wait for listener
-        try {
-            Thread.sleep(100);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-        
+
         // Verify listener was called
         assertTrue(listenerCalled[0], "Locale property listener should be called when locale changes");
         

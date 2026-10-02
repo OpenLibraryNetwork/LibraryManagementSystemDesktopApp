@@ -68,4 +68,9 @@ class StartupFailureTest {
         Exception atStartup = assertThrows(Exception.class, () -> encrypted("dek-two").close());
         assertTrue(StartupFailure.message(atStartup).contains("κλειδί"), StartupFailure.message(atStartup));
     }
+
+    @Test
+    void noExceptionStillGivesASentence() {
+        assertEquals("Η εφαρμογή δεν μπόρεσε να ξεκινήσει.", StartupFailure.message(null));
+    }
 }

@@ -5,7 +5,6 @@ import net.gizmolab.library.librarymanagementsystemdesktop.controller.base.BaseM
 import net.gizmolab.library.librarymanagementsystemdesktop.util.StylesheetHelper;
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.BorrowDTO;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.IBorrowService;
-import net.gizmolab.library.librarymanagementsystemdesktop.service.I18nManager;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.TableCellFactory;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -32,7 +31,6 @@ public class BorrowManagementController extends BaseManagementController<BorrowD
     private static final DateTimeFormatter DATE_FMT = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     @Autowired private IBorrowService borrowService;
-    @Autowired private I18nManager i18nManager;
 
     // FXML Components specific to borrow management
     @FXML private Label titleLabel;

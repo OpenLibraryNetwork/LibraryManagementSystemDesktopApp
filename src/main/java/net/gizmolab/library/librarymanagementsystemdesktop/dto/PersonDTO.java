@@ -24,11 +24,13 @@ public class PersonDTO {
 
     /** "1950–2010", "1950–", "–2010" or "". */
     public String getLifespan() {
-        boolean hasBorn = !isBlank(bornYear);
-        boolean hasDeath = !isBlank(deathYear);
-        if (!hasBorn && !hasDeath) return "";
-        return (hasBorn ? bornYear.trim() : "") + "–" + (hasDeath ? deathYear.trim() : "");
+        String born = trimmed(bornYear);
+        String death = trimmed(deathYear);
+        if (born.isEmpty() && death.isEmpty()) return "";
+        return born + "–" + death;
     }
+
+    private static String trimmed(String s) { return s == null ? "" : s.trim(); }
 
     public boolean isFromBiblionet() { return biblionetPersonId != null; }
 

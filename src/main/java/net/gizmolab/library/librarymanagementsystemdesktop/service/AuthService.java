@@ -36,7 +36,8 @@ import java.time.Duration;
 public class AuthService {
 
     private static final Logger log = LoggerFactory.getLogger(AuthService.class);
-    private static AuthService instance;
+    // Written on login/logout, read by background tasks: volatile so they see the current session
+    private static volatile AuthService instance;
 
     @Autowired
     private KeyStoreService keyStoreService;
@@ -45,11 +46,11 @@ public class AuthService {
     private final ObjectMapper objectMapper;
 
     // In-memory state (loaded from keystore on startup)
-    private String jwt;
-    private String libraryDocumentId;
-    private String strapiBaseUrl;
-    private Long userId;
-    private boolean online = false;
+    private volatile String jwt;
+    private volatile String libraryDocumentId;
+    private volatile String strapiBaseUrl;
+    private volatile Long userId;
+    private volatile boolean online = false;
 
     /** Outcome of a login attempt, with the Greek message the login screen shows. */
     public enum LoginResult {
@@ -58,6 +59,7 @@ public class AuthService {
         NOT_LIBRARIAN("Ο λογαριασμός δεν είναι βιβλιοθηκονόμου. Επικοινωνήστε με τον διαχειριστή."),
         NO_LIBRARY("Ο λογαριασμός δεν έχει βιβλιοθήκη. Ζητήστε από τον διαχειριστή να σας αντιστοιχίσει σε βιβλιοθήκη."),
         UNREACHABLE("Δεν υπάρχει σύνδεση με τον server."),
+        INSECURE_URL("Η διεύθυνση του server πρέπει να ξεκινά με https:// (http:// επιτρέπεται μόνο για server σε αυτόν τον υπολογιστή)."),
         FAILED("Η σύνδεση απέτυχε.");
 
         private final String message;
@@ -93,6 +95,12 @@ public class AuthService {
                 logout();
                 return;
             }
+            if (storedUrl != null && !isAllowedServerUrl(storedUrl)) {
+                // Saved before https became mandatory: the token must not travel unencrypted again
+                log.info("Stored session uses plain http to a remote server — login required");
+                logout();
+                return;
+            }
             if (storedJwt != null && storedUrl != null) {
                 this.jwt = storedJwt;
                 this.libraryDocumentId = storedLibraryDocumentId;
@@ -115,6 +123,24 @@ public class AuthService {
     }
 
     /**
+     * https everywhere; plain http only for a server on this computer,
+     * so the password and the token never cross the network unencrypted.
+     */
+    static boolean isAllowedServerUrl(String url) {
+        try {
+            URI uri = new URI(url);
+            String scheme = uri.getScheme();
+            String host = uri.getHost();
+            if (scheme == null || host == null) return false;
+            if (scheme.equalsIgnoreCase("https")) return true;
+            return scheme.equalsIgnoreCase("http")
+                    && (host.equalsIgnoreCase("localhost") || host.equals("127.0.0.1") || host.equals("[::1]"));
+        } catch (java.net.URISyntaxException e) {
+            return false;
+        }
+    }
+
+    /**
      * Login to Strapi and obtain JWT.
      *
      * POST /api/auth/local
@@ -130,6 +156,10 @@ public class AuthService {
         try {
             // Normalize URL
             String baseUrl = url.endsWith("/") ? url.substring(0, url.length() - 1) : url;
+            if (!isAllowedServerUrl(baseUrl)) {
+                log.warn("Login refused: {} is neither https nor a local server", baseUrl);
+                return LoginResult.INSECURE_URL;
+            }
 
             // Build request body
             String body = objectMapper.writeValueAsString(
@@ -199,6 +229,7 @@ public class AuthService {
             log.error("Cannot connect to Strapi at {}: {}", url, e.getMessage());
             return LoginResult.UNREACHABLE;
         } catch (Exception e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
             log.error("Login failed: {}", e.getMessage(), e);
             return LoginResult.FAILED;
         }
@@ -228,6 +259,7 @@ public class AuthService {
             HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
             return response.statusCode();
         } catch (Exception e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
             log.debug("Connection test failed: {}", e.getMessage());
             return -1;
         }

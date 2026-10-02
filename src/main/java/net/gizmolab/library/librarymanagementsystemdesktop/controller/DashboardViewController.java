@@ -76,6 +76,7 @@ public class DashboardViewController extends BaseController implements Initializ
                         totalPubs = response.path("meta").path("pagination").path("total").asLong(0);
                     }
                 } catch (Exception e) {
+                    if (e instanceof InterruptedException) Thread.currentThread().interrupt();
                     logger.warn("Could not fetch publication count from Strapi: {}", e.getMessage());
                 }
 
@@ -167,6 +168,7 @@ public class DashboardViewController extends BaseController implements Initializ
                 String url = PublicationDetailFormatter.resolveCoverUrl(pub.getCoverImageUrl(), authService.getStrapiBaseUrl());
                 if (url != null) covers.put(coverKey(entry), url);
             } catch (Exception e) {
+                if (e instanceof InterruptedException) Thread.currentThread().interrupt();
                 logger.debug("No cover for publication {}: {}", entry.publicationDocumentId(), e.getMessage());
             }
         }

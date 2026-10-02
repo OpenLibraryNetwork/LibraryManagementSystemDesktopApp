@@ -20,6 +20,7 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.function.Consumer;
 
@@ -75,7 +76,7 @@ public class BorrowFormControllerNew extends BaseController {
         loadUsers();
 
         // Default due date: +14 days
-        dueDatePicker.setValue(LocalDate.now().plusDays(14));
+        dueDatePicker.setValue(LocalDate.now(ZoneId.systemDefault()).plusDays(14));
 
         // Publication search
         searchPublicationButton.setOnAction(e -> handleSearchPublication());

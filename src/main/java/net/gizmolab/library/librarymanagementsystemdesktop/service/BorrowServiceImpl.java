@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,9 @@ public class BorrowServiceImpl implements IBorrowService {
         // Throws AuthenticationExpiredException if 401
         try {
             strapiApiClient.borrowCopy(copy.getDocumentId());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Failed to borrow copy from Strapi: interrupted", e);
         } catch (Exception e) {
             throw new RuntimeException("Failed to borrow copy from Strapi: " + e.getMessage(), e);
         }
@@ -66,7 +70,7 @@ public class BorrowServiceImpl implements IBorrowService {
         borrow.setPublicationType(pub.getType());
         borrow.setIsbn(pub.getIsbn());
         borrow.setAuthorName(pub.getAuthorNames());
-        borrow.setBorrowDate(LocalDate.now());
+        borrow.setBorrowDate(LocalDate.now(ZoneId.systemDefault()));
         borrow.setDueDate(dueDate);
         borrow.setReturned(false);
 
@@ -82,13 +86,16 @@ public class BorrowServiceImpl implements IBorrowService {
         // 1. Strapi: atomic return (sets isAvailable=true)
         try {
             strapiApiClient.returnCopy(borrow.getStrapiCopyDocumentId());
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            throw new RuntimeException("Failed to return copy to Strapi: interrupted", e);
         } catch (Exception e) {
             throw new RuntimeException("Failed to return copy to Strapi: " + e.getMessage(), e);
         }
 
         // 2. H2: Update local record
         borrow.setReturned(true);
-        borrow.setReturnDate(LocalDate.now());
+        borrow.setReturnDate(LocalDate.now(ZoneId.systemDefault()));
 
         return borrowRepository.save(borrow);
     }

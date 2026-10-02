@@ -69,6 +69,7 @@ public abstract class PublicationListController extends BaseManagementController
             JsonNode response = strapiApiClient.getPublicationsPaginated(page, pageSize, publicationType(), searchQuery);
             return DTOConverter.publicationsPageFromJson(response);
         } catch (Exception e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
             logError("Failed to load " + publicationType() + " page", e);
             return StrapiPageResponse.failed(e);
         }

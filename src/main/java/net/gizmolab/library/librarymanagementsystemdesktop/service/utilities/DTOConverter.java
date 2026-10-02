@@ -6,6 +6,7 @@ import net.gizmolab.library.librarymanagementsystemdesktop.model.Borrow;
 import tools.jackson.databind.JsonNode;
 
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -406,7 +407,7 @@ public class DTOConverter {
     private static boolean calculateOverdue(Borrow borrow) {
         if (borrow.isReturned()) return false;
         if (borrow.getDueDate() == null) return false;
-        return LocalDate.now().isAfter(borrow.getDueDate());
+        return LocalDate.now(ZoneId.systemDefault()).isAfter(borrow.getDueDate());
     }
 
     private static String calculateStatus(Borrow borrow) {

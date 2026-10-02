@@ -57,6 +57,7 @@ public class AuthorManagementController extends BaseManagementController<PersonD
             JsonNode response = strapiApiClient.getAuthorsInLibrary(page, pageSize, searchTerm(searchQuery));
             return DTOConverter.personsPageFromJson(response);
         } catch (Exception e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
             logError("Failed to load authors page", e);
             return StrapiPageResponse.failed(e);
         }

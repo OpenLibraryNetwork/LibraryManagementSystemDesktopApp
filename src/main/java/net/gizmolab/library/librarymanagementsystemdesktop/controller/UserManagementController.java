@@ -5,7 +5,6 @@ import net.gizmolab.library.librarymanagementsystemdesktop.config.FXMLLoaderFact
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.UserDTO;
 import net.gizmolab.library.librarymanagementsystemdesktop.model.User;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.IUserService;
-import net.gizmolab.library.librarymanagementsystemdesktop.service.I18nManager;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.exceptions.EntityNotFoundException;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.StylesheetHelper;
 import net.gizmolab.library.librarymanagementsystemdesktop.util.TableCellFactory;
@@ -29,9 +28,6 @@ public class UserManagementController extends BaseManagementController<UserDTO> 
 
     @Autowired
     private IUserService userService;
-
-    @Autowired
-    private I18nManager i18nManager;
 
     @Autowired
     private FXMLLoaderFactory fxmlLoaderFactory;

@@ -63,6 +63,7 @@ public class PublisherManagementController extends BaseManagementController<Publ
             JsonNode response = strapiApiClient.getPublishersInLibrary(page, pageSize, searchTerm(searchQuery));
             return DTOConverter.publishersPageFromJson(response);
         } catch (Exception e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
             logError("Failed to load publishers page", e);
             return StrapiPageResponse.failed(e);
         }

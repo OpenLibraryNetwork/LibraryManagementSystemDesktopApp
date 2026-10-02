@@ -104,4 +104,26 @@ class AuthServiceLoginTest {
         }
         assertEquals(AuthService.LoginResult.UNREACHABLE, auth.login(url, "test", "right"));
     }
+
+    @Test
+    void plainHttpToAnotherComputerIsRefusedBeforeSendingThePassword() {
+        assertEquals(AuthService.LoginResult.INSECURE_URL, auth.login("http://library.example.org", "test", "right"));
+        assertFalse(auth.isAuthenticated());
+        verify(keyStore, never()).storeSecret(anyString(), anyString());
+    }
+
+    @Test
+    void onlyHttpsOrALocalServerIsAllowed() {
+        assertTrue(AuthService.isAllowedServerUrl("https://library.example.org"));
+        assertTrue(AuthService.isAllowedServerUrl("HTTPS://library.example.org:8443"));
+        assertTrue(AuthService.isAllowedServerUrl("http://localhost:1337"));
+        assertTrue(AuthService.isAllowedServerUrl("http://127.0.0.1:1337"));
+        assertTrue(AuthService.isAllowedServerUrl("http://[::1]:1337"));
+        assertFalse(AuthService.isAllowedServerUrl("http://library.example.org"));
+        assertFalse(AuthService.isAllowedServerUrl("http://192.168.1.10:1337"));
+        assertFalse(AuthService.isAllowedServerUrl("http://localhost.example.org"));
+        assertFalse(AuthService.isAllowedServerUrl("localhost:1337"));
+        assertFalse(AuthService.isAllowedServerUrl("ftp://library.example.org"));
+        assertFalse(AuthService.isAllowedServerUrl("not a url"));
+    }
 }

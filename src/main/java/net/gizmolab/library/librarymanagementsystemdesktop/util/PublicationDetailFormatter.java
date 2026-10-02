@@ -16,11 +16,10 @@ public final class PublicationDetailFormatter {
 
     /** "τεύχ. 5 (Δεκέμβριος 2016)", "τεύχ. 5", "Άνοιξη 2020"; empty when both are blank. */
     public static String issueLabel(String number, String period) {
-        boolean hasNumber = !isBlank(number);
-        boolean hasPeriod = !isBlank(period);
-        if (hasNumber && hasPeriod) return "τεύχ. " + number.trim() + " (" + period.trim() + ")";
-        if (hasNumber) return "τεύχ. " + number.trim();
-        return hasPeriod ? period.trim() : "";
+        String n = number == null ? "" : number.trim();
+        String p = period == null ? "" : period.trim();
+        if (n.isEmpty()) return p;
+        return p.isEmpty() ? "τεύχ. " + n : "τεύχ. " + n + " (" + p + ")";
     }
 
     /** An issue: "Κοινωνικός Αναρχισμός — τεύχ. 5"; anything else: its title. */

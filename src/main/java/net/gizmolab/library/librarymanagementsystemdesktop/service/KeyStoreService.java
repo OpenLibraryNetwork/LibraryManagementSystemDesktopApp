@@ -29,6 +29,7 @@ public class KeyStoreService {
 
     private static final Logger log = LoggerFactory.getLogger(KeyStoreService.class);
     private static final String SERVICE_NAME = "LibraryManagementSystem";
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     // Key names
     public static final String KEY_DEK = "dek";
@@ -124,9 +125,8 @@ public class KeyStoreService {
      * @return the generated DEK as Base64 string
      */
     public String generateAndStoreDEK() {
-        SecureRandom random = new SecureRandom();
         byte[] dekBytes = new byte[32]; // 256 bits
-        random.nextBytes(dekBytes);
+        RANDOM.nextBytes(dekBytes);
         String dek = Base64.getEncoder().encodeToString(dekBytes);
         storeSecret(KEY_DEK, dek);
         log.info("Generated and stored new DEK (256-bit)");

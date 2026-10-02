@@ -7,6 +7,8 @@ import javafx.application.Platform;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.WebApplicationType;
 import org.springframework.context.ConfigurableApplicationContext;
@@ -16,6 +18,8 @@ import org.springframework.context.ConfigurableApplicationContext;
  * This class manages the JavaFX lifecycle while integrating with Spring Boot context.
  */
 public class LibraryManagementFXApplication extends Application {
+
+    private static final Logger log = LoggerFactory.getLogger(LibraryManagementFXApplication.class);
 
     private ConfigurableApplicationContext springContext;
 
@@ -42,8 +46,7 @@ public class LibraryManagementFXApplication extends Application {
     public void start(Stage primaryStage) throws Exception {
         if (startupFailure != null) {
             String message = net.gizmolab.library.librarymanagementsystemdesktop.util.StartupFailure.message(startupFailure);
-            System.err.println("Startup failed: " + message);
-            startupFailure.printStackTrace();
+            log.error("Startup failed: {}", message, startupFailure);
             javafx.scene.control.Alert alert = new javafx.scene.control.Alert(
                     javafx.scene.control.Alert.AlertType.ERROR, message, javafx.scene.control.ButtonType.OK);
             alert.setTitle("Library Management System");
@@ -89,8 +92,7 @@ public class LibraryManagementFXApplication extends Application {
             
         } catch (Exception e) {
             // Print detailed error information
-            System.err.println("Could not load main navigation view: " + e.getMessage());
-            e.printStackTrace();
+            log.error("Could not load main navigation view: {}", e.getMessage(), e);
             
             // Create a temporary simple scene for testing
             Parent tempRoot = createTemporaryView();

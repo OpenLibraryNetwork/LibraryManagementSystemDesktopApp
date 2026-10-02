@@ -19,8 +19,7 @@ public class AnimationHelper {
     private static final Logger logger = LoggerFactory.getLogger(AnimationHelper.class);
     private static final int MIN_FPS_THRESHOLD = 20;
     private static final int TARGET_FPS = 30;
-    private static boolean animationsEnabled = true;
-    private static PerformanceMonitor performanceMonitor = new PerformanceMonitor();
+    private static final PerformanceMonitor performanceMonitor = new PerformanceMonitor();
 
     /**
      * Applies an opening animation to a dialog (fade in + scale up).
@@ -32,7 +31,7 @@ public class AnimationHelper {
         Node dialogPane = dialog.getDialogPane();
         Duration duration = Duration.millis(250);
         
-        if (!animationsEnabled) {
+        if (!performanceMonitor.animationsEnabled) {
             dialogPane.setOpacity(1.0);
             dialogPane.setScaleX(1.0);
             dialogPane.setScaleY(1.0);
@@ -76,6 +75,7 @@ public class AnimationHelper {
         private double totalFPS = 0;
         private int measurementCount = 0;
         private boolean isMonitoring = false;
+        private boolean animationsEnabled = true;
         
         /**
          * Start monitoring frame rate.

@@ -114,6 +114,7 @@ public class MagazineManagementController extends BaseManagementController<Magaz
             String q = (searchQuery != null && searchQuery.trim().length() >= 2) ? searchQuery.trim() : null;
             return DTOConverter.magazinesPageFromJson(strapiApiClient.getMagazinesInLibrary(page, pageSize, q));
         } catch (Exception e) {
+            if (e instanceof InterruptedException) Thread.currentThread().interrupt();
             logError("Failed to load magazines page", e);
             return StrapiPageResponse.failed(e);
         }

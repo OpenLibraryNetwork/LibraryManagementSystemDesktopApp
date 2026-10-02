@@ -4,7 +4,6 @@ import net.gizmolab.library.librarymanagementsystemdesktop.controller.base.BaseC
 import net.gizmolab.library.librarymanagementsystemdesktop.dto.UserDTO;
 import net.gizmolab.library.librarymanagementsystemdesktop.model.User;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.IUserService;
-import net.gizmolab.library.librarymanagementsystemdesktop.service.I18nManager;
 
 import javafx.application.Platform;
 import javafx.concurrent.Task;
@@ -26,9 +25,6 @@ public class UserFormController extends BaseController {
 
     @Autowired
     private IUserService userService;
-
-    @Autowired
-    private I18nManager i18nManager;
 
     // FXML Components
     @FXML private Label dialogTitleLabel;
@@ -52,9 +48,9 @@ public class UserFormController extends BaseController {
     private boolean isEditMode = false;
     private Consumer<UserDTO> onSaveCallback;
 
-    // Email validation pattern
+    // Email validation pattern; possessive quantifiers so a long input cannot overflow the stack
     private static final Pattern EMAIL_PATTERN = Pattern.compile(
-        "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$"
+        "^[a-zA-Z0-9_+&*-]++(?:\\.[a-zA-Z0-9_+&*-]++)*+@(?:[a-zA-Z0-9-]++\\.)++[a-zA-Z]{2,7}$"
     );
 
     @FXML

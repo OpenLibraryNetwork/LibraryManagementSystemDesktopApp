@@ -15,6 +15,7 @@ public final class StartupFailure {
     private StartupFailure() {}
 
     public static String message(Throwable error) {
+        if (error == null) return "Η εφαρμογή δεν μπόρεσε να ξεκινήσει.";
         Throwable root = error;
         Set<Throwable> seen = new HashSet<>();
         for (Throwable t = error; t != null && seen.add(t); t = t.getCause()) {

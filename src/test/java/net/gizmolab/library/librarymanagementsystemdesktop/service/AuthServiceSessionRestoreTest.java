@@ -101,4 +101,12 @@ class AuthServiceSessionRestoreTest {
         restoredFrom(serverAnswering(200), keyStore);
         assertEquals("libA", AuthService.getCurrentLibraryDocumentId());
     }
+
+    @Test
+    void aSessionSavedForPlainHttpToAnotherComputerAsksForANewLogin() {
+        KeyStoreService keyStore = mock(KeyStoreService.class);
+        AuthService auth = restoredFrom("http://library.example.org", keyStore);
+        assertFalse(auth.isAuthenticated());
+        verify(keyStore).clearAll();
+    }
 }

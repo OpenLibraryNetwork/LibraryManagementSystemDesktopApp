@@ -17,6 +17,7 @@ import java.security.*;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 import java.util.zip.GZIPInputStream;
@@ -51,6 +52,7 @@ public class BackupService {
     private static final int AES_KEY_SIZE = 256;
     private static final int GCM_IV_SIZE = 12;
     private static final int GCM_TAG_SIZE = 128;
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     @Autowired
     private KeyStoreService keyStoreService;
@@ -94,7 +96,7 @@ public class BackupService {
 
             // First run — generate keypair
             KeyPairGenerator keyGen = KeyPairGenerator.getInstance(RSA_ALGORITHM);
-            keyGen.initialize(RSA_KEY_SIZE, new SecureRandom());
+            keyGen.initialize(RSA_KEY_SIZE, RANDOM);
             KeyPair keyPair = keyGen.generateKeyPair();
 
             rsaPublicKey = keyPair.getPublic();
@@ -149,7 +151,7 @@ public class BackupService {
 
         try {
             // Timestamp for unique backup name
-            String timestamp = LocalDateTime.now().format(
+            String timestamp = LocalDateTime.now(ZoneId.systemDefault()).format(
                 DateTimeFormatter.ofPattern("yyyyMMdd_HHmmss"));
             Path backupPath = Path.of(backupDir, "backup_" + timestamp);
             Files.createDirectories(backupPath);
@@ -164,12 +166,12 @@ public class BackupService {
 
             // Step 3: Generate random AES session key
             KeyGenerator aesKeyGen = KeyGenerator.getInstance(AES_ALGORITHM);
-            aesKeyGen.init(AES_KEY_SIZE, new SecureRandom());
+            aesKeyGen.init(AES_KEY_SIZE, RANDOM);
             SecretKey sessionKey = aesKeyGen.generateKey();
 
             // Step 4: AES-GCM encrypt the compressed data
             byte[] iv = new byte[GCM_IV_SIZE];
-            new SecureRandom().nextBytes(iv);
+            RANDOM.nextBytes(iv);
 
             Cipher aesCipher = Cipher.getInstance(AES_CIPHER);
             aesCipher.init(Cipher.ENCRYPT_MODE, sessionKey, new GCMParameterSpec(GCM_TAG_SIZE, iv));
@@ -275,7 +277,7 @@ public class BackupService {
 
         try (var conn = java.sql.DriverManager.getConnection(jdbcUrl, "sa", password);
              var stmt = conn.createStatement()) {
-            stmt.execute("SCRIPT TO '" + outputPath.toAbsolutePath() + "'");
+            stmt.execute("SCRIPT TO " + sqlLiteral(outputPath.toAbsolutePath().toString()));
         }
         log.debug("H2 dump written to: {}", outputPath);
     }
@@ -286,9 +288,14 @@ public class BackupService {
 
         try (var conn = java.sql.DriverManager.getConnection(jdbcUrl, "sa", password);
              var stmt = conn.createStatement()) {
-            stmt.execute("RUNSCRIPT FROM '" + dumpPath.toAbsolutePath() + "'");
+            stmt.execute("RUNSCRIPT FROM " + sqlLiteral(dumpPath.toAbsolutePath().toString()));
         }
         log.debug("H2 dump imported from: {}", dumpPath);
+    }
+
+    /** H2's SCRIPT/RUNSCRIPT take no bind parameters, so the path is quoted as an SQL string literal. */
+    static String sqlLiteral(String value) {
+        return "'" + value.replace("'", "''") + "'";
     }
 
     // ═══════════════════════════════════════════════════════

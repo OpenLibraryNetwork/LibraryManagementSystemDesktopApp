@@ -53,7 +53,6 @@ public class MainNavigationController extends BaseController implements Initiali
     @Autowired private IUserService userService;
     @Autowired private IBorrowService borrowService;
     @Autowired private FXMLLoaderFactory fxmlLoaderFactory;
-    @Autowired private I18nManager i18nManager;
 
     // Current active button for styling
     private Button activeButton;

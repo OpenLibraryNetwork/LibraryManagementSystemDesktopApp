@@ -4,6 +4,7 @@ import jakarta.persistence.*;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.AllArgsConstructor;
+import lombok.ToString;
 
 import java.time.LocalDate;
 
@@ -29,8 +30,10 @@ public class Borrow {
     private Long id;
 
     // === Τοπική JPA σχέση ===
+    // null once the borrow is anonymised (BorrowRetentionService); kept out of toString so no log line names a borrower
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", nullable = false)
+    @JoinColumn(name = "USER_ID")
+    @ToString.Exclude
     private User user;
 
     // === Strapi αναφορές (documentIds, not JPA) ===

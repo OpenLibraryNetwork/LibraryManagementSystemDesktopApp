@@ -1,6 +1,7 @@
 package net.gizmolab.library.librarymanagementsystemdesktop.util;
 
 import net.gizmolab.library.librarymanagementsystemdesktop.service.StrapiApiClient;
+import net.gizmolab.library.librarymanagementsystemdesktop.service.exceptions.ActiveBorrowsException;
 import org.junit.jupiter.api.Test;
 
 import java.net.ConnectException;
@@ -62,5 +63,10 @@ class UserMessagesTest {
     void conflictStaysGenericBecauseBorrowConflictsAreEnglish() {
         assertEquals(UserMessages.CONFLICT,
                 UserMessages.describe(new StrapiApiClient.ConflictException("{}", "Copy is already borrowed or does not exist")));
+    }
+
+    @Test
+    void aBorrowerWithActiveBorrowsIsExplained() {
+        assertEquals(ActiveBorrowsException.MESSAGE, UserMessages.describe(new RuntimeException(new ActiveBorrowsException())));
     }
 }

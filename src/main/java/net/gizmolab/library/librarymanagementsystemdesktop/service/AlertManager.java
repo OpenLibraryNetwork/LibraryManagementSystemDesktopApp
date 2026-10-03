@@ -120,9 +120,9 @@ public class AlertManager {
         boolean confirmed = result.isPresent() && result.get() == deleteButton;
         
         if (confirmed) {
-            logger.debug("User confirmed deletion of {} '{}'", entityType, entityName);
+            logger.debug("User confirmed deletion of a {}", entityType);
         } else {
-            logger.debug("User cancelled deletion of {} '{}'", entityType, entityName);
+            logger.debug("User cancelled deletion of a {}", entityType);
         }
         
         return confirmed;

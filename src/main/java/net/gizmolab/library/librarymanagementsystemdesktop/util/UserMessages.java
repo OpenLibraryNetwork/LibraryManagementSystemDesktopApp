@@ -1,6 +1,7 @@
 package net.gizmolab.library.librarymanagementsystemdesktop.util;
 
 import net.gizmolab.library.librarymanagementsystemdesktop.service.StrapiApiClient;
+import net.gizmolab.library.librarymanagementsystemdesktop.service.exceptions.ActiveBorrowsException;
 
 import java.net.ConnectException;
 
@@ -20,6 +21,7 @@ public final class UserMessages {
 
     public static String describe(Throwable error) {
         for (Throwable t = error; t != null; t = t.getCause()) {
+            if (t instanceof ActiveBorrowsException) return ActiveBorrowsException.MESSAGE;
             if (t instanceof StrapiApiClient.ForbiddenException) return FORBIDDEN;
             if (t instanceof StrapiApiClient.AuthenticationExpiredException) return SESSION_EXPIRED;
             if (t instanceof StrapiApiClient.ConflictException) return CONFLICT;

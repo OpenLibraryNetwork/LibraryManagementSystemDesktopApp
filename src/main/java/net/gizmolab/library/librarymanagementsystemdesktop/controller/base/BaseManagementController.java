@@ -433,7 +433,7 @@ public abstract class BaseManagementController<T> extends BaseController impleme
         }
 
         try {
-            logInfo("Editing item: %s", selectedItem);
+            logInfo("Editing an item"); // not the item itself: a borrower's toString is their name
 
             T editedItem = showAddEditDialog(selectedItem);
             if (editedItem != null) {

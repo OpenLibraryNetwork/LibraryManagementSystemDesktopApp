@@ -3,6 +3,7 @@ package net.gizmolab.library.librarymanagementsystemdesktop.service;
 import net.gizmolab.library.librarymanagementsystemdesktop.model.User;
 import net.gizmolab.library.librarymanagementsystemdesktop.repository.BorrowRepository;
 import net.gizmolab.library.librarymanagementsystemdesktop.repository.UserRepository;
+import net.gizmolab.library.librarymanagementsystemdesktop.service.exceptions.ActiveBorrowsException;
 import net.gizmolab.library.librarymanagementsystemdesktop.service.exceptions.EntityNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -74,9 +75,12 @@ public class UserServiceImpl implements IUserService {
     @Transactional
     @Override
     public void deleteUser(Long userId) throws EntityNotFoundException {
-        if (!userRepository.existsById(userId)) {
-            throw new EntityNotFoundException("User not found");
+        User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
+        if (!borrowRepository.findByUserAndReturned(user, false).isEmpty()) {
+            throw new ActiveBorrowsException();
         }
+        // The returned borrows stay for the statistics, without the person
+        borrowRepository.detachBorrowerFromReturned(user);
         userRepository.deleteById(userId);
     }
 
